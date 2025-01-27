@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Отключаем предупреждения о неиспользуемых полях -->
+    <Match>
+        <Bug pattern="UUF_UNUSED_FIELD"/>
+    </Match>
+</FindBugsFilter>

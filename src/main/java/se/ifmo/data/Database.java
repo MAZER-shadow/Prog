@@ -4,7 +4,7 @@ import org.example.entity.Person;
 
 import java.util.ArrayList;
 
-public class DataBase {
-    private ArrayList<Person> personArrayList;
+public class Database implements Dao {
+    private ArrayList<Person> listOfPerson;
 
 }

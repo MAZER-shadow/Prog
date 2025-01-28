@@ -1,5 +1,5 @@
 package org.example.recievers;
 
-public class RecieverFirst {
+public class Receiver {
 
 }

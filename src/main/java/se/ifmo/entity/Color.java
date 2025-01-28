@@ -1,4 +1,4 @@
-package org.example.entity;
+package se.ifmo.entity;
 
 public enum Color {
     GREEN,

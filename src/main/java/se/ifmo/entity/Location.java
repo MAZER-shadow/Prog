@@ -1,4 +1,4 @@
-package org.example.entity;
+package se.ifmo.entity;
 
 public class Location {
     private Integer x; //Поле не может быть null

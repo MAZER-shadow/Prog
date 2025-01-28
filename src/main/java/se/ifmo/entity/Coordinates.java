@@ -1,4 +1,4 @@
-package org.example.entity;
+package se.ifmo.entity;
 
 public class Coordinates {
     private double x; //Значение поля должно быть больше -775

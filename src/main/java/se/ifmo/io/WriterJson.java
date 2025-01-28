@@ -1,22 +1,21 @@
-package org.example.io;
+package se.ifmo.io;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.example.entity.Person;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class WriterJson<T> implements JsonWriter<T>{
+public class WriterJson<T> implements JsonWriter<T> {
     @Override
     public void writeToJson(List<T> person, String path) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
-
+        try (FileOutputStream fileOutputStream = new FileOutputStream(path);
+                OutputStreamWriter streamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+                BufferedWriter writer = new BufferedWriter(streamWriter)) {
             gson.toJson(person, writer);
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

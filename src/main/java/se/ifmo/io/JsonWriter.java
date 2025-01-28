@@ -1,9 +1,5 @@
-package org.example.io;
+package se.ifmo.io;
 
-import org.example.entity.Person;
-
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface JsonWriter<T> {

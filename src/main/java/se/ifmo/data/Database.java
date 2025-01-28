@@ -1,10 +1,9 @@
-package org.example.data;
+package se.ifmo.data;
 
-import org.example.entity.Person;
+import se.ifmo.entity.Person;
 
 import java.util.ArrayList;
 
 public class Database implements Dao {
     private ArrayList<Person> listOfPerson;
-
 }

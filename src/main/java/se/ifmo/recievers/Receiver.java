@@ -1,4 +1,4 @@
-package org.example.recievers;
+package se.ifmo.recievers;
 
 public class Receiver {
 

@@ -1,8 +1,7 @@
-package org.example.command;
+package se.ifmo.command;
 
-public class SumOfHeight implements Command{
+public class SumOfHeight implements Command {
     @Override
     public void execute() {
-
     }
 }

@@ -1,8 +1,7 @@
-package org.example.command;
+package se.ifmo.command;
 
-public class Exit implements Command{
+public class Exit implements Command {
     @Override
     public void execute() {
-
     }
 }

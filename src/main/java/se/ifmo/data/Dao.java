@@ -1,4 +1,4 @@
-package org.example.data;
+package se.ifmo.data;
 
 public interface Dao {
 }

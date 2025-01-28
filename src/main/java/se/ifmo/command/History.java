@@ -1,8 +1,7 @@
-package org.example.command;
+package se.ifmo.command;
 
-public class History implements Command{
+public class History implements Command {
     @Override
     public void execute() {
-
     }
 }

@@ -1,8 +1,5 @@
-package org.example.io;
+package se.ifmo.io;
 
-import org.example.entity.Person;
-
-import java.io.File;
 import java.util.List;
 
 public interface JsonReader<T> {

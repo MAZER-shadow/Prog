@@ -1,9 +1,9 @@
-package org.example;
+package se.ifmo;
 
 
-import org.example.entity.Person;
-import org.example.io.ReaderFile;
-import org.example.io.WriterJson;
+import se.ifmo.entity.Person;
+import se.ifmo.io.ReaderFile;
+import se.ifmo.io.WriterJson;
 
 import java.util.ArrayList;
 import java.util.List;

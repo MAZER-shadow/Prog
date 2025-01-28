@@ -1,12 +1,12 @@
-package org.example.command;
+package se.ifmo.command;
 
 import java.util.HashMap;
 
 public class CommandManager {
     private HashMap<String, Command> commandMap = new HashMap<>();
 
-    public void register(String CommandName, Command command) {
-        commandMap.put(CommandName, command);
+    public void register(String commandName, Command command) {
+        commandMap.put(commandName, command);
     }
 
     public void execute(String commandName) {

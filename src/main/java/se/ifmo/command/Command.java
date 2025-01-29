@@ -1,5 +1,5 @@
 package se.ifmo.command;
 
 public interface Command {
-    void execute();
+    void execute(String parameter);
 }

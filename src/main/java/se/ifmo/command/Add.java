@@ -1,12 +1,11 @@
 package se.ifmo.command;
 
-import se.ifmo.entity.Person;
+import se.ifmo.receiver.Receiver;
 
 public class Add implements Command {
-    public Add(Person... person) {
-    }
-
     @Override
-    public void execute() {
+    public void execute(String parameter) {
+        Receiver receiver = new Receiver();
+        receiver.add(parameter);
     }
 }

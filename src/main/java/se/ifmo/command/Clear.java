@@ -1,7 +1,15 @@
 package se.ifmo.command;
 
-public class Clear implements Command {
+import se.ifmo.receiver.Receiver;
+
+public class Clear extends OwnCommand implements Command {
+
+    public Clear(Receiver receiver) {
+        super(receiver);
+    }
+
     @Override
     public void execute(String parameter) {
+        receiver.clear();
     }
 }

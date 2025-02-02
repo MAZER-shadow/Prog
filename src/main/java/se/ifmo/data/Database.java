@@ -1,48 +1,44 @@
 package se.ifmo.data;
 
-import se.ifmo.entity.Person;
-import se.ifmo.io.ReaderFile;
 import se.ifmo.io.WriterJson;
-
 import java.util.ArrayList;
 import java.util.List;
+import se.ifmo.entity.Person;
 
-public class Database implements Dao {
-    private final List<Person> listOfPerson;
+public class Database<T> implements Dao<T> {
+    private final List<T> listOfPerson;
 
-    public Database(List<Person> listOfPerson) {
-        this.listOfPerson = new ArrayList<>(listOfPerson);
+    public Database() {
+        listOfPerson = new ArrayList<>();
+    }
+
+    public Database(List<T> listOfPerson) {
+        this.listOfPerson = new ArrayList<T>(listOfPerson);
     }
 
     @Override
-    public List<Person> getAll() {
-        return new ArrayList<>(listOfPerson);
+    public List<T> getAll() {
+        return new ArrayList<T>(listOfPerson);
     }
 
     @Override
-    public Person create(String name) {
-        return new Person(name);
+    public void clear() {
+        listOfPerson.clear();
     }
 
     @Override
-    public List<Person> read(String path) {
-        ReaderFile<Person> readerFile = new ReaderFile<>(Person.class);
-        return readerFile.readJson(path);
-    }
-
-    @Override
-    public void delete(Person person) {
+    public void delete(T person) {
         listOfPerson.remove(person);
     }
 
     @Override
-    public void add(Person person) {
+    public void add(T person) {
         listOfPerson.add(person);
     }
 
     @Override
     public void write() {
         WriterJson<Person> writerJson = new WriterJson<>();
-        writerJson.writeToJson(listOfPerson, "src/main/resources/FileWithPerson.json");
+        writerJson.writeToJson((List<Person>) listOfPerson, "src/main/resources/FileWithPerson.json");
     }
 }

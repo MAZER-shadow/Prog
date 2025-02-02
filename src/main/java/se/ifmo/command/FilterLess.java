@@ -1,6 +1,13 @@
 package se.ifmo.command;
 
-public class FilterLess implements Command {
+import se.ifmo.receiver.Receiver;
+
+public class FilterLess extends OwnCommand implements Command {
+
+    public FilterLess(Receiver receiver) {
+        super(receiver);
+    }
+
     @Override
     public void execute(String parameter) {
     }

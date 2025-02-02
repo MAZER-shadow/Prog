@@ -1,24 +1,29 @@
 package se.ifmo.receiver;
 
 import se.ifmo.data.Database;
-import se.ifmo.entity.Person;
-import java.util.ArrayList;
 import java.util.List;
 
-public class Receiver {
-    private static Database database = new Database(new ArrayList<Person>(1));
+public class Receiver<T> {
+    private final Database<T> db;
 
-    public void add(String name) {
-        database.add(database.create(name));
+    public Receiver(Database<T> db) {
+        this.db = db;
+    }
+
+    public void add(T person) {
+        db.add(person);
     }
 
     public void clear() {
-        List<Person> list = database.getAll();
-        list.clear();
+        db.clear();
+    }
+
+    public List<T> getAll() {
+        return db.getAll();
     }
 
     public void show() {
-        for (Person person: database.getAll()) {
+        for (Object person: db.getAll()) {
             System.out.println(person);
         }
     }

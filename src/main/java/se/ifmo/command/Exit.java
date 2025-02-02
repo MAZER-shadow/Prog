@@ -1,6 +1,13 @@
 package se.ifmo.command;
 
-public class Exit implements Command {
+import se.ifmo.receiver.Receiver;
+
+public class Exit extends OwnCommand implements Command {
+
+    public Exit(Receiver receiver) {
+        super(receiver);
+    }
+
     @Override
     public void execute(String parameter) {
     }

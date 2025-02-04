@@ -1,14 +1,9 @@
 package se.ifmo.entity;
 
 public class Person {
-    private Long id;
     private String name;
-    private Coordinates coordinates;
-    private long height;
-    private Color eyeColor;
-    private Color hairColor;
-    private Country nationality;
-    private Location location;
+    private Integer height;
+    private String passportID;
 
     public Person(String name) {
         this.name = name;

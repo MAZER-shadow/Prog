@@ -1,10 +1,10 @@
 package se.ifmo.entity;
 
 public class Coordinates {
-    private double x; //Значение поля должно быть больше -775
-    private Integer y; //Значение поля должно быть больше -278, Поле не может быть null
+    private int x; //Значение поля должно быть больше -437
+    private long y;
 
-    public double getX() {
+    public int getX() {
         return x;
     }
 }

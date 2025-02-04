@@ -2,9 +2,9 @@ package se.ifmo.command;
 
 import se.ifmo.receiver.Receiver;
 
-public class RemoveGreater extends OwnCommand implements Command {
+public class RemoveFirst extends OwnCommand implements Command {
 
-    public RemoveGreater(Receiver receiver) {
+    public RemoveFirst(Receiver receiver) {
         super(receiver);
     }
 

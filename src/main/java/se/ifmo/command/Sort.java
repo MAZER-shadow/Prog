@@ -2,9 +2,9 @@ package se.ifmo.command;
 
 import se.ifmo.receiver.Receiver;
 
-public class FilterLess extends OwnCommand implements Command {
+public class Sort extends OwnCommand implements Command {
 
-    public FilterLess(Receiver receiver) {
+    public Sort(Receiver receiver) {
         super(receiver);
     }
 

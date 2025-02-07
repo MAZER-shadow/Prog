@@ -14,6 +14,4 @@ public interface Dao<T> {
     void delete(T person);
 
     void add(T person);
-
-    void write();
 }

@@ -2,7 +2,7 @@ package se.ifmo.command;
 
 import se.ifmo.receiver.Receiver;
 
-public class Show<T> extends OwnCommand implements Command {
+public class Show extends OwnCommand implements Command {
 
     public Show(Receiver receiver) {
         super(receiver);
@@ -10,7 +10,7 @@ public class Show<T> extends OwnCommand implements Command {
 
     @Override
     public void execute(String parameter) {
-        for (Object person: receiver.getAll()) {
+        for (Object person : receiver.getAll()) {
             System.out.println(person);
         }
     }

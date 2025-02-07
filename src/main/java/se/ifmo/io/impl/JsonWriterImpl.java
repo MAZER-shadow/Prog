@@ -1,12 +1,14 @@
-package se.ifmo.io;
+package se.ifmo.io.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import se.ifmo.io.JsonWriter;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class WriterJson<T> implements JsonWriter<T> {
+public class JsonWriterImpl<T> implements JsonWriter<T> {
     @Override
     public void writeToJson(List<T> list, String path) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();

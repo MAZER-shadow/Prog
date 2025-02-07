@@ -1,44 +1,43 @@
 package se.ifmo.data;
 
-import se.ifmo.io.WriterJson;
+import se.ifmo.entity.LabWork;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import se.ifmo.entity.Person;
+import java.util.concurrent.atomic.AtomicLong;
 
-public class Database<T> implements Dao<T> {
-    private final List<T> listOfPerson;
+public class Database implements Dao<LabWork> {
+    private final List<LabWork> listOfLabWork;
 
     public Database() {
-        listOfPerson = new ArrayList<>();
+        listOfLabWork = new ArrayList<>();
     }
 
-    public Database(List<T> listOfPerson) {
-        this.listOfPerson = new ArrayList<T>(listOfPerson);
+    public Database(List<LabWork> listOfLabWork) {
+        this.listOfLabWork = new ArrayList<LabWork>(listOfLabWork);
     }
 
     @Override
-    public List<T> getAll() {
-        return new ArrayList<T>(listOfPerson);
+    public List<LabWork> getAll() {
+        return new ArrayList<LabWork>(listOfLabWork);
     }
 
     @Override
     public void clear() {
-        listOfPerson.clear();
+        listOfLabWork.clear();
     }
 
     @Override
-    public void delete(T person) {
-        listOfPerson.remove(person);
+    public void delete(LabWork person) {
+        listOfLabWork.remove(person);
     }
 
     @Override
-    public void add(T person) {
-        listOfPerson.add(person);
-    }
-
-    @Override
-    public void write() {
-        WriterJson<Person> writerJson = new WriterJson<>();
-        writerJson.writeToJson((List<Person>) listOfPerson, "src/main/resources/FileWithPerson.json");
+    public void add(LabWork labwork) {
+        AtomicLong counter = new AtomicLong();
+        labwork.setId(counter.incrementAndGet());
+        labwork.setCreationDate(LocalDate.now());
+        listOfLabWork.add(labwork);
     }
 }

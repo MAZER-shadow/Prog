@@ -1,16 +1,18 @@
-package se.ifmo.io;
+package se.ifmo.io.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import se.ifmo.io.JsonReader;
+
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class ReaderFile<T> implements JsonReader<T> {
+public class JsonReaderImpl<T> implements JsonReader<T> {
     private final Type listType;
 
-    public ReaderFile(Class<T> clazz) {
+    public JsonReaderImpl(Class<T> clazz) {
         this.listType = TypeToken.getParameterized(List.class, clazz).getType();
     }
 

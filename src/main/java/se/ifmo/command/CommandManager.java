@@ -10,11 +10,16 @@ public class CommandManager {
         commandMap.put(commandName, command);
     }
 
-    public void execute(String commandName, String parameter) {
-        Command command = commandMap.get(commandName);
+    public void execute(String input) {
+        String[] parameters = input.split(" ");
+        Command command = commandMap.get(parameters[0]);
         if (command == null) {
-            throw new IllegalStateException(String.format("Не найдено команды %s", commandName));
+            throw new IllegalStateException(String.format("Не найдено команды %s", parameters[0]));
         }
-        command.execute(parameter);
+        if (parameters.length > 1) {
+            command.execute(parameters[1]);
+        } else {
+            command.execute("");
+        }
     }
 }

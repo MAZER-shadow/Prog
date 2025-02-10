@@ -10,5 +10,7 @@ public class Exit extends OwnCommand implements Command {
 
     @Override
     public void execute(String parameter) {
+        System.out.println("Завершение программы");
+        System.exit(0);
     }
 }

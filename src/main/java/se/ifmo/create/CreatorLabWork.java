@@ -7,12 +7,12 @@ import se.ifmo.entity.Person;
 import se.ifmo.io.Reader;
 import se.ifmo.io.Writer;
 
-public class CreateLabWork {
+public class CreatorLabWork {
     private final Writer writer;
     private final Reader reader;
     private final ValidField validField = new ValidField();
 
-    public CreateLabWork(Reader reader, Writer writer) {
+    public CreatorLabWork(Reader reader, Writer writer) {
         this.writer = writer;
         this.reader = reader;
     }

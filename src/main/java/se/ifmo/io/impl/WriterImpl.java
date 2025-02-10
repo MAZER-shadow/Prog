@@ -21,4 +21,14 @@ public class WriterImpl implements Writer {
             throw new IORuntimeException(e);
         }
     }
+
+    @Override
+    public void println(String s) {
+        try {
+            out.write(s+"\n");
+            out.flush();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 }

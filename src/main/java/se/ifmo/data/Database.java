@@ -15,12 +15,12 @@ public class Database implements Dao<LabWork> {
     }
 
     public Database(List<LabWork> listOfLabWork) {
-        this.listOfLabWork = new ArrayList<LabWork>(listOfLabWork);
+        this.listOfLabWork = new ArrayList<>(listOfLabWork);
     }
 
     @Override
     public List<LabWork> getAll() {
-        return new ArrayList<LabWork>(listOfLabWork);
+        return new ArrayList<>(listOfLabWork);
     }
 
     @Override
@@ -29,8 +29,8 @@ public class Database implements Dao<LabWork> {
     }
 
     @Override
-    public void delete(LabWork person) {
-        listOfLabWork.remove(person);
+    public boolean delete(LabWork person) {
+        return listOfLabWork.remove(person);
     }
 
     @Override

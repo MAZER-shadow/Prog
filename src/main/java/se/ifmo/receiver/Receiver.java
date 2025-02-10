@@ -1,13 +1,13 @@
 package se.ifmo.receiver;
 
-import se.ifmo.data.Database;
+import se.ifmo.data.Dao;
 import se.ifmo.entity.LabWork;
 import java.util.List;
 
 public class Receiver {
-    private final Database db;
+    private final Dao<LabWork> db;
 
-    public Receiver(Database db) {
+    public Receiver(Dao<LabWork> db) {
         this.db = db;
     }
 

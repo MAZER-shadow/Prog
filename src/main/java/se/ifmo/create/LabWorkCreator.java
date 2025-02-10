@@ -7,12 +7,17 @@ import se.ifmo.entity.Person;
 import se.ifmo.io.Reader;
 import se.ifmo.io.Writer;
 
-public class CreatorLabWork {
+public class LabWorkCreator {
     private final Writer writer;
     private final Reader reader;
     private final ValidField validField = new ValidField();
+    private final static int MAX_VALUE_OF_X = 2147483647;
+    private final static int MIN_VALUE_OF_X = -436;
+    private final static long MIN_VALUE_OF_Y = -9223372036854775808L;
+    private final static long MAX_VALUE_OF_Y = 9223372036854775807L;
+    private final static String MINIMAL_POINT = "0.1*10^-324";
 
-    public CreatorLabWork(Reader reader, Writer writer) {
+    public LabWorkCreator(Reader reader, Writer writer) {
         this.writer = writer;
         this.reader = reader;
     }
@@ -58,7 +63,8 @@ public class CreatorLabWork {
     }
 
     private int createCoordinatesX() {
-        writer.print("Введите координату X вашей работы, это должно быть целое число от -436 до 2147483647: ");
+        writer.print(String.format("Введите координату X вашей работы," +
+                " это должно быть целое число от %d до %d: ", MIN_VALUE_OF_X, MAX_VALUE_OF_X));
         String x = reader.readLine();
         if (validField.isValidCoordinateX(x)) {
             return Integer.parseInt(x);
@@ -68,8 +74,8 @@ public class CreatorLabWork {
     }
 
     private Long createCoordinatesY() {
-        writer.print("Введите координату Y вашей работы, это должно быть целое число" +
-                " от -9223372036854775808 до 9223372036854775807: ");
+        writer.print(String.format("Введите координату Y вашей работы, это должно быть целое число" +
+                " от %d до %d: ", MIN_VALUE_OF_Y, MAX_VALUE_OF_Y));
         String y = reader.readLine();
         if (validField.isValidCoordinateY(y)) {
             return Long.parseLong(y);
@@ -79,7 +85,8 @@ public class CreatorLabWork {
     }
 
     private double createMinimalPoint() {
-        writer.print("Введите минимальную оценку вашей работы, это должно быть число от 0.1*10^-324 до 1.7*10^324: ");
+        writer.print(String.format("Введите минимальную оценку вашей работы," +
+                " это должно быть число от %s до 1.7*10^324: ", MINIMAL_POINT));
         String minimalPoint = reader.readLine();
         if (validField.isValidMinimalPoint(minimalPoint)) {
             return Double.parseDouble(minimalPoint);
@@ -122,17 +129,18 @@ public class CreatorLabWork {
     }
 
     private Integer createHeight() {
-        writer.print("Введите рост автора работы, он должен быть больше нуля и быть целым " +
-                "числом или вы можете не задавать его нажав Enter: ");
-        String height = reader.readLine();
-        if (validField.firstValidHeight(height)) {
-            if (validField.secondValidHeight(height)) {
+        try {
+            writer.print("Введите рост автора работы, он должен быть больше нуля и быть целым " +
+                    "числом или вы можете не задавать его нажав Enter: ");
+            String height = reader.readLine();
+            if (validField.firstValidHeight(height)) {
                 return Integer.parseInt(height);
             }
+            printErrorInput("рост автора работы");
+            return createHeight();
+        } catch (Exception e) {
             return null;
         }
-        printErrorInput("рост автора работы");
-        return createHeight();
     }
 
     private String createPassportID() {
@@ -146,7 +154,6 @@ public class CreatorLabWork {
     }
 
     private void printErrorInput(String data) {
-        writer.print(String.format("Некорректно ввели %s, попробуйте ещё раз", data));
-        writer.print("\n");
+        writer.println(String.format("Некорректно ввели %s, попробуйте ещё раз", data));
     }
 }

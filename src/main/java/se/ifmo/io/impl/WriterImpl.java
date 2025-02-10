@@ -2,7 +2,6 @@ package se.ifmo.io.impl;
 
 import se.ifmo.exception.IORuntimeException;
 import se.ifmo.io.Writer;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 
@@ -25,7 +24,7 @@ public class WriterImpl implements Writer {
     @Override
     public void println(String s) {
         try {
-            out.write(s+"\n");
+            out.write(s + "\n");
             out.flush();
         } catch (IOException e) {
             throw new IORuntimeException(e);

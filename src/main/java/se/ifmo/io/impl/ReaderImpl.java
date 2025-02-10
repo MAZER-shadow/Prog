@@ -6,10 +6,10 @@ import se.ifmo.io.Reader;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class ConsoleReader implements Reader {
+public class ReaderImpl implements Reader {
     private final BufferedReader reader;
 
-    public ConsoleReader(BufferedReader reader) {
+    public ReaderImpl(BufferedReader reader) {
         this.reader = reader;
     }
 

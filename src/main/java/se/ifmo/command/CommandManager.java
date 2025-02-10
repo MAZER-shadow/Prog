@@ -1,10 +1,11 @@
 package se.ifmo.command;
 
-import se.ifmo.exception.IORuntimeException;
+import se.ifmo.exception.CommandNotFoundException;
 import se.ifmo.io.Writer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class CommandManager {
     private static final String SEPARATOR = " ";
@@ -23,15 +24,15 @@ public class CommandManager {
         try {
             String[] parameters = input.split(SEPARATOR);
             Command command = commandMap.get(parameters[0]);
-            if (command == null || parameters.length > 2) {
-                throw new IORuntimeException("Не найдено такой команды");
+            if (Objects.isNull(command) || parameters.length > 2) {
+                throw new CommandNotFoundException("Не найдено такой команды");
             }
             if (parameters.length == 2) {
                 command.execute(parameters[1]);
             } else {
                 command.execute("");
             }
-        } catch (IORuntimeException e) {
+        } catch (CommandNotFoundException e) {
             writer.println(e.getMessage());
         }
     }

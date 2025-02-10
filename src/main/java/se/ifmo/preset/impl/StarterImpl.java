@@ -6,9 +6,8 @@ import se.ifmo.data.Database;
 import se.ifmo.entity.LabWork;
 import se.ifmo.io.Reader;
 import se.ifmo.io.Writer;
-import se.ifmo.io.impl.ConsoleReader;
+import se.ifmo.io.impl.ReaderImpl;
 import se.ifmo.io.impl.WriterImpl;
-import se.ifmo.preset.LoaderFromStartFile;
 import se.ifmo.preset.Starter;
 import se.ifmo.receiver.Receiver;
 import java.io.*;
@@ -40,15 +39,13 @@ public class StarterImpl implements Starter {
 
     public void run() throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
                 /*BufferedWriter writerVoid = new BufferedWriter(new OutputStreamWriter(
                         new FileOutputStream("/dev/null")))*/) {
-            Reader consoleReader = new ConsoleReader(reader);
+            Reader consoleReader = new ReaderImpl(reader);
             Writer writerReal = new WriterImpl(writer);
             this.commandManager = new CommandManager(writerReal);
             addCommands(consoleReader, writerReal);
-            LoaderFromStartFile loader = new LoaderFromStartFile(writer, consoleReader);
-            loader.load();
             addRequest(consoleReader, writerReal);
         }
     }

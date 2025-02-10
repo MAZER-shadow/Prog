@@ -1,6 +1,6 @@
 package se.ifmo.command;
 
-import se.ifmo.create.CreatorLabWork;
+import se.ifmo.create.LabWorkCreator;
 import se.ifmo.io.Reader;
 import se.ifmo.io.Writer;
 import se.ifmo.receiver.Receiver;
@@ -21,8 +21,8 @@ public class Add extends OwnCommand implements Command {
             writer.println("add, не нуждается в параметре" );
             return;
         }
-        CreatorLabWork creatorLabWork = new CreatorLabWork(reader, writer);
-        receiver.add(creatorLabWork.createLabWork());
+        LabWorkCreator creator = new LabWorkCreator(reader, writer);
+        receiver.add(creator.createLabWork());
         writer.println("Успешное создание сущности LabWork");
     }
 }

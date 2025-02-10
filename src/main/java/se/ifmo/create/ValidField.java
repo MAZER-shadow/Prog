@@ -62,10 +62,6 @@ public class ValidField {
         }
     }
 
-    public boolean secondValidHeight(String height) {
-        return !height.isEmpty();
-    }
-
     public boolean isValidPassportID(String passportID) {
         return passportID.length() < 26 && passportID.length() > 8;
     }

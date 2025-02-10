@@ -1,7 +1,9 @@
 package se.ifmo.entity;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Builder
 public class Person {
     private String name;
@@ -13,17 +15,5 @@ public class Person {
         return "Person{" +
                 "name='" + name + '\'' +
                 '}';
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Integer getHeight() {
-        return height;
-    }
-
-    public String getPassportID() {
-        return passportID;
     }
 }

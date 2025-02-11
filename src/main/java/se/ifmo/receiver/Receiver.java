@@ -1,16 +1,17 @@
 package se.ifmo.receiver;
 
-import se.ifmo.data.Database;
+import se.ifmo.data.Dao;
+import se.ifmo.entity.LabWork;
 import java.util.List;
 
-public class Receiver<T> {
-    private final Database<T> db;
+public class Receiver {
+    private final Dao<LabWork> db;
 
-    public Receiver(Database<T> db) {
+    public Receiver(Dao<LabWork> db) {
         this.db = db;
     }
 
-    public void add(T person) {
+    public void add(LabWork person) {
         db.add(person);
     }
 
@@ -18,13 +19,15 @@ public class Receiver<T> {
         db.clear();
     }
 
-    public List<T> getAll() {
+    public List<LabWork> getAll() {
         return db.getAll();
     }
 
-    public void show() {
-        for (Object person: db.getAll()) {
-            System.out.println(person);
-        }
+    public long getSize() {
+        return db.getAll().size();
+    }
+
+    public long getMaxId() {
+        return db.getMaxId();
     }
 }

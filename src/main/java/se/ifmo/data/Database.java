@@ -1,44 +1,56 @@
 package se.ifmo.data;
 
-import se.ifmo.io.WriterJson;
+import se.ifmo.entity.LabWork;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import se.ifmo.entity.Person;
 
-public class Database<T> implements Dao<T> {
-    private final List<T> listOfPerson;
+public class Database implements Dao<LabWork> {
+    private final List<LabWork> listOfLabWork;
+    private long maxId;
 
     public Database() {
-        listOfPerson = new ArrayList<>();
+        listOfLabWork = new ArrayList<>();
     }
 
-    public Database(List<T> listOfPerson) {
-        this.listOfPerson = new ArrayList<T>(listOfPerson);
+    public Database(List<LabWork> listOfLabWork) {
+        this.listOfLabWork = new ArrayList<>(listOfLabWork);
     }
 
     @Override
-    public List<T> getAll() {
-        return new ArrayList<T>(listOfPerson);
+    public List<LabWork> getAll() {
+        return new ArrayList<>(listOfLabWork);
     }
 
     @Override
     public void clear() {
-        listOfPerson.clear();
+        listOfLabWork.clear();
     }
 
     @Override
-    public void delete(T person) {
-        listOfPerson.remove(person);
+    public boolean delete(LabWork person) {
+        return listOfLabWork.remove(person);
     }
 
     @Override
-    public void add(T person) {
-        listOfPerson.add(person);
+    public void add(LabWork labwork) {
+        long id = 0;
+        for (LabWork labWork : listOfLabWork) {
+            if (labWork.getId() > id) {
+                id = labWork.getId();
+            }
+        }
+        labwork.setId(++id);
+        setMaxId(id);
+        labwork.setCreationDate(LocalDate.now());
+        listOfLabWork.add(labwork);
     }
 
-    @Override
-    public void write() {
-        WriterJson<Person> writerJson = new WriterJson<>();
-        writerJson.writeToJson((List<Person>) listOfPerson, "src/main/resources/FileWithPerson.json");
+    public long getMaxId() {
+        return maxId;
+    }
+
+    private void setMaxId(long maxId) {
+        this.maxId = maxId;
     }
 }

@@ -1,10 +1,14 @@
 package se.ifmo.entity;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Builder
+@Getter
+@ToString
 public class LabWork {
     private long id;
     private String name;
@@ -15,8 +19,7 @@ public class LabWork {
     private Difficulty difficulty;
     private Person author;
 
-    @Override
-    public String toString() {
+    public String aboutLabWork() {
         return "LabWork{" +
                 "id работы=" + id +
                 ", имя работы='" + name + '\'' +

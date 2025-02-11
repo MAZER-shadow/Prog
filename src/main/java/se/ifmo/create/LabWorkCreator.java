@@ -15,7 +15,12 @@ public class LabWorkCreator {
     private final static int MIN_VALUE_OF_X = -436;
     private final static long MIN_VALUE_OF_Y = -9223372036854775808L;
     private final static long MAX_VALUE_OF_Y = 9223372036854775807L;
-    private final static String MINIMAL_POINT = "0.1*10^-324";
+    private final static String MIN_VALUE_OF_MINIMAL_POINT = "0.1*10^-324";
+    private final static String MAX_VALUE_OF_MINIMAL_POINT = "1.7*10^324";
+    private final static String MIN_VALUE_OF_MAXIMUM_POINT = "0.1*10^-38";
+    private final static String MAX_VALUE_OF_MAXIMUM_POINT = "3.4*10^38";
+    private final static int MAX_VALUE_OF_HEIGHT = 2147483647;
+    private final static String ERROR_MESSAGE = "Некорректно ввели %s, попробуйте ещё раз";
 
     public LabWorkCreator(Reader reader, Writer writer) {
         this.writer = writer;
@@ -30,7 +35,7 @@ public class LabWorkCreator {
                 .y(createCoordinatesY())
                 .build();
 
-        Double minimalPoint = createMinimalPoint();
+        double minimalPoint = createMinimalPoint();
 
         Float maximumPoint = createMaximumPoint();
 
@@ -58,7 +63,7 @@ public class LabWorkCreator {
         if (validField.isValidName(name)) {
             return name;
         }
-        printErrorInput("имя работы");
+        writer.println(String.format(ERROR_MESSAGE, "имя работы"));
         return createNameWork();
     }
 
@@ -69,7 +74,7 @@ public class LabWorkCreator {
         if (validField.isValidCoordinateX(x)) {
             return Integer.parseInt(x);
         }
-        printErrorInput("координата X");
+        writer.println(String.format(ERROR_MESSAGE, "координата X"));
         return createCoordinatesX();
     }
 
@@ -80,28 +85,29 @@ public class LabWorkCreator {
         if (validField.isValidCoordinateY(y)) {
             return Long.parseLong(y);
         }
-        printErrorInput("координата Y");
+        writer.println(String.format(ERROR_MESSAGE, "координата Y"));
         return createCoordinatesY();
     }
 
     private double createMinimalPoint() {
         writer.print(String.format("Введите минимальную оценку вашей работы," +
-                " это должно быть число от %s до 1.7*10^324: ", MINIMAL_POINT));
+                " это должно быть число от %s до %s: ", MIN_VALUE_OF_MINIMAL_POINT, MAX_VALUE_OF_MINIMAL_POINT));
         String minimalPoint = reader.readLine();
         if (validField.isValidMinimalPoint(minimalPoint)) {
             return Double.parseDouble(minimalPoint);
         }
-        printErrorInput("минимальная оценка");
+        writer.println(String.format(ERROR_MESSAGE, "минимальная оценка"));
         return createMinimalPoint();
     }
 
     private Float createMaximumPoint() {
-        writer.print("Введите максимальную оценку вашей работы, это должно быть число от 0.1*10^-38 до 3.4*10^38: ");
+        writer.print(String.format("Введите максимальную оценку вашей работы, это должно быть " +
+                "число от %s до %s: ", MIN_VALUE_OF_MAXIMUM_POINT, MAX_VALUE_OF_MAXIMUM_POINT));
         String maximumPoint = reader.readLine();
         if (validField.isValidMaximumPoint(maximumPoint)) {
             return Float.parseFloat(maximumPoint);
         }
-        printErrorInput("максимальная оценка");
+        writer.println(String.format(ERROR_MESSAGE, "максимальная оценка"));
         return createMaximumPoint();
     }
 
@@ -114,7 +120,7 @@ public class LabWorkCreator {
         if (validField.isValidDifficulty(difficulty)) {
             return Difficulty.valueOf(difficulty);
         }
-        printErrorInput("сложность");
+        writer.println(String.format(ERROR_MESSAGE, "сложность"));
         return createDifficulty();
     }
 
@@ -124,19 +130,19 @@ public class LabWorkCreator {
         if (validField.isValidName(name)) {
             return name;
         }
-        printErrorInput("имя автора");
+        writer.println(String.format(ERROR_MESSAGE, "имя автора"));
         return createNameAuthor();
     }
 
     private Integer createHeight() {
         try {
-            writer.print("Введите рост автора работы, он должен быть больше нуля и быть целым " +
-                    "числом или вы можете не задавать его нажав Enter: ");
+            writer.print(String.format("Введите рост автора работы, он должен быть больше нуля и быть целым " +
+                    "числом до %d или вы можете не задавать его нажав Enter: ", MAX_VALUE_OF_HEIGHT));
             String height = reader.readLine();
             if (validField.firstValidHeight(height)) {
                 return Integer.parseInt(height);
             }
-            printErrorInput("рост автора работы");
+            writer.println(String.format(ERROR_MESSAGE, "рост автора работы"));
             return createHeight();
         } catch (Exception e) {
             return null;
@@ -149,11 +155,7 @@ public class LabWorkCreator {
         if (validField.isValidPassportID(passportID)) {
             return passportID;
         }
-        printErrorInput("ID паспорта");
+        writer.println(String.format(ERROR_MESSAGE, "ID паспорта"));
         return createPassportID();
-    }
-
-    private void printErrorInput(String data) {
-        writer.println(String.format("Некорректно ввели %s, попробуйте ещё раз", data));
     }
 }

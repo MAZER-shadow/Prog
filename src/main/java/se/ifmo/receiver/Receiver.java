@@ -26,4 +26,8 @@ public class Receiver {
     public long getSize() {
         return db.getAll().size();
     }
+
+    public long getMaxId() {
+        return db.getMaxId();
+    }
 }

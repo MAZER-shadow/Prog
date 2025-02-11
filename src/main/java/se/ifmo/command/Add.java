@@ -23,6 +23,6 @@ public class Add extends OwnCommand implements Command {
         }
         LabWorkCreator creator = new LabWorkCreator(reader, writer);
         receiver.add(creator.createLabWork());
-        writer.println("Успешное создание сущности LabWork");
+        writer.println(String.format("Успешное создание сущности LabWork, id = %d", receiver.getMaxId()));
     }
 }

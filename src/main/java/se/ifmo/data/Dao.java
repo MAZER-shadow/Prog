@@ -10,4 +10,6 @@ public interface Dao<T> {
     boolean delete(T person);
 
     void add(T person);
+
+    long getMaxId();
 }

@@ -11,6 +11,10 @@ public class CommandManager {
     private static final String SEPARATOR = " ";
     private final Map<String, Command> commandMap = new HashMap<>();
     private Writer writer;
+    private static final int POSITION_COMMAND_NAME_IN_INPUT = 0;
+    private static final int POSITION_ARGUMENT_OF_COMMAND_IN_INPUT = 1;
+    private static final int SUM_WORDS_OF_COMMAND_NAME_AND_ARGUMENTS = 2;
+    private static final String DEFAULT_ARGUMENT_OF_COMMAND = "";
 
     public CommandManager(Writer writer) {
         this.writer = writer;
@@ -23,14 +27,15 @@ public class CommandManager {
     public void execute(String input) {
         try {
             String[] parameters = input.split(SEPARATOR);
-            Command command = commandMap.get(parameters[0]);
-            if (Objects.isNull(command) || parameters.length > 2) {
+            String commandName = parameters[POSITION_COMMAND_NAME_IN_INPUT];
+            Command command = commandMap.get(commandName);
+            if (Objects.isNull(command) || parameters.length > SUM_WORDS_OF_COMMAND_NAME_AND_ARGUMENTS) {
                 throw new CommandNotFoundException("Не найдено такой команды");
             }
-            if (parameters.length == 2) {
-                command.execute(parameters[1]);
+            if (parameters.length == SUM_WORDS_OF_COMMAND_NAME_AND_ARGUMENTS) {
+                command.execute(parameters[POSITION_ARGUMENT_OF_COMMAND_IN_INPUT]);
             } else {
-                command.execute("");
+                command.execute(DEFAULT_ARGUMENT_OF_COMMAND);
             }
         } catch (CommandNotFoundException e) {
             writer.println(e.getMessage());

@@ -2,14 +2,13 @@ package se.ifmo.command;
 
 import se.ifmo.entity.LabWork;
 import se.ifmo.io.Writer;
+import se.ifmo.preset.CommandName;
 import se.ifmo.receiver.Receiver;
 
-public class Show extends OwnCommand implements Command {
-    private final Writer writer;
+public class ShowCommand extends AbstractCommand  {
 
-    public Show(Receiver receiver, Writer writer) {
-        super(receiver);
-        this.writer = writer;
+    public ShowCommand(Receiver receiver, Writer writer) {
+        super(receiver, CommandName.SHOW_NAME, CommandName.SHOW_DESCRIPTION, writer);
     }
 
     @Override

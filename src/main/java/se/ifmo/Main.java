@@ -1,10 +1,9 @@
 package se.ifmo;
 
 import se.ifmo.preset.Starter;
-import java.io.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Starter starter = new Starter();
         starter.run();
     }

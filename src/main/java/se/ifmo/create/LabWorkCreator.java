@@ -10,7 +10,7 @@ import se.ifmo.io.Writer;
 public class LabWorkCreator {
     private final Writer writer;
     private final Reader reader;
-    private final ValidField validField = new ValidField();
+    private final FieldValidator fieldValidator = new FieldValidator();
     private final static int MAX_VALUE_OF_X = 2147483647;
     private final static int MIN_VALUE_OF_X = -436;
     private final static long MIN_VALUE_OF_Y = -9223372036854775808L;
@@ -27,6 +27,14 @@ public class LabWorkCreator {
         this.reader = reader;
     }
 
+    public Person createPerson() {
+        return Person.builder()
+                .name(createNameAuthor())
+                .height(createHeight())
+                .passportID(createPassportID())
+                .build();
+    }
+
     public LabWork createLabWork() {
         String nameLabWork = createNameWork();
 
@@ -41,11 +49,7 @@ public class LabWorkCreator {
 
         Difficulty difficulty = createDifficulty();
 
-        Person person = Person.builder()
-                .name(createNameAuthor())
-                .height(createHeight())
-                .passportID(createPassportID())
-                .build();
+        Person person = createPerson();
 
         return LabWork.builder()
                 .name(nameLabWork)
@@ -60,7 +64,7 @@ public class LabWorkCreator {
     private String createNameWork() {
         writer.print("Введите имя работы, оно не должно быть пустым: ");
         String name = reader.readLine();
-        if (validField.isValidName(name)) {
+        if (fieldValidator.isValidName(name)) {
             return name;
         }
         writer.println(String.format(ERROR_MESSAGE, "имя работы"));
@@ -71,7 +75,7 @@ public class LabWorkCreator {
         writer.print(String.format("Введите координату X вашей работы," +
                 " это должно быть целое число от %d до %d: ", MIN_VALUE_OF_X, MAX_VALUE_OF_X));
         String x = reader.readLine();
-        if (validField.isValidCoordinateX(x)) {
+        if (fieldValidator.isValidCoordinateX(x)) {
             return Integer.parseInt(x);
         }
         writer.println(String.format(ERROR_MESSAGE, "координата X"));
@@ -82,7 +86,7 @@ public class LabWorkCreator {
         writer.print(String.format("Введите координату Y вашей работы, это должно быть целое число" +
                 " от %d до %d: ", MIN_VALUE_OF_Y, MAX_VALUE_OF_Y));
         String y = reader.readLine();
-        if (validField.isValidCoordinateY(y)) {
+        if (fieldValidator.isValidCoordinateY(y)) {
             return Long.parseLong(y);
         }
         writer.println(String.format(ERROR_MESSAGE, "координата Y"));
@@ -93,7 +97,7 @@ public class LabWorkCreator {
         writer.print(String.format("Введите минимальную оценку вашей работы," +
                 " это должно быть число от %s до %s: ", MIN_VALUE_OF_MINIMAL_POINT, MAX_VALUE_OF_MINIMAL_POINT));
         String minimalPoint = reader.readLine();
-        if (validField.isValidMinimalPoint(minimalPoint)) {
+        if (fieldValidator.isValidMinimalPoint(minimalPoint)) {
             return Double.parseDouble(minimalPoint);
         }
         writer.println(String.format(ERROR_MESSAGE, "минимальная оценка"));
@@ -104,7 +108,7 @@ public class LabWorkCreator {
         writer.print(String.format("Введите максимальную оценку вашей работы, это должно быть " +
                 "число от %s до %s: ", MIN_VALUE_OF_MAXIMUM_POINT, MAX_VALUE_OF_MAXIMUM_POINT));
         String maximumPoint = reader.readLine();
-        if (validField.isValidMaximumPoint(maximumPoint)) {
+        if (fieldValidator.isValidMaximumPoint(maximumPoint)) {
             return Float.parseFloat(maximumPoint);
         }
         writer.println(String.format(ERROR_MESSAGE, "максимальная оценка"));
@@ -117,7 +121,7 @@ public class LabWorkCreator {
             writer.print(o.toString() + " ");
         }
         String difficulty = reader.readLine();
-        if (validField.isValidDifficulty(difficulty)) {
+        if (fieldValidator.isValidDifficulty(difficulty)) {
             return Difficulty.valueOf(difficulty);
         }
         writer.println(String.format(ERROR_MESSAGE, "сложность"));
@@ -127,7 +131,7 @@ public class LabWorkCreator {
     private String createNameAuthor() {
         writer.print("Введите имя автора работы, оно не должно быть пустым: ");
         String name = reader.readLine();
-        if (validField.isValidName(name)) {
+        if (fieldValidator.isValidName(name)) {
             return name;
         }
         writer.println(String.format(ERROR_MESSAGE, "имя автора"));
@@ -139,7 +143,7 @@ public class LabWorkCreator {
             writer.print(String.format("Введите рост автора работы, он должен быть больше нуля и быть целым " +
                     "числом до %d или вы можете не задавать его нажав Enter: ", MAX_VALUE_OF_HEIGHT));
             String height = reader.readLine();
-            if (validField.firstValidHeight(height)) {
+            if (fieldValidator.isValidHeight(height)) {
                 return Integer.parseInt(height);
             }
             writer.println(String.format(ERROR_MESSAGE, "рост автора работы"));
@@ -152,7 +156,7 @@ public class LabWorkCreator {
     private String createPassportID() {
         writer.print("Введите номер паспорта автора работы, это должен быть набор символов длинной от 9 до 25: ");
         String passportID = reader.readLine();
-        if (validField.isValidPassportID(passportID)) {
+        if (fieldValidator.isValidPassportID(passportID)) {
             return passportID;
         }
         writer.println(String.format(ERROR_MESSAGE, "ID паспорта"));

@@ -1,14 +1,13 @@
 package se.ifmo.command;
 
 import se.ifmo.io.Writer;
+import se.ifmo.preset.CommandName;
 import se.ifmo.receiver.Receiver;
 
-public class Exit extends OwnCommand implements Command {
-    private final Writer writer;
+public class ExitCommand extends AbstractCommand  {
 
-    public Exit(Receiver receiver, Writer writer) {
-        super(receiver);
-        this.writer = writer;
+    public ExitCommand(Receiver receiver, Writer writer) {
+        super(receiver, CommandName.EXIT_NAME, CommandName.EXIT_DESCRIPTION, writer);
     }
 
     @Override

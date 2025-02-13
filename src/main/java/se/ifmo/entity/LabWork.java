@@ -9,7 +9,7 @@ import lombok.ToString;
 @Builder
 @Getter
 @ToString
-public class LabWork {
+public class LabWork implements Comparable<LabWork> {
     private long id;
     private String name;
     private Coordinates coordinates;
@@ -29,7 +29,12 @@ public class LabWork {
                 ", минимальная оценка=" + minimalPoint +
                 ", максимальная оценка=" + maximumPoint +
                 ", сложность=" + difficulty +
-                ", автор работы=" + author.getName() +
+                ", автор работы=" + author +
                 '}';
+    }
+
+    @Override
+    public int compareTo(LabWork o) {
+        return name.compareTo(o.name);
     }
 }

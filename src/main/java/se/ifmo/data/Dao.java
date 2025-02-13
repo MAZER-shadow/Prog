@@ -1,5 +1,7 @@
 package se.ifmo.data;
 
+import se.ifmo.entity.LabWork;
+
 import java.util.List;
 
 public interface Dao<T> {
@@ -7,9 +9,11 @@ public interface Dao<T> {
 
     void clear();
 
-    boolean delete(T person);
+    boolean delete(T labWork);
 
-    void add(T person);
+    void add(T labWork);
 
-    long getMaxId();
+    DatabaseMetaData getDatabaseMetaData();
+
+    void updateById(int id, LabWork labWork);
 }

@@ -1,25 +1,23 @@
 package se.ifmo.data;
 
 import se.ifmo.entity.LabWork;
+import se.ifmo.preset.DatabaseDump;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Database implements Dao<LabWork> {
     private final List<LabWork> listOfLabWork;
-    private long maxId;
+    private DatabaseMetaData databaseMetaData;
 
-    public Database() {
-        listOfLabWork = new ArrayList<>();
-    }
-
-    public Database(List<LabWork> listOfLabWork) {
-        this.listOfLabWork = new ArrayList<>(listOfLabWork);
+    public Database(DatabaseDump databaseDump) {
+        this.listOfLabWork = new ArrayList<>(databaseDump.getListOfLabWork());
+        this.databaseMetaData = databaseDump.getDatabaseMetaData();
     }
 
     @Override
     public List<LabWork> getAll() {
-        return new ArrayList<>(listOfLabWork);
+        return listOfLabWork;
     }
 
     @Override
@@ -41,16 +39,18 @@ public class Database implements Dao<LabWork> {
             }
         }
         labwork.setId(++id);
-        setMaxId(id);
         labwork.setCreationDate(LocalDate.now());
         listOfLabWork.add(labwork);
     }
 
-    public long getMaxId() {
-        return maxId;
+    @Override
+    public void updateById(int id, LabWork labWork) {
+        //сделать схему oldItem.set(newItem.get)
     }
 
-    private void setMaxId(long maxId) {
-        this.maxId = maxId;
+    @Override
+    public DatabaseMetaData getDatabaseMetaData() {
+        databaseMetaData.setSize(listOfLabWork.size());
+        return databaseMetaData;
     }
 }

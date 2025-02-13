@@ -2,6 +2,8 @@ package se.ifmo.receiver;
 
 import se.ifmo.data.Dao;
 import se.ifmo.entity.LabWork;
+import se.ifmo.preset.DatabaseDump;
+
 import java.util.List;
 
 public class Receiver {
@@ -28,6 +30,16 @@ public class Receiver {
     }
 
     public long getMaxId() {
-        return db.getMaxId();
+        long id = 0;
+        for (LabWork labWork : getAll()) {
+            if (labWork.getId() > id) {
+                id = labWork.getId();
+            }
+        }
+        return id;
+    }
+
+    public DatabaseDump getDatabaseDump() {
+        return new DatabaseDump(db.getDatabaseMetaData(), getAll());
     }
 }

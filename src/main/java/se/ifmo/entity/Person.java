@@ -2,18 +2,18 @@ package se.ifmo.entity;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
-public class Person {
+@ToString
+public class Person implements Comparable<Person> {
     private String name;
     private Integer height;
     private String passportID;
 
     @Override
-    public String toString() {
-        return "Person{" +
-                "name='" + name + '\'' +
-                '}';
+    public int compareTo(Person o) {
+        return name.compareTo(o.name);
     }
 }

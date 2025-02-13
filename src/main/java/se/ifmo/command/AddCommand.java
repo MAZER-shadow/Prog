@@ -3,22 +3,20 @@ package se.ifmo.command;
 import se.ifmo.create.LabWorkCreator;
 import se.ifmo.io.Reader;
 import se.ifmo.io.Writer;
+import se.ifmo.preset.CommandName;
 import se.ifmo.receiver.Receiver;
 
-public class Add extends OwnCommand implements Command {
+public class AddCommand extends WithoutParametersCommand  {
     private final Reader reader;
-    private final Writer writer;
 
-    public Add(Receiver receiver, Reader reader, Writer writer ) {
-        super(receiver);
+    public AddCommand(Receiver receiver, Reader reader, Writer writer) {
+        super(receiver, CommandName.ADD_NAME, CommandName.ADD_DESCRIPTION, writer);
         this.reader = reader;
-        this.writer = writer;
     }
 
     @Override
     public void execute(String parameter) {
-        if (!parameter.isEmpty()) {
-            writer.println("add, не нуждается в параметре" );
+        if (checkParameters(parameter, writer)) {
             return;
         }
         LabWorkCreator creator = new LabWorkCreator(reader, writer);

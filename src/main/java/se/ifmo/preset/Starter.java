@@ -11,8 +11,10 @@ import se.ifmo.io.impl.WriterImpl;
 import se.ifmo.receiver.Receiver;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class Starter {
+    public final static String NAME_PATH_VARIABLE = "PATH_FILE";
     private Dao<LabWork> database;
     private Receiver receiver;
     private Writer writerReal;
@@ -21,23 +23,16 @@ public class Starter {
     private String path;
 
     private void initializeCommands(Reader reader, Writer writer, String path) {
-        ShowCommand show = new ShowCommand(receiver, writer);
-        ClearCommand clear = new ClearCommand(receiver, writer);
-        AddCommand add = new AddCommand(receiver, reader, writer);
-        ExitCommand exit = new ExitCommand(receiver, writer);
-        SaveCommand save = new SaveCommand(receiver, writer, path);
-        SortCommand sort = new SortCommand(receiver, writer);
-        MinByMinimalPointCommand minByMinimalPoint = new MinByMinimalPointCommand(receiver, writer);
-        CountGreaterThanAuthorCommand countGreaterThanAuthorCommand =
-                new CountGreaterThanAuthorCommand(receiver, reader, writer);
-        commandManager.register(show.getName(), show);
-        commandManager.register(clear.getName(), clear);
-        commandManager.register(add.getName(), add);
-        commandManager.register(exit.getName(), exit);
-        commandManager.register(save.getName(), save);
-        commandManager.register(sort.getName(), sort);
-        commandManager.register(minByMinimalPoint.getName(), minByMinimalPoint);
-        commandManager.register(countGreaterThanAuthorCommand.getName(), countGreaterThanAuthorCommand);
+        List<AbstractCommand> listCommand = List.of(new ShowCommand(receiver, writer),
+                new ClearCommand(receiver, writer),
+                new AddCommand(receiver, reader, writer),
+                new ExitCommand(receiver, writer), new SaveCommand(receiver, writer, path),
+                new SortCommand(receiver, writer), new SortCommand(receiver, writer),
+                new MinByMinimalPointCommand(receiver, writer),
+                new CountGreaterThanAuthorCommand(receiver, reader, writer));
+        for (AbstractCommand command : listCommand) {
+            commandManager.register(command.getName(), command);
+        }
         HelpCommand help = new HelpCommand(receiver, writer, commandManager.getDescriptionMap());
         commandManager.register(help.getName(), help);
     }
@@ -53,27 +48,17 @@ public class Starter {
         writerReal = new WriterImpl(writer);
         consoleReader = new ReaderImpl(reader);
         commandManager = new CommandManager(writerReal);
-        /*ЗАМЕНИ ВХОДНЫЕ ДАННЫЕ*/
         DatabaseDump databaseDump = getDatabaseDump(writerReal);
         database = new Database(databaseDump);
         receiver = new Receiver(database);
     }
 
     private DatabaseDump getDatabaseDump(Writer writer) {
-        //String path = System.getenv("PATH_FILE");
-        //JsonReader<DatabaseDump> jsonReader = new JsonReaderImpl<>(DatabaseDump.class);
-        FirstDatabaseDumpGetter firstDatabaseDumpGetter = new FirstDatabaseDumpGetter(writer);
-        DatabaseDump databaseDump = firstDatabaseDumpGetter.getDatabaseDump();
-        path = firstDatabaseDumpGetter.getPath();
+        path = System.getenv(NAME_PATH_VARIABLE);
+        DatabaseDumpLoader databaseDumpLoader = new DatabaseDumpLoader(writer, path);
+        DatabaseDump databaseDump = databaseDumpLoader.exportDatabaseDump();
+        path = databaseDumpLoader.getPath();
         return databaseDump;
-        //return jsonReader.readJson(path);
-        //валидации чтения
-        //задана ли переменная PATH_FILE -> сказать об этом и дать путь по которому будет сохранение
-        //есть ли файл по пути этой переменной if no -> создать по пути этой переменной
-        //можем ли прочитать(права) если нет сказать об этом и выйти
-        //читаемость json -> то делаю метаданные по дефолту
-        //валидация полей !всех!
-        //починить сериализацию даты(LocalDate)
         //валидации записи
         //проверить путь, есть ли -> то сказать об этом выдать путь куда я сохранил.
         //нет прав на запись

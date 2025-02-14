@@ -116,16 +116,20 @@ public class LabWorkCreator {
     }
 
     private Difficulty createDifficulty() {
-        writer.print("Введите сложность вашей работы -> : ");
-        for (Difficulty o : Difficulty.values()) {
-            writer.print(o.toString() + " ");
+        try {
+            writer.print("Введите сложность вашей работы, или вы можете не задавать её нажав Enter: -> : ");
+            for (Difficulty o : Difficulty.values()) {
+                writer.print(o.toString() + " ");
+            }
+            String difficulty = reader.readLine();
+            if (fieldValidator.isValidDifficulty(difficulty)) {
+                return Difficulty.valueOf(difficulty);
+            }
+            writer.println(String.format(ERROR_MESSAGE, "сложность"));
+            return createDifficulty();
+        } catch (IllegalArgumentException e) {
+            return null;
         }
-        String difficulty = reader.readLine();
-        if (fieldValidator.isValidDifficulty(difficulty)) {
-            return Difficulty.valueOf(difficulty);
-        }
-        writer.println(String.format(ERROR_MESSAGE, "сложность"));
-        return createDifficulty();
     }
 
     private String createNameAuthor() {

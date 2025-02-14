@@ -1,25 +1,29 @@
 package se.ifmo.command;
 
 import se.ifmo.io.Writer;
-import se.ifmo.preset.CommandName;
+import se.ifmo.preset.CommandConfiguration;
 import se.ifmo.receiver.Receiver;
 
 import java.util.Map;
 
-public class HelpCommand extends AbstractCommand  {
-    private final Map<String, String> descriptionMap;
+public class HelpCommand extends WithoutParametersCommand  {
+    private final StringBuilder resultCommand;
 
     public HelpCommand(Receiver receiver, Writer writer, Map<String, String> descriptionMap) {
-        super(receiver, CommandName.HELP_NAME, CommandName.HELP_DESCRIPTION, writer);
-
-        this.descriptionMap = descriptionMap;
+        super(receiver, CommandConfiguration.HELP_NAME, CommandConfiguration.HELP_DESCRIPTION, writer);
+        resultCommand = new StringBuilder();
         descriptionMap.put(name, description);
+        for (Map.Entry<String, String> stringStringEntry : descriptionMap.entrySet()) {
+            resultCommand.append(stringStringEntry.getKey()).append(": ")
+                    .append(stringStringEntry.getValue()).append("\n");
+        }
     }
 
     @Override
     public void execute(String parameter) {
-        for (Map.Entry<String, String> stringStringEntry : descriptionMap.entrySet()) {
-            writer.println(stringStringEntry.getKey() + ": " + stringStringEntry.getValue());
+        if (checkParameters(parameter, writer)) {
+            return;
         }
+        writer.println(resultCommand.toString());
     }
 }

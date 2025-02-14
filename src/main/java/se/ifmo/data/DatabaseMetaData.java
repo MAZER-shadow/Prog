@@ -4,11 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Builder
 public class DatabaseMetaData {
     private String clazz;
-    private String localDateTime;
+    private LocalDate localDateTime;
     private int size;
 }

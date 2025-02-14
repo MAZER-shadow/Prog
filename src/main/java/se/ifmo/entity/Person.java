@@ -16,4 +16,12 @@ public class Person implements Comparable<Person> {
     public int compareTo(Person o) {
         return name.compareTo(o.name);
     }
+
+    public String aboutPerson() {
+        return "Person{" +
+                "name='" + name + '\'' +
+                ", height=" + height +
+                ", passportID='" + passportID + '\'' +
+                '}';
+    }
 }

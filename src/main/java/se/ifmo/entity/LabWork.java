@@ -29,7 +29,7 @@ public class LabWork implements Comparable<LabWork> {
                 ", минимальная оценка=" + minimalPoint +
                 ", максимальная оценка=" + maximumPoint +
                 ", сложность=" + difficulty +
-                ", автор работы=" + author +
+                ", автор работы=" + author.aboutPerson() +
                 '}';
     }
 

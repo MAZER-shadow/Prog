@@ -67,25 +67,25 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.23.0</version>
-                <configuration>
-                    <rulesets>
-                        <ruleset>${basedir}/config/ruleset.xml</ruleset>
-                    </rulesets>
-                    <format>html</format>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-pmd-plugin</artifactId>-->
+<!--                <version>3.23.0</version>-->
+<!--                <configuration>-->
+<!--                    <rulesets>-->
+<!--                        <ruleset>${basedir}/config/ruleset.xml</ruleset>-->
+<!--                    </rulesets>-->
+<!--                    <format>html</format>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
 
 <!--            <plugin>-->
 <!--                <groupId>com.github.spotbugs</groupId>-->

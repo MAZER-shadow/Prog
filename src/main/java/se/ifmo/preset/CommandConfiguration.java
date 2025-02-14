@@ -1,6 +1,6 @@
 package se.ifmo.preset;
 
-public class CommandName {
+public class CommandConfiguration {
     public static final String ADD_NAME = "add";
     public static final String ADD_DESCRIPTION = "добавить новый элемент в коллекцию";
     public static final String CLEAR_NAME = "clear";

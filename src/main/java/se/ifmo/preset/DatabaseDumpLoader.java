@@ -113,6 +113,12 @@ public class DatabaseDumpLoader {
                 runExitProcess();
             }
         }
+        for (LabWork labWork : listOfLabWork) {
+            if (labWork.getCreationDate().isBefore(databaseDump.getDatabaseMetaData().getLocalDateTime())) {
+                writer.println(String.format("%s: %s", VALID_ERROR, "время создания какого-либо члена коллекции раньше даты создания коллекции"));
+                runExitProcess();
+            }
+        }
         return true;
     }
 

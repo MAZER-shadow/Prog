@@ -3,7 +3,13 @@ package se.ifmo.preset;
 import se.ifmo.command.*;
 import se.ifmo.data.Dao;
 import se.ifmo.data.Database;
+import se.ifmo.dump.DatabaseDump;
+import se.ifmo.dump.DatabaseDumpLoader;
+import se.ifmo.dump.DatabaseDumpValidator;
 import se.ifmo.entity.LabWork;
+import se.ifmo.exception.DumpDataBaseValidationException;
+import se.ifmo.exception.FileReadException;
+import se.ifmo.exception.NonNullException;
 import se.ifmo.io.Reader;
 import se.ifmo.io.Writer;
 import se.ifmo.io.impl.ReaderImpl;
@@ -13,23 +19,67 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * Класс Starter предназначен для инициализации и запуска приложения.
+ * Он управляет командами, чтением и записью данных, а также взаимодействует с базой данных.
+ */
 public class Starter {
+    /**
+     * Имя переменной окружения, содержащей путь к файлу.
+     */
     public final static String NAME_PATH_VARIABLE = "PATH_FILE";
+
+    /**
+     * Объект для взаимодействия с базой данных.
+     */
     private Dao<LabWork> database;
+
+    /**
+     * Объект Receiver, который управляет выполнением команд.
+     */
     private Receiver receiver;
+
+    /**
+     * Объект Writer для вывода сообщений.
+     */
     private Writer writerReal;
+
+    /**
+     * Объект Reader для чтения ввода пользователя.
+     */
     private Reader consoleReader;
+
+    /**
+     * Объект CommandManager для управления командами.
+     */
     private CommandManager commandManager;
+
+    /**
+     * Путь к файлу, используемый для загрузки и сохранения данных.
+     */
     private String path;
 
+    /**
+     * Инициализирует команды, которые будут доступны в приложении.
+     *
+     * @param reader Читатель для ввода данных.
+     * @param writer Писатель для вывода данных.
+     * @param path   Путь к файлу, используемый для команд, связанных с файлами.
+     */
     private void initializeCommands(Reader reader, Writer writer, String path) {
         List<AbstractCommand> listCommand = List.of(new ShowCommand(receiver, writer),
                 new ClearCommand(receiver, writer),
-                new AddCommand(receiver, reader, writer),
+                new AddCommand(receiver, reader, writer, (byte) 1),
                 new ExitCommand(receiver, writer), new SaveCommand(receiver, writer, path),
                 new SortCommand(receiver, writer), new SortCommand(receiver, writer),
                 new MinByMinimalPointCommand(receiver, writer),
-                new CountGreaterThanAuthorCommand(receiver, reader, writer));
+                new CountGreaterThanAuthorCommand(receiver, reader, writer, 1),
+                new InfoCommand(receiver, writer), new UpdateIdCommand(receiver, reader, writer, 1),
+                new RemoveByIdCommand(receiver, writer),
+                new InsertAtIndexCommand(receiver, reader, writer, 1),
+                new RemoveFirstCommand(receiver, writer),
+                new GroupCountingByMinimalPointCommand(receiver, writer),
+                new ExecuteScriptCommand(receiver, writer, path));
         for (AbstractCommand command : listCommand) {
             commandManager.register(command.getName(), command);
         }
@@ -37,45 +87,86 @@ public class Starter {
         commandManager.register(help.getName(), help);
     }
 
+    /**
+     * Обрабатывает запросы пользователя, выполняя команды, введенные через консоль.
+     *
+     * @param reader Читатель для ввода данных.
+     * @param writer Писатель для вывода данных.
+     */
     private void makeRequest(Reader reader, Writer writer) {
-        while (true) {
-            writer.print("Введите вашу команду: ");
-            commandManager.execute(reader.readLine());
+        try {
+            while (true) {
+                writer.print("Введите вашу команду: ");
+                commandManager.execute(reader.readLine());
+            }
+        } catch (NonNullException e) {
+            writer.println(e.getMessage());
+            makeRequest(reader, writer);
         }
     }
 
+    /**
+     * Инициализирует вспомогательные объекты, такие как писатель, читатель, менеджер команд и базу данных.
+     *
+     * @param reader Читатель для ввода данных.
+     * @param writer Писатель для вывода данных.
+     */
     private void launchAssistants(BufferedReader reader, BufferedWriter writer) {
-        writerReal = new WriterImpl(writer);
-        consoleReader = new ReaderImpl(reader);
-        commandManager = new CommandManager(writerReal);
-        DatabaseDump databaseDump = getDatabaseDump(writerReal);
-        database = new Database(databaseDump);
-        receiver = new Receiver(database);
+        try {
+            writerReal = new WriterImpl(writer);
+            consoleReader = new ReaderImpl(reader);
+            commandManager = new CommandManager(writerReal);
+            DatabaseDump databaseDump = getDatabaseDump(writerReal);
+            database = new Database(databaseDump);
+            receiver = new Receiver(database);
+        } catch (DumpDataBaseValidationException e) {
+            writerReal.println(e.getMessage());
+            System.exit(1);
+        }
     }
 
+    /**
+     * Загружает дамп базы данных из файла или создает новый, если файл недоступен.
+     *
+     * @param writer Писатель для вывода данных.
+     * @return Объект DatabaseDump, содержащий данные базы данных.
+     */
     private DatabaseDump getDatabaseDump(Writer writer) {
+        DatabaseDumpLoader databaseDumpLoader = new DatabaseDumpLoader();
         path = System.getenv(NAME_PATH_VARIABLE);
-        DatabaseDumpLoader databaseDumpLoader = new DatabaseDumpLoader(writer, path);
-        DatabaseDump databaseDump = databaseDumpLoader.exportDatabaseDump();
-        path = databaseDumpLoader.getPath();
-        return databaseDump;
-        //валидации записи
-        //проверить путь, есть ли -> то сказать об этом выдать путь куда я сохранил.
-        //нет прав на запись
-//        DatabaseMetaData databaseMetaData = new DatabaseMetaData();
-//        databaseMetaData.setClazz("LabWork");
-//        databaseMetaData.setLocalDateTime("24.05.2006");
-//        DatabaseDump databaseDump = new DatabaseDump(databaseMetaData, new ArrayList<>());
-//        return databaseDump;
+        AbsolutePathResolver absolutePathResolver = new AbsolutePathResolver();
+        path = absolutePathResolver.resolvePath(path);
+        try {
+            DatabaseDump databaseDump = databaseDumpLoader.loadDatabaseDump(path);
+            if (databaseDump != null) {
+                DatabaseDumpValidator databaseDumpValidator = new DatabaseDumpValidator();
+                databaseDumpValidator.isValidateDatabase(databaseDump);
+                writer.println(String.format("успешное считывание c -> %s", path));
+                return databaseDump;
+            } else {
+                writerReal.println(String.format("создана новая коллекция," +
+                        " путь для сохранения: -> %s", path));
+                return databaseDumpLoader.getDefaultDatabaseDump();
+            }
+        } catch (FileReadException e) {
+            writerReal.println(e.getMessage());
+            writerReal.println("не удалось считать данные с файла," +
+                    " вы будете работать с пустой коллекцией!");
+            return databaseDumpLoader.getDefaultDatabaseDump();
+        }
     }
 
+    /**
+     * Запускает приложение, инициализируя необходимые компоненты и начиная обработку команд.
+     */
     public void run() {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
-                /*BufferedWriter writerVoid = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream("/dev/null")))*/) {
+                 BufferedWriter writer = new BufferedWriter(
+                         new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
             launchAssistants(reader, writer);
             initializeCommands(consoleReader, writerReal, path);
+            writerReal.print("\n");
+            commandManager.execute("help");
             makeRequest(consoleReader, writerReal);
         } catch (IOException e) {
             writerReal.println("ошибка потока ввода");

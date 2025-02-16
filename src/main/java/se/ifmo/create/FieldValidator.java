@@ -7,6 +7,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Set;
 
+/**
+ * Класс FieldValidator отвечает за проверку корректности вводимых данных.
+ */
 public class FieldValidator {
     private static final int MIN_VALUE_OF_X = -436;
     private static final int BOUNDARY_OF_MINIMAL_POINT = 0;
@@ -17,14 +20,21 @@ public class FieldValidator {
     private static final int BOUNDARY_OF_ID = 0;
     private final static String DATE_PATTERN = "yyyy-MM-dd";
 
-    public boolean isValidDate(String dateForCheck) {
+    /**
+     * Проверяет корректность введённой даты.
+     *
+     * @param dateForCheck дата в строковом формате.
+     * @param dateCollection минимальная допустимая дата.
+     * @return true, если дата корректна, иначе false.
+     */
+    public boolean isValidDate(String dateForCheck, LocalDate dateCollection) {
         try {
             if (dateForCheck == null || dateForCheck.isEmpty()) {
                 return false;
             }
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
             LocalDate date = LocalDate.parse(dateForCheck, formatter);
-            if (date.isAfter(LocalDate.now())) {
+            if (date.isAfter(LocalDate.now()) || date.isBefore(dateCollection)) {
                 return false;
             }
             return true;
@@ -33,6 +43,13 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * Проверяет корректность введённого ID.
+     *
+     * @param id строковое представление ID.
+     * @param setId множество существующих ID.
+     * @return true, если ID корректен, иначе false.
+     */
     public boolean isValidId(String id, Set<Long> setId) {
         try {
             if (id == null || id.isEmpty()) {
@@ -49,10 +66,22 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * Проверяет корректность имени.
+     *
+     * @param name имя для проверки.
+     * @return true, если имя корректно, иначе false.
+     */
     public boolean isValidName(String name) {
         return name != null && !name.isEmpty();
     }
 
+    /**
+     * Проверяет корректность координаты X.
+     *
+     * @param coordinateX строковое представление координаты X.
+     * @return true, если координата X корректна, иначе false.
+     */
     public boolean isValidCoordinateX(String coordinateX) {
         try {
             if (coordinateX == null || coordinateX.isEmpty()) {
@@ -65,6 +94,12 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * Проверяет корректность координаты Y.
+     *
+     * @param coordinateY строковое представление координаты Y.
+     * @return true, если координата Y корректна, иначе false.
+     */
     public boolean isValidCoordinateY(String coordinateY) {
         try {
             if (coordinateY == null || coordinateY.isEmpty()) {
@@ -77,6 +112,12 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * Проверяет корректность минимального балла.
+     *
+     * @param minimalPoint строковое представление минимального балла.
+     * @return true, если значение больше установленного порога, иначе false.
+     */
     public boolean isValidMinimalPoint(String minimalPoint) {
         try {
             if (minimalPoint == null || minimalPoint.isEmpty()) {
@@ -89,6 +130,12 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * Проверяет корректность максимального балла.
+     *
+     * @param maximumPoint строковое представление максимального балла.
+     * @return true, если значение больше установленного порога, иначе false.
+     */
     public boolean isValidMaximumPoint(String maximumPoint) {
         try {
             if (maximumPoint == null || maximumPoint.isEmpty()) {
@@ -101,6 +148,12 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * Проверяет корректность сложности.
+     *
+     * @param difficulty строковое представление сложности.
+     * @return true, если значение соответствует существующему enum, иначе false.
+     */
     public boolean isValidDifficulty(String difficulty) {
         try {
             Difficulty.valueOf(difficulty);
@@ -110,6 +163,12 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * Проверяет корректность роста.
+     *
+     * @param height строковое представление роста.
+     * @return true, если значение больше установленного порога, иначе false.
+     */
     public boolean isValidHeight(String height) {
         try {
             int integerHeight = Integer.parseInt(height);
@@ -119,6 +178,12 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * Проверяет корректность паспортного ID.
+     *
+     * @param passportID строковое представление паспортного ID.
+     * @return true, если длина ID находится в допустимом диапазоне, иначе false.
+     */
     public boolean isValidPassportID(String passportID) {
         return passportID.length() <= MAXIMUM_LENGTH_OF_PASSPORT_ID
                 && passportID.length() >= MINIMUM_LENGTH_OF_PASSPORT_ID;

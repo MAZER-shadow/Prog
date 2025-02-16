@@ -8,24 +8,44 @@ import se.ifmo.io.JsonReader;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Класс JsonReaderImpl реализует интерфейс JsonReader
+ * для чтения объектов из файла в формате JSON.
+ * Использует библиотеку Gson для десериализации JSON-данных в объекты указанного типа.
+ *
+ * @param <T> Тип объекта, который будет прочитан из JSON.
+ */
 public class JsonReaderImpl<T> implements JsonReader<T> {
     private final Class<T> clazz;
 
+    /**
+     * Конструктор класса JsonReaderImpl. Инициализирует объект с указанным классом типа.
+     *
+     * @param clazz Класс типа, который будет использоваться для десериализации JSON.
+     */
     public JsonReaderImpl(Class<T> clazz) {
         this.clazz = clazz;
     }
 
+    /**
+     * Читает объект из файла в формате JSON по указанному пути.
+     * Использует библиотеку Gson для десериализации JSON-данных.
+     *
+     * @param path Путь к файлу, из которого будет прочитан объект.
+     * @return Объект, прочитанный из файла в формате JSON.
+     * @throws IllegalStateException Если возникает ошибка при чтении файла или десериализации JSON.
+     * @throws IORuntimeException Если возникает ошибка ввода-вывода при чтении файла.
+     */
     @Override
     public T readJson(String path) throws IllegalStateException {
-        try (FileInputStream inputStream = new FileInputStream(path);
-                InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-                BufferedReader reader = new BufferedReader(streamReader)) {
+        try (FileReader fileReader = new FileReader(path, StandardCharsets.UTF_8);
+                BufferedReader reader = new BufferedReader(fileReader)) {
             Gson gson = Converters.registerLocalDate(new GsonBuilder())
                     .setPrettyPrinting()
                     .create();
             return gson.fromJson(reader, clazz);
         } catch (IOException e) {
-            throw new IORuntimeException(e);
+            throw new IORuntimeException();
         }
     }
 }

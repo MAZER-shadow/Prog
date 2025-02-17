@@ -1,4 +1,4 @@
-package se.ifmo.data;
+package se.ifmo.database.data;
 
 import lombok.Builder;
 import lombok.Getter;

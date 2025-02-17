@@ -1,4 +1,4 @@
-package se.ifmo.preset;
+package se.ifmo.configuration;
 
 /**
  * Класс CommandConfiguration содержит конфигурационные данные для команд приложения.

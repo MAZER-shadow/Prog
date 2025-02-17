@@ -1,10 +1,10 @@
 package se.ifmo.command;
 
-import se.ifmo.create.LabWorkCreator;
+import se.ifmo.creator.LabWorkCreator;
 import se.ifmo.exception.EntityNotFoundException;
 import se.ifmo.io.Reader;
 import se.ifmo.io.Writer;
-import se.ifmo.preset.CommandConfiguration;
+import se.ifmo.configuration.CommandConfiguration;
 import se.ifmo.receiver.Receiver;
 
 /**
@@ -23,7 +23,7 @@ public class UpdateIdCommand extends WithParametersCommand  {
      * @param writer объект для вывода информации пользователю.
      * @param flag флаг, определяющий режим работы.
      */
-    public UpdateIdCommand(Receiver receiver, Reader reader, Writer writer, int flag) {
+    public UpdateIdCommand(Receiver receiver, Reader reader, Writer writer, boolean flag) {
         super(receiver, CommandConfiguration.UPDATE_ID_NAME, CommandConfiguration.UPDATE_ID_DESCRIPTION, writer);
         this.reader = reader;
         creator = new LabWorkCreator(reader, writer, flag);

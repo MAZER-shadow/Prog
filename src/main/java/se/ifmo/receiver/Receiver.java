@@ -1,8 +1,8 @@
 package se.ifmo.receiver;
 
-import se.ifmo.data.Dao;
+import se.ifmo.database.data.Dao;
 import se.ifmo.entity.LabWork;
-import se.ifmo.dump.DatabaseDump;
+import se.ifmo.database.dump.DatabaseDump;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class Receiver {
     /**
      * Конструктор класса Receiver. Инициализирует объект с указанной базой данных.
      *
-     * @param db Объект Dao<LabWork>, представляющий базу данных для работы с объектами LabWork.
+     * @param db Объект Dao, представляющий базу данных для работы с объектами LabWork.
      */
     public Receiver(Dao<LabWork> db) {
         this.db = db;

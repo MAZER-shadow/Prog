@@ -2,7 +2,7 @@ package se.ifmo.command;
 
 import se.ifmo.exception.EntityNotFoundException;
 import se.ifmo.io.Writer;
-import se.ifmo.preset.CommandConfiguration;
+import se.ifmo.configuration.CommandConfiguration;
 import se.ifmo.receiver.Receiver;
 
 /**

@@ -1,10 +1,10 @@
 package se.ifmo.command;
 
-import se.ifmo.create.LabWorkCreator;
+import se.ifmo.creator.LabWorkCreator;
 import se.ifmo.entity.LabWork;
 import se.ifmo.io.Reader;
 import se.ifmo.io.Writer;
-import se.ifmo.preset.CommandConfiguration;
+import se.ifmo.configuration.CommandConfiguration;
 import se.ifmo.receiver.Receiver;
 
 import java.time.LocalDate;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
  */
 public class InsertAtIndexCommand extends WithParametersCommand  {
     private final LabWorkCreator creator;
-    private final int flag;
+    private final boolean flag;
 
     /**
      * Конструктор команды вставки новой сущности по индексу.
@@ -25,7 +25,7 @@ public class InsertAtIndexCommand extends WithParametersCommand  {
      * @param writer Писатель для вывода сообщений.
      * @param flag Флаг для определения дополнительной логики создания сущности.
      */
-    public InsertAtIndexCommand(Receiver receiver, Reader reader, Writer writer, int flag) {
+    public InsertAtIndexCommand(Receiver receiver, Reader reader, Writer writer, boolean flag) {
         super(receiver, CommandConfiguration.INSERT_AT_INDEX_NAME,
                 CommandConfiguration.INSERT_AT_INDEX_DESCRIPTION, writer);
         creator = new LabWorkCreator(reader, writer, flag);

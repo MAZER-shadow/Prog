@@ -3,12 +3,12 @@ package se.ifmo.entity;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
-@Builder
 /**
  • Класс Coordinates представляет координаты точки в двумерном пространстве.
  • Координаты представлены целым числом X и длинным целым числом Y.
  */
+@Getter
+@Builder
 public class Coordinates {
     /**
      * Координата по оси X.

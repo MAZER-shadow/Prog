@@ -1,8 +1,8 @@
-package se.ifmo.dump;
+package se.ifmo.database.dump;
 
 import lombok.Getter;
 import lombok.Setter;
-import se.ifmo.data.DatabaseMetaData;
+import se.ifmo.database.data.DatabaseMetaData;
 import se.ifmo.entity.LabWork;
 
 import java.util.List;

@@ -1,7 +1,7 @@
-package se.ifmo.data;
+package se.ifmo.database.data;
 
 import se.ifmo.entity.LabWork;
-import se.ifmo.dump.DatabaseDump;
+import se.ifmo.database.dump.DatabaseDump;
 import se.ifmo.exception.EntityNotFoundException;
 
 import java.time.LocalDate;

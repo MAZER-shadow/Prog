@@ -1,11 +1,11 @@
 package se.ifmo.command;
 
-import se.ifmo.create.LabWorkCreator;
+import se.ifmo.creator.LabWorkCreator;
 import se.ifmo.entity.LabWork;
 import se.ifmo.entity.Person;
 import se.ifmo.io.Reader;
 import se.ifmo.io.Writer;
-import se.ifmo.preset.CommandConfiguration;
+import se.ifmo.configuration.CommandConfiguration;
 import se.ifmo.receiver.Receiver;
 
 /**
@@ -14,7 +14,7 @@ import se.ifmo.receiver.Receiver;
  */
 public class CountGreaterThanAuthorCommand extends WithoutParametersCommand  {
     private final Reader reader;
-    private final int flag;
+    private final boolean flag;
 
     /**
      * Конструктор команды подсчёта элементов с автором, лексикографически большим, чем переданный.
@@ -24,7 +24,7 @@ public class CountGreaterThanAuthorCommand extends WithoutParametersCommand  {
      * @param writer Писатель для вывода сообщений.
      * @param flag Флаг, используемый для создания данных.
      */
-    public CountGreaterThanAuthorCommand(Receiver receiver, Reader reader, Writer writer, int flag) {
+    public CountGreaterThanAuthorCommand(Receiver receiver, Reader reader, Writer writer, boolean flag) {
         super(receiver, CommandConfiguration.COUNT_GREATER_THAN_AUTHOR_NAME,
                 CommandConfiguration.COUNT_GREATER_THAN_AUTHOR_DESCRIPTION, writer);
         this.reader = reader;

@@ -5,12 +5,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import se.ifmo.io.Writer;
 import se.ifmo.receiver.Receiver;
-@RequiredArgsConstructor
+
 /**
  * Абстрактный класс, представляющий команду для взаимодействия с {@link Receiver}.
  * Каждая команда должна реализовывать метод {@link #execute(String)} для выполнения своей логики.
  * Хранит информацию о названии команды, её описании и объекте для вывода сообщений.
  */
+@RequiredArgsConstructor
 public abstract class AbstractCommand {
 
     /**

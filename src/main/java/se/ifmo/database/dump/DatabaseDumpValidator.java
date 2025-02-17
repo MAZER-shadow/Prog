@@ -1,7 +1,7 @@
-package se.ifmo.dump;
+package se.ifmo.database.dump;
 
-import se.ifmo.create.FieldValidator;
-import se.ifmo.data.DatabaseMetaData;
+import se.ifmo.creator.LabWorkFieldValidator;
+import se.ifmo.database.data.DatabaseMetaData;
 import se.ifmo.entity.LabWork;
 import se.ifmo.exception.DumpDataBaseValidationException;
 import java.time.LocalDate;
@@ -43,7 +43,7 @@ public class DatabaseDumpValidator {
             throw new DumpDataBaseValidationException(String.format("%s %s", VALID_ERROR, "localDateTime"));
         } else if (!metaData.getClazz().equals(NAME_OF_COLLECTION)) {
             throw new DumpDataBaseValidationException(String.format("%s %s", VALID_ERROR, "clazz"));
-        } else if (!new FieldValidator().isValidDate(String.valueOf(metaData.getLocalDateTime()),
+        } else if (!new LabWorkFieldValidator().isValidDate(String.valueOf(metaData.getLocalDateTime()),
                 metaData.getLocalDateTime())) {
             throw new DumpDataBaseValidationException(String.format("%s %s", VALID_ERROR, "localDateTime"));
         }
@@ -80,7 +80,7 @@ public class DatabaseDumpValidator {
      * @throws DumpDataBaseValidationException Если объект LabWork не проходит валидацию.
      */
     private void validateLabWork(LabWork labWork, Set<Long> setId, LocalDate creationCollectionDate) {
-        FieldValidator validator = new FieldValidator();
+        LabWorkFieldValidator validator = new LabWorkFieldValidator();
         if (!validator.isValidName(labWork.getName())) {
             throw new DumpDataBaseValidationException(String.format(
                     "%s %s %d", VALID_ERROR, "name y id =", labWork.getId()));

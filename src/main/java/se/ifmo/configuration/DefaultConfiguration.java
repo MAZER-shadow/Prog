@@ -1,4 +1,4 @@
-package se.ifmo.preset;
+package se.ifmo.configuration;
 
 import java.nio.file.Paths;
 

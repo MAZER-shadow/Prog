@@ -1,11 +1,12 @@
-package se.ifmo.preset;
+package se.ifmo;
 
+import se.ifmo.util.AbsolutePathResolver;
 import se.ifmo.command.*;
-import se.ifmo.data.Dao;
-import se.ifmo.data.Database;
-import se.ifmo.dump.DatabaseDump;
-import se.ifmo.dump.DatabaseDumpLoader;
-import se.ifmo.dump.DatabaseDumpValidator;
+import se.ifmo.database.data.Dao;
+import se.ifmo.database.data.Database;
+import se.ifmo.database.dump.DatabaseDump;
+import se.ifmo.database.dump.DatabaseDumpLoader;
+import se.ifmo.database.dump.DatabaseDumpValidator;
 import se.ifmo.entity.LabWork;
 import se.ifmo.exception.DumpDataBaseValidationException;
 import se.ifmo.exception.FileReadException;
@@ -15,6 +16,7 @@ import se.ifmo.io.Writer;
 import se.ifmo.io.impl.ReaderImpl;
 import se.ifmo.io.impl.WriterImpl;
 import se.ifmo.receiver.Receiver;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -32,22 +34,22 @@ public class Starter {
     /**
      * Объект для взаимодействия с базой данных.
      */
-    private Dao<LabWork> database;
+    private  Dao<LabWork> database;
 
     /**
      * Объект Receiver, который управляет выполнением команд.
      */
-    private Receiver receiver;
+    private static Receiver receiver;
 
     /**
      * Объект Writer для вывода сообщений.
      */
-    private Writer writerReal;
+    private static Writer writerReal;
 
     /**
      * Объект Reader для чтения ввода пользователя.
      */
-    private Reader consoleReader;
+    private static Reader consoleReader;
 
     /**
      * Объект CommandManager для управления командами.
@@ -57,8 +59,18 @@ public class Starter {
     /**
      * Путь к файлу, используемый для загрузки и сохранения данных.
      */
-    private String path;
+    private static String path;
+    private boolean flag;
+    private String pathForExecuteScript;
 
+    public Starter() {
+        flag = true;
+    }
+
+    public Starter(String pathForExecuteScript) {
+        this.flag = false;
+        this.pathForExecuteScript = pathForExecuteScript;
+    }
     /**
      * Инициализирует команды, которые будут доступны в приложении.
      *
@@ -66,20 +78,20 @@ public class Starter {
      * @param writer Писатель для вывода данных.
      * @param path   Путь к файлу, используемый для команд, связанных с файлами.
      */
-    private void initializeCommands(Reader reader, Writer writer, String path) {
+    private void initializeCommands(Reader reader, Writer writer, String path, boolean flag) {
         List<AbstractCommand> listCommand = List.of(new ShowCommand(receiver, writer),
                 new ClearCommand(receiver, writer),
-                new AddCommand(receiver, reader, writer, (byte) 1),
+                new AddCommand(receiver, reader, writer, flag),
                 new ExitCommand(receiver, writer), new SaveCommand(receiver, writer, path),
                 new SortCommand(receiver, writer), new SortCommand(receiver, writer),
                 new MinByMinimalPointCommand(receiver, writer),
-                new CountGreaterThanAuthorCommand(receiver, reader, writer, 1),
-                new InfoCommand(receiver, writer), new UpdateIdCommand(receiver, reader, writer, 1),
+                new CountGreaterThanAuthorCommand(receiver, reader, writer, flag),
+                new InfoCommand(receiver, writer), new UpdateIdCommand(receiver, reader, writer, flag),
                 new RemoveByIdCommand(receiver, writer),
-                new InsertAtIndexCommand(receiver, reader, writer, 1),
+                new InsertAtIndexCommand(receiver, reader, writer, flag),
                 new RemoveFirstCommand(receiver, writer),
                 new GroupCountingByMinimalPointCommand(receiver, writer),
-                new ExecuteScriptCommand(receiver, writer, path));
+                new ExecuteScriptCommand(receiver, writer));
         for (AbstractCommand command : listCommand) {
             commandManager.register(command.getName(), command);
         }
@@ -102,6 +114,14 @@ public class Starter {
         } catch (NonNullException e) {
             writer.println(e.getMessage());
             makeRequest(reader, writer);
+        }
+    }
+
+    private void makeRequestForRequestFromFile(Reader reader) {
+        String line = "";
+        while (line != null) {
+            line = reader.readLine();
+            commandManager.execute(line);
         }
     }
 
@@ -160,16 +180,27 @@ public class Starter {
      * Запускает приложение, инициализируя необходимые компоненты и начиная обработку команд.
      */
     public void run() {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+        if (flag) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
                  BufferedWriter writer = new BufferedWriter(
                          new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
-            launchAssistants(reader, writer);
-            initializeCommands(consoleReader, writerReal, path);
-            writerReal.print("\n");
-            commandManager.execute("help");
-            makeRequest(consoleReader, writerReal);
-        } catch (IOException e) {
-            writerReal.println("ошибка потока ввода");
+                launchAssistants(reader, writer);
+                writerReal.println("введите help для получения информации о командах");
+                initializeCommands(consoleReader, writerReal, path, true);
+                makeRequest(consoleReader, writerReal);
+            } catch (IOException e) {
+                writerReal.println("ошибка потока ввода");
+            }
+        } else {
+            try (FileReader fileReader = new FileReader(pathForExecuteScript);
+                 BufferedReader reader = new BufferedReader(fileReader)) {
+                Reader readerCommandFromFile = new ReaderImpl(reader);
+                commandManager = new CommandManager(writerReal);
+                initializeCommands(readerCommandFromFile, writerReal, path, false);
+                makeRequestForRequestFromFile(readerCommandFromFile);
+            } catch (IOException e) {
+                writerReal.println("ошибка потока ввода");
+            }
         }
     }
 }

@@ -1,4 +1,4 @@
-package se.ifmo.create;
+package se.ifmo.creator;
 
 import se.ifmo.entity.Difficulty;
 
@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Класс FieldValidator отвечает за проверку корректности вводимых данных.
  */
-public class FieldValidator {
+public class LabWorkFieldValidator {
     private static final int MIN_VALUE_OF_X = -436;
     private static final int BOUNDARY_OF_MINIMAL_POINT = 0;
     private static final int BOUNDARY_OF_MAXIMUM_POINT = 0;

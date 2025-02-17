@@ -2,7 +2,7 @@ package se.ifmo.command;
 
 import se.ifmo.entity.LabWork;
 import se.ifmo.io.Writer;
-import se.ifmo.preset.CommandConfiguration;
+import se.ifmo.configuration.CommandConfiguration;
 import se.ifmo.receiver.Receiver;
 
 import java.util.Collections;

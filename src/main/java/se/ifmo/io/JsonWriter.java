@@ -1,7 +1,17 @@
 package se.ifmo.io;
 
-import java.util.List;
-
+/**
+ * Интерфейс JsonWriter определяет метод для записи объекта в формате JSON в файл.
+ * Он предоставляет базовый метод для сериализации объекта и сохранения его в указанный файл.
+ *
+ * @param <T> Тип объекта, который будет записан в формате JSON.
+ */
 public interface JsonWriter<T> {
-    void writeToJson(List<T> list, String path);
+    /**
+     * Записывает объект в формате JSON в файл по указанному пути.
+     *
+     * @param object Объект, который необходимо записать в формате JSON.
+     * @param path   Путь к файлу, в который будет записан объект.
+     */
+    void writeToJson(T object, String path);
 }

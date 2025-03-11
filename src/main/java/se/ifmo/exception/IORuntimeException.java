@@ -1,10 +1,8 @@
 package se.ifmo.exception;
 
-import java.io.IOException;
-
+/**
+ * Исключение, которое выбрасывается при возникновении ошибок ввода-вывода (I/O).
+ * Наследуется от {@link RuntimeException}, что делает его необязательным для обработки.
+ */
 public class IORuntimeException extends RuntimeException {
-
-    public IORuntimeException(IOException e) {
-        super(e);
-    }
 }

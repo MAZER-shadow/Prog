@@ -1,19 +1,15 @@
 package se.ifmo.command;
 
 import se.ifmo.Starter;
+import se.ifmo.configuration.CommandConfiguration;
 import se.ifmo.exception.NonNullException;
 import se.ifmo.exception.NonNullScriptException;
-import se.ifmo.io.Reader;
 import se.ifmo.io.Writer;
-import se.ifmo.io.impl.ReaderImpl;
-import se.ifmo.util.AbsolutePathResolver;
-import se.ifmo.configuration.CommandConfiguration;
 import se.ifmo.receiver.Receiver;
+import se.ifmo.util.AbsolutePathResolver;
 import se.ifmo.util.PathValidator;
 
-import java.io.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,7 +17,7 @@ import java.util.Set;
  * Читает команды из файла и выполняет их, предотвращая повторное выполнение того же файла.
  */
 public class ExecuteScriptCommand extends WithParametersCommand  {
-    private static final Set<String> setOfPath = new HashSet<>();
+    private static final Set<String> SET_OF_PATH = new HashSet<>();
 
     /**
      * Конструктор команды выполнения скрипта.
@@ -52,18 +48,21 @@ public class ExecuteScriptCommand extends WithParametersCommand  {
         if (!validator.isValidPathToRead(path)) {
             return;
         }
-        if (setOfPath.contains(path)) {
+        if (SET_OF_PATH.contains(path)) {
             writer.println(String.format("по этому пути -> %s запрещено выполнение," +
                     " файл уже был запущен в скрипте", path));
             return;
         }
-        setOfPath.add(path);
+        SET_OF_PATH.add(path);
         try {
             Starter starter = new Starter(path);
             starter.run();
-        } catch (NonNullScriptException | NonNullException e) {
-            writer.println(String.format("закончено выполнение скрипта: %s", path));
-            setOfPath.clear();
+        } catch (NonNullScriptException e) {
+            writer.println(String.format("закончено неуспешно выполнение скрипта: %s", path));
+            SET_OF_PATH.clear();
+        } catch (NonNullException e) {
+            writer.println(String.format("закончено успешно выполнение скрипта: %s", path));
+            SET_OF_PATH.clear();
         }
     }
 }

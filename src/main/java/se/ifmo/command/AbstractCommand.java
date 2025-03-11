@@ -1,8 +1,7 @@
 package se.ifmo.command;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import se.ifmo.io.Writer;
 import se.ifmo.receiver.Receiver;
 
@@ -11,13 +10,12 @@ import se.ifmo.receiver.Receiver;
  * Каждая команда должна реализовывать метод {@link #execute(String)} для выполнения своей логики.
  * Хранит информацию о названии команды, её описании и объекте для вывода сообщений.
  */
-@RequiredArgsConstructor
+@AllArgsConstructor
 public abstract class AbstractCommand {
 
     /**
      * Объект, управляющий взаимодействием с базой данных или хранилищем данных.
      */
-    @NonNull
     protected Receiver receiver;
 
     /**

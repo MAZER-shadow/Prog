@@ -12,13 +12,13 @@ public class PathValidator {
         this.writer = writer;
     }
 
-    public boolean isValidDefaultPathToSave(){
+    public boolean isValidDefaultPathToSave() {
         File pFile = new File(DEFAULT_PATH);
         File pDir = new File(pFile.getParent().toString());
         if (!isValidDirectoryPathToSave(pDir)) {
             return false;
         }
-        if (pFile.isFile()){
+        if (pFile.isFile()) {
             if (!pFile.canWrite()) {
                 writer.println(String.format("Ошибка доступа записи в -> %s", DEFAULT_PATH));
                 return false;

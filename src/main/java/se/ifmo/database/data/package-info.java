@@ -3,7 +3,8 @@
  * Основные классы:
  * <ul>
  *   <li>{@link se.ifmo.database.data.Dao} - интерфейс для доступа к данным (Data Access Object).</li>
- *   <li>{@link se.ifmo.database.data.Database} - класс для управления базой данных и выполнения операций с коллекцией.</li>
+ *   <li>{@link se.ifmo.database.data.Database} - класс для управления базой данных
+ *   и выполнения операций с коллекцией.</li>
  *   <li>{@link se.ifmo.database.data.DatabaseMetaData} - класс для хранения метаданных базы данных.</li>
  * </ul>
  *

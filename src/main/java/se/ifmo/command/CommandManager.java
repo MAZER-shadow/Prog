@@ -78,7 +78,10 @@ public class CommandManager {
             String[] parameters = input.split(SEPARATOR);
             String abstractCommandName = parameters[POSITION_COMMAND_NAME_IN_INPUT];
             AbstractCommand abstractCommand = commandMap.get(abstractCommandName);
-            if (Objects.isNull(abstractCommand) || parameters.length > SUM_WORDS_OF_COMMAND_NAME_AND_ARGUMENTS) {
+            if (parameters.length > SUM_WORDS_OF_COMMAND_NAME_AND_ARGUMENTS) {
+                throw new CommandNotFoundException("Слишком много параметров -_-");
+            }
+            if (Objects.isNull(abstractCommand)) {
                 throw new CommandNotFoundException(String.format("Не найдено команды: %s", abstractCommandName));
             }
             if (parameters.length == SUM_WORDS_OF_COMMAND_NAME_AND_ARGUMENTS) {

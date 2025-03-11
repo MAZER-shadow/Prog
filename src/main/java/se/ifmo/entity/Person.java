@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Objects;
+
 @Getter
 @Builder
 @ToString
@@ -37,6 +39,19 @@ public class Person implements Comparable<Person> {
     @Override
     public int compareTo(Person o) {
         return name.compareTo(o.name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(name, person.name) && Objects.equals(height, person.height)
+                && Objects.equals(passportID, person.passportID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, height, passportID);
     }
 
     /**

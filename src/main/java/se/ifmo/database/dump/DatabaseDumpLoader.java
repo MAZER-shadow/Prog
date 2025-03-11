@@ -85,7 +85,8 @@ public class DatabaseDumpLoader {
             throw new FileReadException(String.format("Переменная окружения %s не задана", NAME_PATH_VARIABLE));
         }
         if (!Files.isRegularFile(Paths.get(incomingPath))) {
-            throw new FileReadException(String.format("Путь %s не является файлом или нет доступа для чтения директории, в которой он находится", incomingPath));
+            throw new FileReadException(String.format("Путь %s не является файлом или нет дост" +
+                    "упа для чтения директории, в которой он находится", incomingPath));
         }
         if (!Files.isReadable(Paths.get(incomingPath))) {
             throw new FileReadException(String.format("файл %s недоступен для чтения", incomingPath));

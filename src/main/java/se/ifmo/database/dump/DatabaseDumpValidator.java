@@ -62,12 +62,13 @@ public class DatabaseDumpValidator {
                 throw new DumpDataBaseValidationException(String.format("%s %s", VALID_ERROR, "size"));
             }
         }
-        if (metaData.getSize() != list.size()) {
+        else if (metaData.getSize() != list.size()) {
             throw new DumpDataBaseValidationException(String.format("%s %s", VALID_ERROR, "size"));
-        }
-        Set<Long> setId = new HashSet<>();
-        for (LabWork labWork : list) {
-            validateLabWork(labWork, setId, metaData.getLocalDateTime());
+        } else {
+            Set<Long> setId = new HashSet<>();
+            for (LabWork labWork : list) {
+                validateLabWork(labWork, setId, metaData.getLocalDateTime());
+            }
         }
     }
 
@@ -81,7 +82,10 @@ public class DatabaseDumpValidator {
      */
     private void validateLabWork(LabWork labWork, Set<Long> setId, LocalDate creationCollectionDate) {
         LabWorkFieldValidator validator = new LabWorkFieldValidator();
-        if (!validator.isValidName(labWork.getName())) {
+        if (!validator.isValidId(String.valueOf(labWork.getId()), setId)) {
+            throw new DumpDataBaseValidationException(String.format(
+                    "%s %s %d", VALID_ERROR, "id у id =", labWork.getId()));
+        } else if (!validator.isValidName(labWork.getName())) {
             throw new DumpDataBaseValidationException(String.format(
                     "%s %s %d", VALID_ERROR, "name y id =", labWork.getId()));
         } else if (labWork.getCoordinates() == null) {

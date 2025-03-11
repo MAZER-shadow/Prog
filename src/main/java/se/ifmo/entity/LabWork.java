@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Objects;
+
 @Setter
 @Builder
 @Getter
@@ -54,5 +56,22 @@ public class LabWork implements Comparable<LabWork> {
     @Override
     public int compareTo(LabWork o) {
         return name.compareTo(o.name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        LabWork labWork = (LabWork) o;
+        return id == labWork.id && Double.compare(minimalPoint, labWork.minimalPoint) == 0 &&
+                Objects.equals(name, labWork.name) && Objects.equals(coordinates, labWork.coordinates)
+                && Objects.equals(creationDate, labWork.creationDate)
+                && Objects.equals(maximumPoint, labWork.maximumPoint)
+                && difficulty == labWork.difficulty && Objects.equals(author, labWork.author);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, coordinates, creationDate, minimalPoint,
+                maximumPoint, difficulty, author);
     }
 }

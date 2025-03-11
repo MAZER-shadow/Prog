@@ -34,7 +34,7 @@ public class Starter {
     /**
      * Объект для взаимодействия с базой данных.
      */
-    private  Dao<LabWork> database;
+    private Dao<LabWork> database;
 
     /**
      * Объект Receiver, который управляет выполнением команд.
@@ -71,6 +71,7 @@ public class Starter {
         this.flag = false;
         this.pathForExecuteScript = pathForExecuteScript;
     }
+
     /**
      * Инициализирует команды, которые будут доступны в приложении.
      *
@@ -118,9 +119,8 @@ public class Starter {
     }
 
     private void makeRequestForRequestFromFile(Reader reader) {
-        String line = "";
-        while (line != null) {
-            line = reader.readLine();
+        while (true) {
+            String line = reader.readLine();
             commandManager.execute(line);
         }
     }
@@ -182,8 +182,8 @@ public class Starter {
     public void run() {
         if (flag) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-                 BufferedWriter writer = new BufferedWriter(
-                         new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
+                    BufferedWriter writer = new BufferedWriter(
+                                new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
                 launchAssistants(reader, writer);
                 writerReal.println("введите help для получения информации о командах");
                 initializeCommands(consoleReader, writerReal, path, true);
@@ -192,8 +192,8 @@ public class Starter {
                 writerReal.println("ошибка потока ввода");
             }
         } else {
-            try (FileReader fileReader = new FileReader(pathForExecuteScript);
-                 BufferedReader reader = new BufferedReader(fileReader)) {
+            try (FileReader fileReader = new FileReader(pathForExecuteScript, StandardCharsets.UTF_8);
+                    BufferedReader reader = new BufferedReader(fileReader)) {
                 Reader readerCommandFromFile = new ReaderImpl(reader);
                 commandManager = new CommandManager(writerReal);
                 initializeCommands(readerCommandFromFile, writerReal, path, false);

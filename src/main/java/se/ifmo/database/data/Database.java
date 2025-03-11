@@ -77,7 +77,8 @@ public class Database implements Dao<LabWork> {
                 id = labWork.getId();
             }
         }
-        labwork.setId(++id);
+        id = id + 1;
+        labwork.setId(id);
         labwork.setCreationDate(LocalDate.now());
         listOfLabWork.add(labwork);
         return labwork;

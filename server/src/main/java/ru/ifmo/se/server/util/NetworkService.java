@@ -23,7 +23,7 @@ public class NetworkService {
             channel.configureBlocking(false);
             Selector selector = Selector.open();
             channel.register(selector, SelectionKey.OP_READ);
-            channel.bind(new InetSocketAddress("127.0.0.1",12345));
+            channel.bind(new InetSocketAddress("0.0.0.0",12345));
 
             ByteBuffer buffer = ByteBuffer.allocate(4096);
 

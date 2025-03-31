@@ -34,6 +34,6 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest
             docker stop your_container_name || true
             docker rm your_container_name || true
-            docker run -it -d --name your_container_name -p 7778:7777/udp ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest
+            docker run -it -d --name your_container_name -p 12345:12345/udp ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest
             docker rmi $(docker images -f "dangling=true" -q) || true
           EOF

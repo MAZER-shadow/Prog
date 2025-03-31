@@ -1,0 +1,27 @@
+<Configuration status="WARN">
+    <Appenders>
+        <!-- Консольный Appender -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <!-- Файловый Appender -->
+        <RollingFile name="RollingFile" fileName="logs/app.log"
+                     filePattern="logs/app-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/> <!-- Ротация по размеру файла -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/> <!-- Ротация по времени -->
+            </Policies>
+            <DefaultRolloverStrategy max="10"/> <!-- Максимальное количество файлов -->
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="debug">
+            <!-- Указываем оба Appender'а -->
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

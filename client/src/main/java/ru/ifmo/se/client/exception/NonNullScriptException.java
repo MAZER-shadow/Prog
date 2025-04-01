@@ -1,4 +1,4 @@
-package ru.ifmo.se.common.exception;
+package ru.ifmo.se.client.exception;
 
 /**
  * Исключение NonNullScriptException выбрасывается при

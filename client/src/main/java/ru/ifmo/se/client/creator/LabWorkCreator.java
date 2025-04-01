@@ -6,7 +6,7 @@ import ru.ifmo.se.common.dto.model.DifficultyDto;
 import ru.ifmo.se.common.dto.model.LabWorkDto;
 import ru.ifmo.se.common.dto.model.PersonDto;
 import ru.ifmo.se.common.exception.NonNullException;
-import ru.ifmo.se.common.exception.NonNullScriptException;
+import ru.ifmo.se.client.exception.NonNullScriptException;
 import ru.ifmo.se.common.io.Reader;
 import ru.ifmo.se.common.io.Writer;
 

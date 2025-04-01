@@ -8,7 +8,7 @@ import ru.ifmo.se.client.util.PathValidator;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.exception.NonNullException;
-import ru.ifmo.se.common.exception.NonNullScriptException;
+import ru.ifmo.se.client.exception.NonNullScriptException;
 import ru.ifmo.se.common.io.Writer;
 import java.util.HashSet;
 import java.util.Set;

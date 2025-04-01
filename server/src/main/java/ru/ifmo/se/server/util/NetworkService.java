@@ -6,6 +6,7 @@ import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.server.command.CommandManager;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
@@ -19,7 +20,6 @@ public class NetworkService {
 
     public void run(CommandManager commandManager) {
         try (DatagramChannel channel = DatagramChannel.open()) {
-            log.info("Connecting to {}", clientAddress);
             channel.configureBlocking(false);
             Selector selector = Selector.open();
             channel.register(selector, SelectionKey.OP_READ);
@@ -34,15 +34,16 @@ public class NetworkService {
                     if (key.isReadable()) {
                         DatagramChannel readyChannel = (DatagramChannel) key.channel();
                         Request request = receive(buffer, readyChannel);
-                        log.info("Received request: " + request.getCommandName());
+                        log.info("Получили запрос с командой: " + request.getCommandName());
                         Response response = commandManager.execute(request);
-                        log.info("получили респонс");
                         send(response, readyChannel);
                     }
                 }
-
             }
-        }  catch (IOException | ClassNotFoundException e) {
+        } catch (BindException e) {
+            log.error("Попытка запуска сервера на адресе, который уже занят");
+            System.exit(1);
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -57,15 +58,10 @@ public class NetworkService {
 
     public void send(Response response, DatagramChannel channel) {
         try  {
-            log.info("в сенде");
             ByteBuffer buffer = ByteBuffer.wrap(ru.ifmo.se.common.Serialization.serialize(response));
             channel.send(buffer, clientAddress);
             buffer.clear();
-//            buffer.put(Serialization.serialize(response));
-//            buffer.flip();
-//
-//            channel.send(buffer, clientAddress);
-            log.info("Отправили данные");
+            log.info("Отправили данные клиенту");
 
         } catch (IOException e) {
             throw new RuntimeException(e);

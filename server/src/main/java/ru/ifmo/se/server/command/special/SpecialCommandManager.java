@@ -1,7 +1,8 @@
 package ru.ifmo.se.server.command.special;
 
+import ru.ifmo.se.common.exception.IORuntimeException;
 import ru.ifmo.se.common.io.Writer;
-import ru.ifmo.se.server.exception.CommandNotFoundException;
+import ru.ifmo.se.common.exception.CommandNotFoundException;
 
 
 import java.util.HashMap;
@@ -83,7 +84,7 @@ public class SpecialCommandManager {
             } else {
                 abstractSpecialCommand.execute(DEFAULT_ARGUMENT_OF_COMMAND);
             }
-        } catch (CommandNotFoundException e) {
+        } catch (IORuntimeException | CommandNotFoundException e) {
             writer.println(e.getMessage());
         }
     }

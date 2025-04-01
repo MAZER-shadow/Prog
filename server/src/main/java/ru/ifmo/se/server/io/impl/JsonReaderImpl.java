@@ -3,7 +3,7 @@ package ru.ifmo.se.server.io.impl;
 import com.fatboyindustrial.gsonjavatime.Converters;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import ru.ifmo.se.server.exception.IORuntimeException;
+import ru.ifmo.se.common.exception.IORuntimeException;
 import ru.ifmo.se.server.io.JsonReader;
 
 import java.io.BufferedReader;

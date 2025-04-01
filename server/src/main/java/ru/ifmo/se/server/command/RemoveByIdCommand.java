@@ -3,8 +3,8 @@ package ru.ifmo.se.server.command;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.request.RequestId;
 import ru.ifmo.se.common.dto.response.Response;
+import ru.ifmo.se.common.exception.EntityNotFoundException;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
-import ru.ifmo.se.server.exception.EntityNotFoundException;
 import ru.ifmo.se.server.receiver.Receiver;
 
 /**

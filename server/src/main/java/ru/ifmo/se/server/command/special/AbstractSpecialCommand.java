@@ -2,6 +2,7 @@ package ru.ifmo.se.server.command.special;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import ru.ifmo.se.common.exception.IORuntimeException;
 import ru.ifmo.se.common.io.Writer;
 import ru.ifmo.se.server.receiver.Receiver;
 
@@ -33,7 +34,9 @@ public abstract class AbstractSpecialCommand {
      */
     public abstract void execute(String parameters);
 
-    protected boolean checkParameters(String parameter) {
-        return parameter.isEmpty();
+    protected void verifyParameter(String parameter) {
+        if (!parameter.isEmpty()) {
+            throw new IORuntimeException(String.format("%s не нуждается в параметре", getName()));
+        }
     }
 }

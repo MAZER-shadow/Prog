@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.io.Writer;
-import ru.ifmo.se.server.exception.CommandNotFoundException;
+import ru.ifmo.se.common.exception.CommandNotFoundException;
 
 
 import java.util.HashMap;
@@ -79,13 +79,10 @@ public class CommandManager {
     public Response execute(Request request) {
         try {
             String commandName = request.getCommandName();
-            log.info("получили команду имя");
             AbstractCommand abstractCommand = commandMap.get(commandName);
-            log.info("получили команду она есть");
             if (Objects.isNull(abstractCommand)) {
                 throw new CommandNotFoundException(String.format("Не найдено команды: %s", commandName));
             }
-            log.info("команда не налл");
             return abstractCommand.execute(request);
         } catch (CommandNotFoundException e) {
             return Response.builder()

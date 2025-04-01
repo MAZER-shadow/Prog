@@ -12,6 +12,8 @@ import ru.ifmo.se.server.receiver.Receiver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Класс ShowCommand предназначен для вывода всех элементов коллекции LabWork.
@@ -41,10 +43,7 @@ public class ShowCommand extends AbstractCommand {
                     .message("Нет элементов в коллекции")
                     .build();
         }
-        List<LabWorkDto> list = new ArrayList<>();
-        for (LabWork labWork : receiver.getAll()) {
-            list.add(LabWorkMapper.INSTANCE.toDto(labWork));
-        }
+        List<LabWorkDto> list = receiver.getAll().stream().map(LabWorkMapper.INSTANCE::toDto).toList();
         return ResponseListLabWorkDto.builder()
                 .status(true)
                 .labWorkList(list)

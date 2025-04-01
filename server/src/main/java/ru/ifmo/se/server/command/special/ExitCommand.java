@@ -1,5 +1,6 @@
 package ru.ifmo.se.server.command.special;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.common.io.Writer;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.receiver.Receiver;
@@ -8,6 +9,7 @@ import ru.ifmo.se.server.receiver.Receiver;
  * Команда для завершения работы программы.
  * При выполнении этой команды программа завершает свое выполнение.
  */
+@Slf4j
 public class ExitCommand extends AbstractSpecialCommand {
     private String path;
     /**
@@ -29,13 +31,10 @@ public class ExitCommand extends AbstractSpecialCommand {
      */
     @Override
     public void execute(String parameter) {
-        if (!checkParameters(parameter)) {
-            writer.println(String.format("%s не нуждается в параметре", getName()));
-            return;
-        }
+        verifyParameter(parameter);
         SaveCommand save = new SaveCommand(receiver, writer, path);
         save.execute("");
-        writer.println("Завершение программы");
+        log.info("Завершение программы");
         System.exit(0);
     }
 }

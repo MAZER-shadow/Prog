@@ -113,9 +113,7 @@ public class CommandManager {
                     writer.println(response.getMessage());
                 }
             }
-        } catch (IORuntimeException e) {
-            writer.println(e.getMessage());
-        } catch (CommandNotFoundException e) {
+        } catch (IORuntimeException | CommandNotFoundException e) {
             writer.println(e.getMessage());
         }
     }

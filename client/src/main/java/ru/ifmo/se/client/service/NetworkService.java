@@ -1,7 +1,5 @@
 package ru.ifmo.se.client.service;
 
-
-
 import ru.ifmo.se.common.Serialization;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
@@ -31,29 +29,6 @@ public class NetworkService {
         this.selector = selector;
         socketAddress = new InetSocketAddress(ip, port);
     }
-
-//    public void run() {
-//        try (DatagramChannel channel = DatagramChannel.open()) {
-//            channel.configureBlocking(false);
-//
-//            Selector selector = Selector.open();
-//            channel.register(selector, SelectionKey.OP_READ);
-//
-//            while (true) {
-//                System.out.print("Введите имя вашей работы обратно придет ответ: ");
-//                Scanner sc = new Scanner(System.in);
-//                String name = sc.nextLine();
-//                LabWorkDto labWork = new LabWorkDto(name);
-//                RequestWith requestWith = new RequestWith("bed", labWork, "something");
-//                Request request = (Request) requestWith;
-//                Response response = send(request, channel, selector);
-//                ResponseWith responseWith = (ResponseWith) response;
-//                System.out.println("Пришло -> " + responseWith.getInfo() + responseWith.getWork().getName());
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public Response send(Request request) {
         try {

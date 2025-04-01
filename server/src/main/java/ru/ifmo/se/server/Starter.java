@@ -99,6 +99,8 @@ public class Starter {
         for (AbstractSpecialCommand command : listSpecialCommand) {
             specialCommandManager.register(command.getName(), command);
         }
+        ru.ifmo.se.server.command.special.HelpCommand helpCommand = new ru.ifmo.se.server.command.special.HelpCommand(receiver, writer, specialCommandManager.getDescriptionMap());
+        specialCommandManager.register(helpCommand.getName(), helpCommand);
         HelpCommand help = new HelpCommand(receiver, commandManager.getDescriptionMap());
         commandManager.register(help.getName(), help);
     }
@@ -112,7 +114,7 @@ public class Starter {
     private void makeRequest(Reader reader, Writer writer) {
         try {
             while (true) {
-                writer.print("Введите вашу команду: ");
+                writer.println("Введите вашу команду: ");
                 specialCommandManager.execute(reader.readLine());
             }
         } catch (NonNullException e) {
@@ -122,7 +124,6 @@ public class Starter {
     }
 
     private void makeRequestFromClient() {
-        log.info("сервер поднят");
         NetworkService networkService = new NetworkService();
         networkService.run(commandManager);
 
@@ -191,6 +192,7 @@ public class Starter {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
              BufferedWriter writer = new BufferedWriter(
                      new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
+            log.info("сервер поднят");
             launchAssistants(reader, writer);
             writerReal.println("введите help для получения информации о командах");
             initializeCommands(writerReal, path);

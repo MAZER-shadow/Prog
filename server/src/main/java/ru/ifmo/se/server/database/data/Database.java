@@ -1,8 +1,8 @@
 package ru.ifmo.se.server.database.data;
 
+import ru.ifmo.se.common.exception.EntityNotFoundException;
 import ru.ifmo.se.server.database.dump.DatabaseDump;
 import ru.ifmo.se.server.entity.LabWork;
-import ru.ifmo.se.server.exception.EntityNotFoundException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

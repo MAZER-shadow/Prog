@@ -3,7 +3,6 @@ package ru.ifmo.se.client;
 
 import ru.ifmo.se.client.command.*;
 import ru.ifmo.se.client.service.NetworkService;
-import ru.ifmo.se.common.exception.DumpDataBaseValidationException;
 import ru.ifmo.se.common.exception.NonNullException;
 import ru.ifmo.se.common.io.impl.ReaderImpl;
 import ru.ifmo.se.common.io.impl.WriterImpl;
@@ -17,6 +16,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
 
 /**
  * Класс Starter предназначен для инициализации и запуска приложения.
@@ -124,28 +124,65 @@ public class Starter {
             channel.register(selector, SelectionKey.OP_READ);
             writerReal = new WriterImpl(writer);
             consoleReader = new ReaderImpl(reader);
-            requestDataServer();
-            networkService = new NetworkService(ip,port, channel, selector);
+            requestIp();
+            requestPort();
+            networkService = new NetworkService(ip, port, channel, selector);
             commandManager = new CommandManager(writerReal, networkService);
-        } catch (DumpDataBaseValidationException e) {
-            writerReal.println(e.getMessage());
-            System.exit(1);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void requestDataServer() {
-        writerReal.println("Введите ip");
-        ip = consoleReader.readLine();
+    private void requestPort() {
         writerReal.println("Введите порт");
-        String reader = consoleReader.readLine();
         try {
-            port = Integer.parseInt(reader);
-        } catch (NumberFormatException e) {
-            writerReal.println("не корректный порт");
-            requestDataServer();
+            String reader = consoleReader.readLine();
+            if (!isValidPort(reader)) {
+                writerReal.println("не корректный port");
+                requestPort();
+            } else {
+                port = Integer.parseInt(reader);
+            }
+        } catch (NonNullException e) {
+            writerReal.println(e.getMessage());
+            requestPort();
         }
+    }
+
+    private boolean isValidPort(String stringPort) {
+        try {
+            int portNumber = Integer.parseInt(stringPort);
+            if (portNumber >= 0 && portNumber <= 65535) {
+                port = portNumber;
+                return true;
+            } else {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private void requestIp() {
+        writerReal.println("Введите ip");
+        try {
+            ip = consoleReader.readLine();
+        } catch (NonNullException e) {
+            writerReal.println(e.getMessage());
+            requestIp();
+        }
+        if (!isValidIpAddress(ip)) {
+            writerReal.println("не корректный ip");
+            requestIp();
+        }
+    }
+
+    private boolean isValidIpAddress(String ip) {
+        String ipv4Pattern = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+
+        String ipv6Pattern = "^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$";
+
+        return ip.matches(ipv4Pattern) || ip.matches(ipv6Pattern);
     }
     /**
      * Запускает приложение, инициализируя необходимые компоненты и начиная обработку команд.

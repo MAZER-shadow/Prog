@@ -1,6 +1,7 @@
 package ru.ifmo.se.client.command;
 
 import ru.ifmo.se.client.configuration.CommandConfiguration;
+import ru.ifmo.se.client.util.LabWorkDtoPrinter;
 import ru.ifmo.se.common.dto.model.LabWorkDto;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
@@ -14,7 +15,7 @@ import java.util.List;
  * Наследуется от WithoutParametersCommand.
  */
 public class ShowCommand extends WithoutParametersCommand  {
-
+    private final LabWorkDtoPrinter printer = new LabWorkDtoPrinter();
     /**
      * Конструктор ShowCommand.
      * @param writer объект для вывода информации пользователю.
@@ -41,8 +42,6 @@ public class ShowCommand extends WithoutParametersCommand  {
     public void handleResponse(Response response) {
         ResponseListLabWorkDto responseListLabWorkDto = (ResponseListLabWorkDto) response;
         List<LabWorkDto> labWorkList = responseListLabWorkDto.getLabWorkList();
-        for (LabWorkDto labWorkDto : labWorkList) {
-            writer.println(labWorkDto.aboutLabWork());
-        }
+        printer.printLabWorks(labWorkList, writer);
     }
 }

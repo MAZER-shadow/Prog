@@ -44,7 +44,7 @@ public class CommandConfiguration {
     /**
      * Описание команды завершения программы без сохранения в файл.
      */
-    public static final String EXIT_DESCRIPTION = "завершить программу (без сохранения в файл)";
+    public static final String EXIT_DESCRIPTION = "остановить сервер, с сохранением в файл";
 
     /**
      * Имя команды выполнения скрипта из указанного файла.

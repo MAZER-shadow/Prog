@@ -1,6 +1,6 @@
 package ru.ifmo.se.server.util;
 
-import ru.ifmo.se.server.exception.IORuntimeException;
+import ru.ifmo.se.common.exception.IORuntimeException;
 
 import java.io.*;
 import java.nio.ByteBuffer;

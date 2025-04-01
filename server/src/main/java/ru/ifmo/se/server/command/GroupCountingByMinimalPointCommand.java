@@ -2,11 +2,9 @@ package ru.ifmo.se.server.command;
 
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
-import ru.ifmo.se.common.dto.response.ResponseListLabWorkDto;
 import ru.ifmo.se.common.dto.response.ResponseMap;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.entity.LabWork;
-import ru.ifmo.se.server.mapper.LabWorkMapper;
 import ru.ifmo.se.server.receiver.Receiver;
 
 import java.util.Map;

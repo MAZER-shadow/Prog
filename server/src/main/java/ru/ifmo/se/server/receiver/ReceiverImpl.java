@@ -1,7 +1,6 @@
 package ru.ifmo.se.server.receiver;
 
-import ru.ifmo.se.server.database.data.Dao;
-import ru.ifmo.se.server.database.dump.DatabaseDump;
+import ru.ifmo.se.server.database.LabWorkDao;
 import ru.ifmo.se.server.entity.LabWork;
 
 import java.util.List;
@@ -11,15 +10,15 @@ import java.util.List;
  * Он предоставляет методы для выполнения операций с базой данных,
  * таких как добавление, удаление и обновление объектов LabWork.
  */
-public class Receiver {
-    private final Dao<LabWork> db;
+public class ReceiverImpl implements Receiver {
+    private final LabWorkDao db;
 
     /**
      * Конструктор класса Receiver. Инициализирует объект с указанной базой данных.
      *
      * @param db Объект Dao, представляющий базу данных для работы с объектами LabWork.
      */
-    public Receiver(Dao<LabWork> db) {
+    public ReceiverImpl(LabWorkDao db) {
         this.db = db;
     }
 
@@ -73,14 +72,6 @@ public class Receiver {
         return db.getAll().size();
     }
 
-    /**
-     * Возвращает дамп базы данных, содержащий метаданные и список всех объектов LabWork.
-     *
-     * @return Объект DatabaseDump.
-     */
-    public DatabaseDump getDatabaseDump() {
-        return new DatabaseDump(db.getDatabaseMetaData(), getAll());
-    }
 
     /**
      * Проверяет наличие объекта LabWork с указанным идентификатором в базе данных.

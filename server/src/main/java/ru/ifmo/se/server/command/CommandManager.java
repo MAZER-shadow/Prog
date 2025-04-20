@@ -89,6 +89,11 @@ public class CommandManager {
                     .status(false)
                     .message(e.getMessage())
                     .build();
+        } catch (Throwable e) {
+            return Response.builder()
+                    .status(false)
+                    .message("СЕРВЕР УПАЛ ИЗВИНИТЕ, ДАВАЙТЕ В ДРУГОЙ РАЗ МОЖЕТ БЫТЬ В АЛЬФА БАНКЕ ОН РАБОТАЕТ")
+                    .build();
         }
     }
 

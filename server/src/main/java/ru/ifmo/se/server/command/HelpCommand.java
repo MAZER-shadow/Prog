@@ -1,5 +1,6 @@
 package ru.ifmo.se.server.command;
 
+import lombok.SneakyThrows;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
@@ -30,6 +31,7 @@ public class HelpCommand extends AbstractCommand {
      * Выполняет команду вывода справки по доступным командам.
      * Выводит список команд с их описаниями.
      */
+    @SneakyThrows
     @Override
     public Response execute(Request request) {
         return Response.builder()

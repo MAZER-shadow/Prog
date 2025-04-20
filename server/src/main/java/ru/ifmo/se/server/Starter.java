@@ -1,24 +1,23 @@
 package ru.ifmo.se.server;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.common.io.impl.ReaderImpl;
 import ru.ifmo.se.common.io.impl.WriterImpl;
+import ru.ifmo.se.server.annotationprocces.TransactionManager;
+import ru.ifmo.se.server.annotationprocces.TransactionalProxy;
 import ru.ifmo.se.server.command.*;
-import ru.ifmo.se.server.command.special.AbstractSpecialCommand;
-import ru.ifmo.se.server.command.special.ExitCommand;
-import ru.ifmo.se.server.command.special.SaveCommand;
-import ru.ifmo.se.server.command.special.SpecialCommandManager;
-import ru.ifmo.se.server.database.data.Dao;
-import ru.ifmo.se.server.database.data.Database;
-import ru.ifmo.se.server.database.dump.DatabaseDump;
-import ru.ifmo.se.server.database.dump.DatabaseDumpLoader;
-import ru.ifmo.se.server.database.dump.DatabaseDumpValidator;
+import ru.ifmo.se.server.database.ConnectionPull;
+import ru.ifmo.se.server.database.Dao;
+import ru.ifmo.se.server.database.LabWorkDao;
+import ru.ifmo.se.server.database.impl.CoordinatesDao;
+import ru.ifmo.se.server.database.impl.LabWorkDaoImpl;
+import ru.ifmo.se.server.database.impl.PersonDao;
 import ru.ifmo.se.server.entity.LabWork;
 import ru.ifmo.se.server.exception.DumpDataBaseValidationException;
-import ru.ifmo.se.server.exception.FileReadException;
 import ru.ifmo.se.server.exception.NonNullException;
+import ru.ifmo.se.server.receiver.ReceiverImpl;
 import ru.ifmo.se.server.receiver.Receiver;
-import ru.ifmo.se.server.util.AbsolutePathResolver;
 import ru.ifmo.se.server.util.NetworkService;
 
 import ru.ifmo.se.common.io.Reader;
@@ -65,7 +64,6 @@ public class Starter {
      * Объект CommandManager для управления командами.
      */
     private CommandManager commandManager;
-    private SpecialCommandManager specialCommandManager;
     /**
      * Путь к файлу, используемый для загрузки и сохранения данных.
      */
@@ -86,52 +84,22 @@ public class Starter {
                 new SortCommand(receiver), new SortCommand(receiver),
                 new MinByMinimalPointCommand(receiver),
                 new CountGreaterThanAuthorCommand(receiver),
-                new InfoCommand(receiver), new UpdateIdCommand(receiver),
+                new UpdateIdCommand(receiver),
                 new RemoveByIdCommand(receiver),
                 new InsertAtIndexCommand(receiver),
                 new RemoveFirstCommand(receiver),
                 new GroupCountingByMinimalPointCommand(receiver));
-        List<AbstractSpecialCommand> listSpecialCommand = List.of(new ExitCommand(receiver, writer, path),
-                new SaveCommand(receiver, writer, path));
         for (AbstractCommand command : listCommand) {
             commandManager.register(command.getName(), command);
         }
-        for (AbstractSpecialCommand command : listSpecialCommand) {
-            specialCommandManager.register(command.getName(), command);
-        }
-        ru.ifmo.se.server.command.special.HelpCommand helpCommand = new ru.ifmo.se.server.command.special.HelpCommand(receiver, writer, specialCommandManager.getDescriptionMap());
-        specialCommandManager.register(helpCommand.getName(), helpCommand);
         HelpCommand help = new HelpCommand(receiver, commandManager.getDescriptionMap());
         commandManager.register(help.getName(), help);
     }
 
-    /**
-     * Обрабатывает запросы пользователя, выполняя команды, введенные через консоль.
-     *
-     * @param reader Читатель для ввода данных.
-     * @param writer Писатель для вывода данных.
-     */
-    private void makeRequest(Reader reader, Writer writer) {
-        try {
-            while (true) {
-                writer.println("Введите вашу команду: ");
-                specialCommandManager.execute(reader.readLine());
-            }
-        } catch (NonNullException e) {
-            writer.println(e.getMessage());
-            makeRequest(reader, writer);
-        }
-    }
 
     private void makeRequestFromClient() {
         NetworkService networkService = new NetworkService();
         networkService.run(commandManager);
-
-    }
-
-    private void startBothMethods(Reader reader, Writer writer) {
-        ExecutorService executor = Executors.newFixedThreadPool(1);
-        executor.submit(() -> makeRequest(reader, writer));
     }
     /**
      * Инициализирует вспомогательные объекты, такие как писатель, читатель, менеджер команд и базу данных.
@@ -144,10 +112,12 @@ public class Starter {
             writerReal = new WriterImpl(writer);
             consoleReader = new ReaderImpl(reader);
             commandManager = new CommandManager(writerReal);
-            specialCommandManager = new SpecialCommandManager(writerReal);
-            DatabaseDump databaseDump = getDatabaseDump(writerReal);
-            database = new Database(databaseDump);
-            receiver = new Receiver(database);
+            ConnectionPull connectionPull = new ConnectionPull(10 );
+            TransactionManager transactionManager = new TransactionManager();
+            LabWorkDao labWorkDao = new LabWorkDaoImpl(new CoordinatesDao(connectionPull), new PersonDao(connectionPull), connectionPull);
+            Receiver receiver = new ReceiverImpl(labWorkDao);
+            Receiver labWorkService = TransactionalProxy.newProxyInstance(receiver, transactionManager, connectionPull, Receiver.class);
+            this.receiver = labWorkService;
         } catch (DumpDataBaseValidationException e) {
             writerReal.println(e.getMessage());
             System.exit(1);
@@ -155,39 +125,9 @@ public class Starter {
     }
 
     /**
-     * Загружает дамп базы данных из файла или создает новый, если файл недоступен.
-     *
-     * @param writer Писатель для вывода данных.
-     * @return Объект DatabaseDump, содержащий данные базы данных.
-     */
-    private DatabaseDump getDatabaseDump(Writer writer) {
-        DatabaseDumpLoader databaseDumpLoader = new DatabaseDumpLoader();
-        path = System.getenv(NAME_PATH_VARIABLE);
-        AbsolutePathResolver absolutePathResolver = new AbsolutePathResolver();
-        path = absolutePathResolver.resolvePath(path);
-        try {
-            DatabaseDump databaseDump = databaseDumpLoader.loadDatabaseDump(path);
-            if (databaseDump != null) {
-                DatabaseDumpValidator databaseDumpValidator = new DatabaseDumpValidator();
-                databaseDumpValidator.isValidateDatabase(databaseDump);
-                writer.println(String.format("успешное считывание c -> %s", path));
-                return databaseDump;
-            } else {
-                writerReal.println(String.format("создана новая коллекция," +
-                        " путь для сохранения: -> %s", path));
-                return databaseDumpLoader.getDefaultDatabaseDump();
-            }
-        } catch (FileReadException e) {
-            writerReal.println(e.getMessage());
-            writerReal.println("не удалось считать данные с файла," +
-                    " вы будете работать с пустой коллекцией!");
-            return databaseDumpLoader.getDefaultDatabaseDump();
-        }
-    }
-
-    /**
      * Запускает приложение, инициализируя необходимые компоненты и начиная обработку команд.
      */
+    @SneakyThrows
     public void run() {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
              BufferedWriter writer = new BufferedWriter(
@@ -196,8 +136,10 @@ public class Starter {
             launchAssistants(reader, writer);
             writerReal.println("введите help для получения информации о командах");
             initializeCommands(writerReal, path);
-            startBothMethods(consoleReader, writerReal);
             makeRequestFromClient();
+            while (true) {
+                Thread.sleep(Long.MAX_VALUE);
+            }
         } catch (IOException e) {
             writerReal.println("ошибка потока ввода");
         }

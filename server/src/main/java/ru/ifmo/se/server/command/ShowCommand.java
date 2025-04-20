@@ -6,14 +6,10 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.dto.response.ResponseListLabWorkDto;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
-import ru.ifmo.se.server.entity.LabWork;
 import ru.ifmo.se.server.mapper.LabWorkMapper;
 import ru.ifmo.se.server.receiver.Receiver;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Класс ShowCommand предназначен для вывода всех элементов коллекции LabWork.
@@ -43,6 +39,7 @@ public class ShowCommand extends AbstractCommand {
                     .message("Нет элементов в коллекции")
                     .build();
         }
+        log.info("МЫ ДОЩЛИ ДО СЮДА");
         List<LabWorkDto> list = receiver.getAll().stream().map(LabWorkMapper.INSTANCE::toDto).toList();
         return ResponseListLabWorkDto.builder()
                 .status(true)

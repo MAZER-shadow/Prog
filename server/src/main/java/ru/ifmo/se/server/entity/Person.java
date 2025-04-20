@@ -14,6 +14,7 @@ import java.util.Objects;
  * Реализует интерфейс Comparable для сравнения объектов Person по имени.
  */
 public class Person implements Comparable<Person> {
+    private long id;
     /**
      * Имя человека.
      */

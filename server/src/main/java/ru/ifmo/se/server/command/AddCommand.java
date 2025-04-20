@@ -1,5 +1,6 @@
 package ru.ifmo.se.server.command;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.common.dto.model.LabWorkDto;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.request.RequestLabWork;
@@ -16,6 +17,7 @@ import ru.ifmo.se.server.receiver.Receiver;
  * Команда для добавления нового элемента в коллекцию.
  * Создаёт новый объект `LabWork` и добавляет его в коллекцию.
  */
+@Slf4j
 public class AddCommand extends AbstractCommand {
 
     /**
@@ -39,6 +41,7 @@ public class AddCommand extends AbstractCommand {
         }
         LabWork labWork = LabWorkMapper.INSTANCE.toEntity(labWorkDto);
         labWork = receiver.add(labWork);
+        log.info(labWork.aboutLabWork());
         LabWorkDto lastLabWorkDto = LabWorkMapper.INSTANCE.toDto(labWork);
         return ResponseLabWorkDto.builder()
                 .status(true)

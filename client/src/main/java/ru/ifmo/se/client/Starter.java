@@ -75,7 +75,7 @@ public class Starter {
                 new SortCommand(writer), new SortCommand(writer),
                 new MinByMinimalPointCommand(writer),
                 new CountGreaterThanAuthorCommand(reader, writer, flag),
-                new InfoCommand(writer), new UpdateIdCommand(reader, writer, flag),
+                new UpdateIdCommand(reader, writer, flag),
                 new RemoveByIdCommand(writer),
                 new InsertAtIndexCommand(reader, writer, flag),
                 new RemoveFirstCommand(writer), new HelpCommand(writer),

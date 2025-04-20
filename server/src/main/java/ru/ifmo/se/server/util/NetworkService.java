@@ -108,7 +108,6 @@ public class NetworkService {
             Response response = commandManager.execute(request);
             AbstractMap.SimpleEntry<InetSocketAddress, Response> entryFinal = new AbstractMap.SimpleEntry<>(entry.getKey(), response);
             responseQueue.add(entryFinal);
-            log.info("добавили в очередь запрос");
         }
     }
 }

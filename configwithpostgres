@@ -1,4 +1,0 @@
-db.url=jdbc:postgresql://postgres:5432/mydatabase
-db.username=postgres
-db.password=mysecretpassword
-db.driver=org.postgresql.Driver

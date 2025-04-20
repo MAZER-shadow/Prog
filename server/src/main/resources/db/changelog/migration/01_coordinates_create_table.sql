@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS coordinates (
+                                           id BIGSERIAL PRIMARY KEY,
+                                           x INTEGER NOT NULL,
+                                           y BIGINT NOT NULL
+);

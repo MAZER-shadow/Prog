@@ -9,5 +9,5 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app2
 COPY --from=build /app/server/target/server-1.0-SNAPSHOT-jar-with-dependencies.jar app.jar
 EXPOSE 12345
-COPY ./localjostconfig .
-CMD ["java", "-jar", "-Ddb.config=./localjostconfig", "app.jar"]
+COPY ./server/src/main/resources/configwithpostgres .
+CMD ["java", "-jar", "-Ddb.config=./configwithpostgres", "app.jar"]

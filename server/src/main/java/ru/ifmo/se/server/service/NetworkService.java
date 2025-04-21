@@ -7,7 +7,6 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.server.controller.CommandManager;
 
-
 import java.io.IOException;
 import java.net.BindException;
 import java.net.InetSocketAddress;
@@ -63,12 +62,11 @@ public class NetworkService {
                     try {
                         buffer.clear();
                         InetSocketAddress clientAddress = (InetSocketAddress) readyChannel.receive(buffer);
-                        log.error("Пришли данные c данного адреса: {}", clientAddress);
                         buffer.flip();
                         Request request = (Request) Serialization.deserialize(buffer);
+                        log.info("Пришёл запрос c данного адреса: {} с командой: {}", clientAddress, request.getCommandName());
                         AbstractMap.SimpleEntry<InetSocketAddress, Request> entry = new AbstractMap.SimpleEntry<>(clientAddress, request);
                         requestQueue.add(entry);
-                        log.info("Получили запрос с командой: " + request.getCommandName());
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -87,7 +85,7 @@ public class NetworkService {
                     ByteBuffer buffer = ByteBuffer.wrap(ru.ifmo.se.common.Serialization.serialize(response.getValue()));
                     channel.send(buffer, response.getKey());
                     buffer.clear();
-                    log.info("Отправили данные клиенту");
+                    log.info("Отправили данные клиенту: {}", response.getKey());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -96,19 +94,20 @@ public class NetworkService {
     }
 
     private void process(CommandManager commandManager) {
+        log.info("Запустился поток обработки");
         while (true) {
-            log.info("МЫ В ПОТОКЕ");
             Map.Entry<InetSocketAddress, Request> entry = null;
             try {
                 entry = requestQueue.take();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            log.info(entry.getKey().toString());
             Request request = entry.getValue();
+            log.info("Поток приступил к обработке запроса от: {} с командой: {}", entry.getKey().toString(), request.getCommandName());
             Response response = commandManager.execute(request);
             AbstractMap.SimpleEntry<InetSocketAddress, Response> entryFinal = new AbstractMap.SimpleEntry<>(entry.getKey(), response);
             responseQueue.add(entryFinal);
+            log.info("Поток обработал запрос от: {} с командой: {} и передал его в очередь на отправку", entry.getKey().toString(), request.getCommandName());
         }
     }
 }

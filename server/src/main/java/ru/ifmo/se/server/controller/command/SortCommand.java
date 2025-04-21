@@ -1,0 +1,47 @@
+package ru.ifmo.se.server.controller.command;
+
+import ru.ifmo.se.common.dto.request.Request;
+import ru.ifmo.se.common.dto.response.Response;
+import ru.ifmo.se.server.configuration.CommandConfiguration;
+import ru.ifmo.se.server.entity.LabWork;
+import ru.ifmo.se.server.service.LabWorkService;
+
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Класс SortCommand предназначен для сортировки коллекции LabWork
+ * в естественном порядке и вывода её элементов.
+ * Наследуется от WithoutParametersCommand.
+ */
+public class SortCommand extends AbstractCommand {
+
+    /**
+     * Конструктор SortCommand.
+     *
+     * @param labWorkService объект, управляющий коллекцией.
+     */
+    public SortCommand(LabWorkService labWorkService) {
+        super(labWorkService, CommandConfiguration.SORT_NAME, CommandConfiguration.SORT_DESCRIPTION);
+    }
+
+    /**
+     * Выполняет сортировку коллекции LabWork и выводит её элементы.
+     * Если коллекция пуста, выводит соответствующее сообщение.
+     */
+    @Override
+    public Response execute(Request request) {
+        if (labWorkService.getSize() == 0) {
+            return Response.builder()
+                    .status(false)
+                    .message("Нет элементов в коллекции -> нечего сортировать")
+                    .build();
+        }
+        List<LabWork> list = labWorkService.getAll();
+        Collections.sort(list);
+        return Response.builder()
+                .status(true)
+                .message("коллекция успешно отсортирована")
+                .build();
+    }
+}

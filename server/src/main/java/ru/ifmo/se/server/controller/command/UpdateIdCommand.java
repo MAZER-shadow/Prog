@@ -29,7 +29,6 @@ public class UpdateIdCommand extends AbstractCommand {
     /**
      * Выполняет обновление элемента коллекции по заданному ID.
      * Если ID не найден, выводит сообщение об ошибке.
-     *
      */
     @Override
     public Response execute(Request request) {

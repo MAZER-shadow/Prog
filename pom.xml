@@ -19,6 +19,9 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <configLocation>
+            ${basedir}/config
+        </configLocation>
     </properties>
     <dependencies>
         <dependency>
@@ -63,7 +66,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.4.0</version>
                 <configuration>
-                    <configLocation>server/config/checkstyle.xml</configLocation>
+                    <configLocation>${configLocation}/checkstyle.xml</configLocation>
                 </configuration>
                 <executions>
                     <execution>
@@ -80,7 +83,7 @@
                 <version>3.23.0</version>
                 <configuration>
                     <rulesets>
-                        <ruleset>${basedir}/config/ruleset.xml</ruleset>
+                        <ruleset>${configLocation}/ruleset.xml</ruleset>
                     </rulesets>
                     <format>html</format>
                 </configuration>
@@ -101,14 +104,14 @@
                 <configuration>
                     <htmlOutput>true</htmlOutput>
                     <outputDirectory>${project.build.directory}/spotbugs</outputDirectory>
-                    <excludeFilterFile>${basedir}/config/spotbugs-exclude.xml</excludeFilterFile>
+                    <excludeFilterFile>${configLocation}/spotbugs-exclude.xml</excludeFilterFile>
                 </configuration>
                 <executions>
                     <execution>
                         <phase>verify</phase>
                         <goals>
                             <goal>check</goal>
-<!--                            <goal>gui</goal>-->
+                            <!--                            <goal>gui</goal>-->
                         </goals>
                     </execution>
                 </executions>

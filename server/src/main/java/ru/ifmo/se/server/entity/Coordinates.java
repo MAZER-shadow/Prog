@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- • Класс Coordinates представляет координаты точки в двумерном пространстве.
- • Координаты представлены целым числом X и длинным целым числом Y.
+ * • Класс Coordinates представляет координаты точки в двумерном пространстве.
+ * • Координаты представлены целым числом X и длинным целым числом Y.
  */
 @Builder
 @Setter
@@ -22,6 +22,7 @@ public class Coordinates {
      * Координата по оси Y.
      */
     private long y;
+
     public Coordinates() {
     }
 

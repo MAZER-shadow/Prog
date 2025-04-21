@@ -3,10 +3,9 @@ package ru.ifmo.se.server.controller;
 import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
-import ru.ifmo.se.common.io.Writer;
 import ru.ifmo.se.common.exception.CommandNotFoundException;
+import ru.ifmo.se.common.io.Writer;
 import ru.ifmo.se.server.controller.command.AbstractCommand;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +65,7 @@ public class CommandManager {
      * Регистрирует команду в карте команд.
      *
      * @param abstractCommandName Имя команды.
-     * @param abstractCommand Объект команды, который будет зарегистрирован.
+     * @param abstractCommand     Объект команды, который будет зарегистрирован.
      */
     public void register(String abstractCommandName, AbstractCommand abstractCommand) {
         commandMap.put(abstractCommandName, abstractCommand);
@@ -74,7 +73,7 @@ public class CommandManager {
 
     /**
      * Выполняет команду на основе введенных данных.
-
+     *
      * @throws CommandNotFoundException Если команда не найдена.
      */
     public Response execute(Request request) {

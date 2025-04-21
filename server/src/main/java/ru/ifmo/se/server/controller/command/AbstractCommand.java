@@ -7,7 +7,6 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.server.service.LabWorkService;
 
-
 @AllArgsConstructor
 public abstract class AbstractCommand {
 

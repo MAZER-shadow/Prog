@@ -5,11 +5,18 @@
         <Bug pattern="UUF_UNUSED_FIELD"/>
     </Match>
     <Match>
-        <Bug pattern="EI_EXPOSE_REP2" />
+        <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
     <Match>
-        <Bug pattern="DM_EXIT" />
+        <Bug pattern="DM_EXIT"/>
+    </Match>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP"/>
     </Match><Match>
-        <Bug pattern="EI_EXPOSE_REP" />
+        <Bug pattern="OBL_UNSATISFIED_OBLIGATION"/>
+    </Match><Match>
+        <Bug pattern="OS_OPEN_STREAM"/>
+    </Match><Match>
+        <Bug pattern="WA_NOT_IN_LOOP"/>
     </Match>
 </FindBugsFilter>

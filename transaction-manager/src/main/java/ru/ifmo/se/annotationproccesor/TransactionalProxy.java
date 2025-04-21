@@ -36,9 +36,7 @@ public class TransactionalProxy implements InvocationHandler {
             try {
                 transactionManager.beginTransaction(connection);
 
-
                 Object invoke = method.invoke(target, args);
-
 
                 transactionManager.commitTransaction(connection);
 
@@ -62,7 +60,8 @@ public class TransactionalProxy implements InvocationHandler {
         }
     }
 
-    public static <T> T newProxyInstance(Object target, TransactionManager transactionManager, ConnectionPull connectionPool, Class<T> interfaceType) {
+    public static <T> T newProxyInstance(Object target, TransactionManager transactionManager,
+                                         ConnectionPull connectionPool, Class<T> interfaceType) {
         return (T) Proxy.newProxyInstance(
                 target.getClass().getClassLoader(),
                 new Class<?>[]{interfaceType},

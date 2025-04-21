@@ -10,20 +10,20 @@ import ru.ifmo.se.common.dto.response.ResponseLabWorkDto;
 import ru.ifmo.se.common.io.Reader;
 import ru.ifmo.se.common.io.Writer;
 
-
 /**
  * Команда для вставки новой сущности в коллекцию по указанному индексу.
  * Если индекс больше, чем размер коллекции, выводится сообщение об ошибке.
  */
-public class InsertAtIndexCommand extends WithParametersCommand  {
+public class InsertAtIndexCommand extends WithParametersCommand {
     private final LabWorkCreator creator;
     private final boolean flag;
 
     /**
      * Конструктор команды вставки новой сущности по индексу.
+     *
      * @param reader Читатель для ввода данных.
      * @param writer Писатель для вывода сообщений.
-     * @param flag Флаг для определения дополнительной логики создания сущности.
+     * @param flag   Флаг для определения дополнительной логики создания сущности.
      */
     public InsertAtIndexCommand(Reader reader, Writer writer, boolean flag) {
         super(CommandConfiguration.INSERT_AT_INDEX_NAME,
@@ -50,7 +50,6 @@ public class InsertAtIndexCommand extends WithParametersCommand  {
                     .index(id)
                     .labWorkDto(labWork)
                     .build();
-
         } catch (NumberFormatException e) {
             writer.println("Значение id не в том формате");
             return null;
@@ -59,7 +58,10 @@ public class InsertAtIndexCommand extends WithParametersCommand  {
 
     @Override
     public void handleResponse(Response response) {
-        ResponseLabWorkDto responseLabWorkDto = (ResponseLabWorkDto) response;
-        writer.println(String.format("Успешно вставлена сущность с id = %d", responseLabWorkDto.getLabWorkDto().getId()));
+        if (response instanceof ResponseLabWorkDto) {
+            ResponseLabWorkDto responseLabWorkDto = (ResponseLabWorkDto) response;
+            writer.println(String.format("Успешно вставлена сущность с id " +
+                    "= %d", responseLabWorkDto.getLabWorkDto().getId()));
+        }
     }
 }

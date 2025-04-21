@@ -10,5 +10,6 @@ public interface CoordinatesMapper {
     CoordinatesMapper INSTANCE = Mappers.getMapper(CoordinatesMapper.class);
 
     CoordinatesDto toDto(Coordinates coordinates);
+
     Coordinates toEntity(CoordinatesDto coordinatesDto);
 }

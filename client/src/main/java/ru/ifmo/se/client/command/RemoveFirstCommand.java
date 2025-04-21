@@ -9,10 +9,11 @@ import ru.ifmo.se.common.io.Writer;
  * Команда для удаления первого элемента из коллекции.
  * Если коллекция пуста, выводится сообщение об ошибке.
  */
-public class RemoveFirstCommand extends WithoutParametersCommand  {
+public class RemoveFirstCommand extends WithoutParametersCommand {
 
     /**
      * Конструктор команды удаления первого элемента.
+     *
      * @param writer Писатель для вывода сообщений.
      */
     public RemoveFirstCommand(Writer writer) {

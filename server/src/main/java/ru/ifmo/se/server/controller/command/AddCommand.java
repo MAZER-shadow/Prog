@@ -6,12 +6,12 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.request.RequestLabWork;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.dto.response.ResponseLabWorkDto;
-import ru.ifmo.se.server.entity.LabWork;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
-import ru.ifmo.se.server.service.validator.LabWorkFieldValidator;
+import ru.ifmo.se.server.entity.LabWork;
 import ru.ifmo.se.server.exception.LabWorkDtoException;
 import ru.ifmo.se.server.mapper.LabWorkMapper;
 import ru.ifmo.se.server.service.LabWorkService;
+import ru.ifmo.se.server.service.validator.LabWorkFieldValidator;
 
 /**
  * Команда для добавления нового элемента в коллекцию.

@@ -8,6 +8,7 @@ import ru.ifmo.se.server.entity.Coordinates;
 
 import java.sql.*;
 import java.util.Optional;
+
 @Slf4j
 public class CoordinatesDao implements Dao<Coordinates> {
     public static final String DELETE_FROM_COORDINATES_WHERE_ID = "DELETE FROM coordinates WHERE id = ?";
@@ -24,7 +25,7 @@ public class CoordinatesDao implements Dao<Coordinates> {
     public Coordinates add(Coordinates coordinates) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(ADD_FROM_COORDINATES, Statement.RETURN_GENERATED_KEYS);
-             Statement stmt1 = con.createStatement()) {
+                Statement stmt1 = con.createStatement()) {
 
             ResultSet rs1 = stmt1.executeQuery("SELECT txid_current()");
             if (rs1.next()) {
@@ -91,7 +92,7 @@ public class CoordinatesDao implements Dao<Coordinates> {
     public Optional<Coordinates> getById(long id) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(FIND_BY_ID);
-             Statement stmt1 = con.createStatement()) {
+                Statement stmt1 = con.createStatement()) {
             ResultSet rs1 = stmt1.executeQuery("SELECT txid_current()");
             if (rs1.next()) {
                 String txId = rs1.getString(1);

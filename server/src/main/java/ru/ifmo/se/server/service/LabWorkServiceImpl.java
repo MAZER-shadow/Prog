@@ -72,7 +72,6 @@ public class LabWorkServiceImpl implements LabWorkService {
         return db.getAll().size();
     }
 
-
     /**
      * Проверяет наличие объекта LabWork с указанным идентификатором в базе данных.
      *

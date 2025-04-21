@@ -10,9 +10,10 @@ import ru.ifmo.se.common.io.Writer;
 public abstract class WithParametersCommand extends AbstractCommand {
     /**
      * Конструктор для команды, требующей параметров.
-     * @param name Название команды.
+     *
+     * @param name        Название команды.
      * @param description Описание команды.
-     * @param writer Писатель для вывода сообщений.
+     * @param writer      Писатель для вывода сообщений.
      */
     public WithParametersCommand(String name, String description, Writer writer) {
         super(name, description, writer);

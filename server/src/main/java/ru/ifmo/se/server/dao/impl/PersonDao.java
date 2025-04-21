@@ -27,7 +27,7 @@ public class PersonDao implements Dao<Person> {
     public Person add(Person person) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
-             Statement stmt1 = con.createStatement()) {
+                Statement stmt1 = con.createStatement()) {
 
             ResultSet rs1 = stmt1.executeQuery("SELECT txid_current()");
             if (rs1.next()) {
@@ -90,7 +90,6 @@ public class PersonDao implements Dao<Person> {
 
             stmt.setLong(1, id);
             return stmt.executeUpdate() > 0;
-
         } catch (SQLException e) {
             throw new RuntimeException("Error deleting person", e);
         } finally {
@@ -112,7 +111,6 @@ public class PersonDao implements Dao<Person> {
                 return Optional.of(buildPersonFromResultSet(rs));
             }
             return Optional.empty();
-
         } catch (SQLException e) {
             throw new RuntimeException("Error getting person", e);
         } finally {
@@ -133,7 +131,6 @@ public class PersonDao implements Dao<Person> {
                 return Optional.of(buildPersonFromResultSet(rs));
             }
             return Optional.empty();
-
         } catch (SQLException e) {
             throw new RuntimeException("Error finding person by passport", e);
         } finally {

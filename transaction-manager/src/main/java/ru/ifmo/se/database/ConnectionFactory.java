@@ -8,9 +8,9 @@ import java.util.Optional;
 import java.util.Properties;
 
 public class ConnectionFactory {
-    private static final String url;
-    private static final String user;
-    private static final String password;
+    private static final String URL;
+    private static final String USER;
+    private static final String PASSWORD;
 
     private static final String NAME_OF_ENV_PATH = "PATHTOCONF";
 
@@ -26,9 +26,9 @@ public class ConnectionFactory {
             }
             Properties prop = new Properties();
             prop.load(input);
-            url = prop.getProperty("db.url");
-            user = prop.getProperty("db.username");
-            password = prop.getProperty("db.password");
+            URL = prop.getProperty("db.url");
+            USER = prop.getProperty("db.username");
+            PASSWORD = prop.getProperty("db.password");
             Class.forName(prop.getProperty("db.driver"));
         } catch (Exception e) {
             throw new RuntimeException("Error loading configuration", e);
@@ -37,7 +37,7 @@ public class ConnectionFactory {
 
     public static Connection getConnection() {
         try {
-            return DriverManager.getConnection(url, user, password);
+            return DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (Exception e) {
             throw new RuntimeException("Error connection", e);
         }

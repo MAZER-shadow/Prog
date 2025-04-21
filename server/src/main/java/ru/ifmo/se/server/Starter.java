@@ -16,8 +16,8 @@ import ru.ifmo.se.server.dao.impl.PersonDao;
 import ru.ifmo.se.server.exception.DumpDataBaseValidationException;
 import ru.ifmo.se.server.service.LabWorkService;
 import ru.ifmo.se.server.service.LabWorkServiceImpl;
-import ru.ifmo.se.server.util.BannerPrinter;
 import ru.ifmo.se.server.service.NetworkService;
+import ru.ifmo.se.server.util.BannerPrinter;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -69,11 +69,11 @@ public class Starter {
         commandManager.register(help.getName(), help);
     }
 
-
     private void makeRequestFromClient() {
         NetworkService networkService = new NetworkService();
         networkService.run(commandManager);
     }
+
     /**
      * Инициализирует вспомогательные объекты, такие как писатель, читатель, менеджер команд и базу данных.
      *
@@ -83,11 +83,13 @@ public class Starter {
         try {
             writerReal = new WriterImpl(writer);
             commandManager = new CommandManager(writerReal);
-            ConnectionPull connectionPull = new ConnectionPull(10 );
+            ConnectionPull connectionPull = new ConnectionPull(10);
             TransactionManager transactionManager = new TransactionManager();
-            LabWorkDao labWorkDao = new LabWorkDaoImpl(new CoordinatesDao(connectionPull), new PersonDao(connectionPull), connectionPull);
+            LabWorkDao labWorkDao = new LabWorkDaoImpl(new CoordinatesDao(connectionPull),
+                    new PersonDao(connectionPull), connectionPull);
             LabWorkService receiver = new LabWorkServiceImpl(labWorkDao);
-            LabWorkService labWorkService = TransactionalProxy.newProxyInstance(receiver, transactionManager, connectionPull, LabWorkService.class);
+            LabWorkService labWorkService = TransactionalProxy.newProxyInstance(receiver,
+                    transactionManager, connectionPull, LabWorkService.class);
             this.labWorkService = labWorkService;
         } catch (DumpDataBaseValidationException e) {
             writerReal.println(e.getMessage());
@@ -102,7 +104,7 @@ public class Starter {
     public void run() {
         BannerPrinter.printBanner();
         try (BufferedWriter writer = new BufferedWriter(
-                     new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
+                new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
             launchAssistants(writer);
             initializeCommands();
             makeRequestFromClient();

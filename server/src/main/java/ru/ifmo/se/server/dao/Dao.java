@@ -22,7 +22,7 @@ public interface Dao<T> {
     /**
      * Обновляет объект типа T в хранилище данных по-указанному ID.
      *
-     * @param id      ID объекта для обновления.
+     * @param id     ID объекта для обновления.
      * @param entity Объект с новыми данными.
      */
     void updateById(long id, T entity);

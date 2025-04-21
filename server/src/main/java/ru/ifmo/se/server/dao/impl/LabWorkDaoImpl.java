@@ -19,22 +19,27 @@ import java.util.Optional;
 @Slf4j
 public class LabWorkDaoImpl implements LabWorkDao {
     public static final String TRUNCATE_LAB_WORK = "TRUNCATE lab_work;";
-    public static final String FIND_BY_ID = "SELECT lb.*, coordinates.x, coordinates.y, person.name as nam, person.height, person.passport_id" +
+    public static final String FIND_BY_ID = "SELECT lb.*, coordinates.x, coordinates.y," +
+            " person.name as nam, person.height, person.passport_id" +
             " FROM lab_work AS lb" +
             " JOIN person ON lb.author_id = person.id" +
             " JOIN coordinates ON lb.coordinates_id = coordinates.id" +
             " WHERE lb.id = ?";
     public static final String DELETE_FROM_LAB_WORK_WHERE_ID = "DELETE FROM lab_work WHERE id = ?";
-    public static final String SELECT_ALL = "SELECT lb.*, coordinates.x, coordinates.y, person.name as nam, person.height, person.passport_id" +
+    public static final String SELECT_ALL = "SELECT lb.*, coordinates.x, coordinates.y," +
+            " person.name as nam, person.height, person.passport_id" +
             " FROM lab_work AS lb" +
             " JOIN person ON lb.author_id = person.id" +
             " JOIN coordinates ON lb.coordinates_id = coordinates.id";
-    public static final String INSERT_INTO_LAB_WORK = "INSERT INTO lab_work (name, coordinates_id, creation_date, minimal_point, maximum_point, difficulty, author_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    public static final String UPDATE_LAB_WORK = "UPDATE lab_work SET name = ?, coordinates_id = ?, minimal_point = ?, maximum_point = ?, difficulty = ?, author_id = ? WHERE id = ?";
+    public static final String INSERT_INTO_LAB_WORK = "INSERT INTO lab_work (name, coordinates_id," +
+            " creation_date, minimal_point, maximum_point, difficulty, author_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    public static final String UPDATE_LAB_WORK = "UPDATE lab_work SET name = ?, coordinates_id = ?," +
+            " minimal_point = ?, maximum_point = ?, difficulty = ?, author_id = ? WHERE id = ?";
 
     private final CoordinatesDao coordinatesDao;
     private final PersonDao personDao;
     private ConnectionPull connectionPull;
+
     public LabWorkDaoImpl(CoordinatesDao coordinatesDao, PersonDao personDao, ConnectionPull connectionPull) {
         this.coordinatesDao = coordinatesDao;
         this.personDao = personDao;
@@ -75,7 +80,7 @@ public class LabWorkDaoImpl implements LabWorkDao {
     public boolean existById(long id) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(FIND_BY_ID);
-             Statement stmt1 = con.createStatement()) {
+                Statement stmt1 = con.createStatement()) {
             ResultSet rs1 = stmt1.executeQuery("SELECT txid_current()");
             if (rs1.next()) {
                 String txId = rs1.getString(1);
@@ -137,7 +142,7 @@ public class LabWorkDaoImpl implements LabWorkDao {
         List<LabWork> labWorks = new ArrayList<>();
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(SELECT_ALL);
-             Statement stmt1 = con.createStatement()
+                Statement stmt1 = con.createStatement()
         ) {
             ResultSet rs = stmt.executeQuery();
             ResultSet rs1 = stmt1.executeQuery("SELECT txid_current()");
@@ -195,7 +200,7 @@ public class LabWorkDaoImpl implements LabWorkDao {
     public LabWork add(LabWork entity) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(INSERT_INTO_LAB_WORK, Statement.RETURN_GENERATED_KEYS);
-             Statement stmt1 = con.createStatement()) {
+                Statement stmt1 = con.createStatement()) {
             Coordinates savedCoordinates = coordinatesDao.add(entity.getCoordinates());
             Person savedAuthor = personDao.add(entity.getAuthor());
 

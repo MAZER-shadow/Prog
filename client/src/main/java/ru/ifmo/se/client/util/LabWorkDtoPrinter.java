@@ -34,7 +34,8 @@ public class LabWorkDtoPrinter {
             }
 
             if (lab.getCreationDate() != null) {
-                maxDateLen = Math.max(maxDateLen, lab.getCreationDate().format(DateTimeFormatter.ISO_LOCAL_DATE).length());
+                maxDateLen = Math.max(maxDateLen, lab.getCreationDate()
+                        .format(DateTimeFormatter.ISO_LOCAL_DATE).length());
             }
 
             maxMinLen = Math.max(maxMinLen, String.format("%.1f", lab.getMinimalPoint()).length());
@@ -48,9 +49,12 @@ public class LabWorkDtoPrinter {
             }
 
             if (lab.getAuthor() != null) {
-                maxAuthorNameLen = Math.max(maxAuthorNameLen, lab.getAuthor().getName() != null ? lab.getAuthor().getName().length() : 4);
-                maxHeightLen = Math.max(maxHeightLen, lab.getAuthor().getHeight() != null ? String.valueOf(lab.getAuthor().getHeight()).length() : 4);
-                maxPassportLen = Math.max(maxPassportLen, lab.getAuthor().getPassportID() != null ? lab.getAuthor().getPassportID().length() : 4);
+                maxAuthorNameLen = Math.max(maxAuthorNameLen, lab.getAuthor().getName()
+                        != null ? lab.getAuthor().getName().length() : 4);
+                maxHeightLen = Math.max(maxHeightLen, lab.getAuthor().getHeight()
+                        != null ? String.valueOf(lab.getAuthor().getHeight()).length() : 4);
+                maxPassportLen = Math.max(maxPassportLen, lab.getAuthor().getPassportID()
+                        != null ? lab.getAuthor().getPassportID().length() : 4);
             }
         }
 
@@ -72,7 +76,10 @@ public class LabWorkDtoPrinter {
         writer.print(header);
 
         // Выводим заголовки столбцов
-        String titleFormat = "│ %-" + maxIdLen + "s │ %-" + maxNameLen + "s │ %-" + maxXLen + "s │ %-" + maxYLen + "s │ %-" + maxDateLen + "s │ %-" + maxMinLen + "s │ %-" + maxMaxLen + "s │ %-" + maxDiffLen + "s │ %-" + maxAuthorNameLen + "s │ %-" + maxHeightLen + "s │ %-" + maxPassportLen + "s │%n";
+        String titleFormat = "│ %-" + maxIdLen + "s │ %-" + maxNameLen + "s │ %-"
+                + maxXLen + "s │ %-" + maxYLen + "s │ %-" + maxDateLen + "s │ %-"
+                + maxMinLen + "s │ %-" + maxMaxLen + "s │ %-" + maxDiffLen + "s │ %-"
+                + maxAuthorNameLen + "s │ %-" + maxHeightLen + "s │ %-" + maxPassportLen + "s │%n";
         writer.print(String.format(titleFormat,
                 "ID",
                 "Name",
@@ -102,20 +109,27 @@ public class LabWorkDtoPrinter {
         writer.print(divider);
 
         // Выводим данные
-        String rowFormat = "│ %-" + maxIdLen + "d │ %-" + maxNameLen + "s │ %" + maxXLen + "d │ %" + maxYLen + "d │ %-" + maxDateLen + "s │ %" + maxMinLen + ".1f │ %" + maxMaxLen + "s │ %-" + maxDiffLen + "s │ %-" + maxAuthorNameLen + "s │ %" + maxHeightLen + "s │ %-" + maxPassportLen + "s │%n";
+        String rowFormat = "│ %-" + maxIdLen + "d │ %-" + maxNameLen + "s │ %"
+                + maxXLen + "d │ %" + maxYLen + "d │ %-" + maxDateLen + "s │ %"
+                + maxMinLen + ".1f │ %" + maxMaxLen + "s │ %-" + maxDiffLen + "s │ %-"
+                + maxAuthorNameLen + "s │ %" + maxHeightLen + "s │ %-" + maxPassportLen + "s │%n";
         for (LabWorkDto lab : labWorks) {
             writer.print(String.format(rowFormat,
                     lab.getId(),
                     lab.getName(),
                     lab.getCoordinates() != null ? lab.getCoordinates().getX() : 0,
                     lab.getCoordinates() != null ? lab.getCoordinates().getY() : 0,
-                    lab.getCreationDate() != null ? lab.getCreationDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : "null",
+                    lab.getCreationDate() != null ? lab.getCreationDate().format
+                            (DateTimeFormatter.ISO_LOCAL_DATE) : "null",
                     lab.getMinimalPoint(),
                     lab.getMaximumPoint() != null ? String.format("%.1f", lab.getMaximumPoint()) : "null",
                     lab.getDifficulty() != null ? lab.getDifficulty().toString() : "null",
-                    lab.getAuthor() != null && lab.getAuthor().getName() != null ? lab.getAuthor().getName() : "null",
-                    lab.getAuthor() != null && lab.getAuthor().getHeight() != null ? String.valueOf(lab.getAuthor().getHeight()) : "null",
-                    lab.getAuthor() != null && lab.getAuthor().getPassportID() != null ? lab.getAuthor().getPassportID() : "null"));
+                    lab.getAuthor() != null && lab.getAuthor().getName()
+                            != null ? lab.getAuthor().getName() : "null",
+                    lab.getAuthor() != null && lab.getAuthor().getHeight()
+                            != null ? String.valueOf(lab.getAuthor().getHeight()) : "null",
+                    lab.getAuthor() != null && lab.getAuthor().getPassportID()
+                            != null ? lab.getAuthor().getPassportID() : "null"));
         }
 
         // Нижняя граница таблицы

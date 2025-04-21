@@ -23,7 +23,6 @@ public class RemoveFirstCommand extends AbstractCommand {
     /**
      * Выполняет команду удаления первого элемента из коллекции.
      * Если коллекция пуста, выводится сообщение о том, что сущности отсутствуют.
-     *
      */
     @Override
     public Response execute(Request request) {

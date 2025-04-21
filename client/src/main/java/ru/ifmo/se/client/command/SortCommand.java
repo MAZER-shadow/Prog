@@ -5,19 +5,16 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.io.Writer;
 
-
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Класс SortCommand предназначен для сортировки коллекции LabWork
  * в естественном порядке и вывода её элементов.
  * Наследуется от WithoutParametersCommand.
  */
-public class SortCommand extends WithoutParametersCommand  {
+public class SortCommand extends WithoutParametersCommand {
 
     /**
      * Конструктор SortCommand.
+     *
      * @param writer объект для вывода информации пользователю.
      */
     public SortCommand(Writer writer) {

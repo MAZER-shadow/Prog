@@ -52,6 +52,7 @@ public class CommandManager {
     private static final String DEFAULT_ARGUMENT_OF_COMMAND = "";
 
     private final NetworkService networkService;
+
     /**
      * Конструктор класса CommandManager. Инициализирует объект с указанным Writer.
      *
@@ -66,7 +67,7 @@ public class CommandManager {
      * Регистрирует команду в карте команд.
      *
      * @param abstractCommandName Имя команды.
-     * @param abstractCommand Объект команды, который будет зарегистрирован.
+     * @param abstractCommand     Объект команды, который будет зарегистрирован.
      */
     public void register(String abstractCommandName, AbstractCommand abstractCommand) {
         commandMap.put(abstractCommandName, abstractCommand);

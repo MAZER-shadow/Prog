@@ -3,15 +3,13 @@ package ru.ifmo.se.client.command;
 import ru.ifmo.se.client.configuration.CommandConfiguration;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
-import ru.ifmo.se.common.exception.EntityNotFoundException;
 import ru.ifmo.se.common.io.Writer;
-
 
 /**
  * Команда для удаления сущности по идентификатору.
  * Проверяет корректность идентификатора и удаляет сущность из коллекции.
  */
-public class RemoveByIdCommand extends WithParametersCommand  {
+public class RemoveByIdCommand extends WithParametersCommand {
 
     /**
      * Конструктор команды удаления сущности по идентификатору.

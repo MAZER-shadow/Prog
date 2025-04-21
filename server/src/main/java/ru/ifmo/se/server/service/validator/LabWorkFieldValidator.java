@@ -28,7 +28,7 @@ public class LabWorkFieldValidator {
     /**
      * Проверяет корректность введённой даты.
      *
-     * @param dateForCheck дата в строковом формате.
+     * @param dateForCheck   дата в строковом формате.
      * @param dateCollection минимальная допустимая дата.
      * @return true, если дата корректна, иначе false.
      */
@@ -51,7 +51,7 @@ public class LabWorkFieldValidator {
     /**
      * Проверяет корректность введённого ID.
      *
-     * @param id строковое представление ID.
+     * @param id    строковое представление ID.
      * @param setId множество существующих ID.
      * @return true, если ID корректен, иначе false.
      */
@@ -218,7 +218,7 @@ public class LabWorkFieldValidator {
         }
     }
 
-    public void validatePerson (PersonDto person) {
+    public void validatePerson(PersonDto person) {
         if (person == null) {
             throw new PersonDtoException("Ошибка валидации Person");
         } else if (!isValidName(person.getName())) {

@@ -14,10 +14,12 @@ import java.util.List;
  * Класс ShowCommand предназначен для вывода всех элементов коллекции LabWork.
  * Наследуется от WithoutParametersCommand.
  */
-public class ShowCommand extends WithoutParametersCommand  {
+public class ShowCommand extends WithoutParametersCommand {
     private final LabWorkDtoPrinter printer = new LabWorkDtoPrinter();
+
     /**
      * Конструктор ShowCommand.
+     *
      * @param writer объект для вывода информации пользователю.
      */
     public ShowCommand(Writer writer) {
@@ -40,8 +42,10 @@ public class ShowCommand extends WithoutParametersCommand  {
 
     @Override
     public void handleResponse(Response response) {
-        ResponseListLabWorkDto responseListLabWorkDto = (ResponseListLabWorkDto) response;
-        List<LabWorkDto> labWorkList = responseListLabWorkDto.getLabWorkList();
-        printer.printLabWorks(labWorkList, writer);
+        if (response instanceof ResponseListLabWorkDto) {
+            ResponseListLabWorkDto responseListLabWorkDto = (ResponseListLabWorkDto) response;
+            List<LabWorkDto> labWorkList = responseListLabWorkDto.getLabWorkList();
+            printer.printLabWorks(labWorkList, writer);
+        }
     }
 }

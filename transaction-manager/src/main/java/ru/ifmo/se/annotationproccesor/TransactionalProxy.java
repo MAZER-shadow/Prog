@@ -33,7 +33,6 @@ public class TransactionalProxy implements InvocationHandler {
                 connection = connectionPull.getConnection();
                 TransactionSynchronizationManager.bindResource(connection);
             }
-
             try {
                 transactionManager.beginTransaction(connection);
 

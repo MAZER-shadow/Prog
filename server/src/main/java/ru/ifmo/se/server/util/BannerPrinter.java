@@ -4,8 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Slf4j
 public class BannerPrinter {
     private static final String YELLOW = "\u001B[33m";
@@ -13,7 +15,7 @@ public class BannerPrinter {
 
     public static void printBanner() {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-                BannerPrinter.class.getResourceAsStream("/banner.txt")))) {
+                BannerPrinter.class.getResourceAsStream("/banner.txt"), StandardCharsets.UTF_8))) {
 
             final String RESET = "\u001B[0m";
             List<String> lines = reader.lines().collect(Collectors.toList());

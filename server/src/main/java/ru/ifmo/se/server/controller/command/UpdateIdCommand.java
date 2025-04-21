@@ -33,34 +33,37 @@ public class UpdateIdCommand extends AbstractCommand {
      */
     @Override
     public Response execute(Request request) {
-        try {
-            RequestIndex requestIndex = (RequestIndex) request;
-            Long id = requestIndex.getIndex();
-            if (!labWorkService.existById(id)) {
+        if (request instanceof RequestIndex) {
+            try {
+                RequestIndex requestIndex = (RequestIndex) request;
+                Long id = requestIndex.getIndex();
+                if (!labWorkService.existById(id)) {
+                    return Response.builder()
+                            .status(false)
+                            .message("в коллекции меньше элементов чем передаваемый индекс")
+                            .build();
+                } else {
+                    LabWork labWork = LabWorkMapper.INSTANCE.toEntity(requestIndex.getLabWorkDto());
+                    labWork.setId(id);
+                    labWork.setCreationDate(LocalDate.now());
+                    labWorkService.updateById(id, labWork);
+                    return Response.builder()
+                            .status(true)
+                            .message("успешное обновление сущности")
+                            .build();
+                }
+            } catch (NumberFormatException e) {
                 return Response.builder()
                         .status(false)
-                        .message("в коллекции меньше элементов чем передаваемый индекс")
+                        .message("Формат Id не целое число!")
                         .build();
-            } else {
-                LabWork labWork = LabWorkMapper.INSTANCE.toEntity(requestIndex.getLabWorkDto());
-                labWork.setId(id);
-                labWork.setCreationDate(LocalDate.now());
-                labWorkService.updateById(id, labWork);
+            } catch (EntityNotFoundException e) {
                 return Response.builder()
-                        .status(true)
-                        .message("успешное обновление сущности")
+                        .status(false)
+                        .message(e.getMessage())
                         .build();
             }
-        } catch (NumberFormatException e) {
-            return Response.builder()
-                    .status(false)
-                    .message("Формат Id не целое число!")
-                    .build();
-        } catch (EntityNotFoundException e) {
-            return Response.builder()
-                    .status(false)
-                    .message(e.getMessage())
-                    .build();
         }
+        return Response.builder().status(false).build();
     }
 }

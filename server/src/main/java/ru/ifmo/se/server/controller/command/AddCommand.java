@@ -31,20 +31,23 @@ public class AddCommand extends AbstractCommand {
 
     @Override
     public Response execute(Request request) {
-        RequestLabWork requestLabWork = (RequestLabWork) request;
-        LabWorkDto labWorkDto = requestLabWork.getLabWorkDto();
-        LabWorkFieldValidator validator = new LabWorkFieldValidator();
-        try {
-            validator.validateLabWorkDto(labWorkDto);
-        } catch (LabWorkDtoException e) {
-            return Response.builder().status(false).message(e.getMessage()).build();
+        if (request instanceof RequestLabWork) {
+            RequestLabWork requestLabWork = (RequestLabWork) request;
+            LabWorkDto labWorkDto = requestLabWork.getLabWorkDto();
+            LabWorkFieldValidator validator = new LabWorkFieldValidator();
+            try {
+                validator.validateLabWorkDto(labWorkDto);
+            } catch (LabWorkDtoException e) {
+                return Response.builder().status(false).message(e.getMessage()).build();
+            }
+            LabWork labWork = LabWorkMapper.INSTANCE.toEntity(labWorkDto);
+            labWork = labWorkService.add(labWork);
+            log.info(labWork.aboutLabWork());
+            LabWorkDto lastLabWorkDto = LabWorkMapper.INSTANCE.toDto(labWork);
+            return ResponseLabWorkDto.builder()
+                    .status(true)
+                    .labWorkDto(lastLabWorkDto).build();
         }
-        LabWork labWork = LabWorkMapper.INSTANCE.toEntity(labWorkDto);
-        labWork = labWorkService.add(labWork);
-        log.info(labWork.aboutLabWork());
-        LabWorkDto lastLabWorkDto = LabWorkMapper.INSTANCE.toDto(labWork);
-        return ResponseLabWorkDto.builder()
-                .status(true)
-                .labWorkDto(lastLabWorkDto).build();
+        return Response.builder().status(false).build();
     }
 }

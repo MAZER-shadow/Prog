@@ -34,22 +34,25 @@ public class InsertAtIndexCommand extends AbstractCommand {
      */
     @Override
     public Response execute(Request request) {
-        RequestIndex requestIndex = (RequestIndex) request;
-        Long index = requestIndex.getIndex();
-        if (labWorkService.getAll().size() < index) {
-            return Response.builder()
-                    .status(false)
-                    .message("в коллекции меньше элементов чем передаваемый индекс")
-                    .build();
-        } else {
-            LabWork labWork = LabWorkMapper.INSTANCE.toEntity(requestIndex.getLabWorkDto());
-            labWork.setId(labWorkService.getMaxId() + 1);
-            labWork.setCreationDate(LocalDate.now());
-            labWorkService.getAll().add(Math.toIntExact(index), labWork);
-            return ResponseLabWorkDto.builder()
-                    .status(true)
-                    .labWorkDto(LabWorkMapper.INSTANCE.toDto(labWork))
-                    .build();
+        if (request instanceof RequestIndex) {
+            RequestIndex requestIndex = (RequestIndex) request;
+            Long index = requestIndex.getIndex();
+            if (labWorkService.getAll().size() < index) {
+                return Response.builder()
+                        .status(false)
+                        .message("в коллекции меньше элементов чем передаваемый индекс")
+                        .build();
+            } else {
+                LabWork labWork = LabWorkMapper.INSTANCE.toEntity(requestIndex.getLabWorkDto());
+                labWork.setId(labWorkService.getMaxId() + 1);
+                labWork.setCreationDate(LocalDate.now());
+                labWorkService.getAll().add(Math.toIntExact(index), labWork);
+                return ResponseLabWorkDto.builder()
+                        .status(true)
+                        .labWorkDto(LabWorkMapper.INSTANCE.toDto(labWork))
+                        .build();
+            }
         }
+        return Response.builder().status(false).build();
     }
 }

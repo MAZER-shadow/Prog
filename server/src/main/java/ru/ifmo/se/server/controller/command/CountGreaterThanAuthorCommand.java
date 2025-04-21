@@ -27,25 +27,28 @@ public class CountGreaterThanAuthorCommand extends AbstractCommand {
 
     @Override
     public Response execute(Request request) {
-        RequestPersonDto requestPersonDto = (RequestPersonDto) request;
-        LabWorkFieldValidator validator = new LabWorkFieldValidator();
-        try {
-            validator.validatePerson(requestPersonDto.getPerson());
-        } catch (PersonDtoException e) {
+        if (request instanceof RequestPersonDto) {
+            RequestPersonDto requestPersonDto = (RequestPersonDto) request;
+            LabWorkFieldValidator validator = new LabWorkFieldValidator();
+            try {
+                validator.validatePerson(requestPersonDto.getPerson());
+            } catch (PersonDtoException e) {
+                return Response.builder()
+                        .status(false)
+                        .message(e.getMessage())
+                        .build();
+            }
+
+            long count = labWorkService.getAll()
+                    .stream()
+                    .map(LabWork::getAuthor)
+                    .filter(element -> element.compareTo(PersonMapper.INSTANCE.toEntity(requestPersonDto.getPerson())) > 0)
+                    .count();
             return Response.builder()
-                    .status(false)
-                    .message(e.getMessage())
+                    .status(true)
+                    .message(String.format("Результат CountGreaterThanAuthorCommand: %s", count))
                     .build();
         }
-
-        long count = labWorkService.getAll()
-                .stream()
-                .map(LabWork::getAuthor)
-                .filter(element -> element.compareTo(PersonMapper.INSTANCE.toEntity(requestPersonDto.getPerson())) > 0)
-                .count();
-        return Response.builder()
-                .status(true)
-                .message(String.format("Результат CountGreaterThanAuthorCommand: %s", count))
-                .build();
+        return Response.builder().status(false).build();
     }
 }

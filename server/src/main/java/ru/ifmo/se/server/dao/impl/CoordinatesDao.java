@@ -13,7 +13,7 @@ public class CoordinatesDao implements Dao<Coordinates> {
     public static final String DELETE_FROM_COORDINATES_WHERE_ID = "DELETE FROM coordinates WHERE id = ?";
     public static final String FIND_BY_ID = "SELECT * FROM coordinates WHERE id = ?";
     public static final String ADD_FROM_COORDINATES = "INSERT INTO coordinates (x, y) VALUES (?, ?)";
-    final String UPDATE_COORDINATES = "UPDATE coordinates SET x = ?, y = ? WHERE id = ?";
+    public static final String UPDATE_COORDINATES = "UPDATE coordinates SET x = ?, y = ? WHERE id = ?";
     private ConnectionPull connectionPull;
 
     public CoordinatesDao(ConnectionPull connectionPull) {

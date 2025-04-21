@@ -29,31 +29,34 @@ public class RemoveByIdCommand extends AbstractCommand {
      */
     @Override
     public Response execute(Request request) {
-        try {
-            RequestId requestId = (RequestId) request;
-            Long id = Long.parseLong(String.valueOf(requestId.getId()));
-            if (!labWorkService.existById(id)) {
+        if (request instanceof RequestId) {
+            try {
+                RequestId requestId = (RequestId) request;
+                Long id = Long.parseLong(String.valueOf(requestId.getId()));
+                if (!labWorkService.existById(id)) {
+                    return Response.builder()
+                            .status(false)
+                            .message("Нет такого id")
+                            .build();
+                } else {
+                    labWorkService.removeById(id);
+                    return Response.builder()
+                            .status(true)
+                            .message("успешное удаление сущности")
+                            .build();
+                }
+            } catch (NumberFormatException e) {
                 return Response.builder()
                         .status(false)
-                        .message("Нет такого id")
+                        .message("Формат Id не целое число!")
                         .build();
-            } else {
-                labWorkService.removeById(id);
+            } catch (EntityNotFoundException e) {
                 return Response.builder()
-                        .status(true)
-                        .message("успешное удаление сущности")
+                        .status(false)
+                        .message(e.getMessage())
                         .build();
             }
-        } catch (NumberFormatException e) {
-            return Response.builder()
-                    .status(false)
-                    .message("Формат Id не целое число!")
-                    .build();
-        } catch (EntityNotFoundException e) {
-            return Response.builder()
-                    .status(false)
-                    .message(e.getMessage())
-                    .build();
         }
+        return Response.builder().status(false).build();
     }
 }

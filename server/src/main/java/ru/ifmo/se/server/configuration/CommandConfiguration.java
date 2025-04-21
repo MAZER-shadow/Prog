@@ -36,26 +36,6 @@ public class CommandConfiguration {
     public static final String COUNT_GREATER_THAN_AUTHOR_DESCRIPTION = "вывести количество элементов, " +
             "значение поля author которых больше заданного";
 
-    /**
-     * Имя команды завершения программы без сохранения в файл.
-     */
-    public static final String EXIT_NAME = "exit";
-
-    /**
-     * Описание команды завершения программы без сохранения в файл.
-     */
-    public static final String EXIT_DESCRIPTION = "остановить сервер, с сохранением в файл";
-
-    /**
-     * Имя команды выполнения скрипта из указанного файла.
-     */
-    public static final String EXECUTE_SCRIPT_NAME = "executeScript";
-
-    /**
-     * Описание команды выполнения скрипта из указанного файла.
-     */
-    public static final String EXECUTE_SCRIPT_DESCRIPTION = "считать и исполнить скрипт из указанного файла. " +
-            "В скрипте содержатся команды в таком же виде, в котором их вводит пользователь в интерактивном режиме.";
 
     /**
      * Имя команды группировки элементов коллекции по значению поля minimalPoint.
@@ -78,16 +58,6 @@ public class CommandConfiguration {
      */
     public static final String HELP_DESCRIPTION = "вывести справку по доступным командам";
 
-    /**
-     * Имя команды вывода информации о коллекции.
-     */
-    public static final String INFO_NAME = "info";
-
-    /**
-     * Описание команды вывода информации о коллекции.
-     */
-    public static final String INFO_DESCRIPTION = "вывести в стандартный поток вывода информацию о " +
-            "коллекции (тип, дата инициализации, количество элементов и т.д.)";
 
     /**
      * Имя команды добавления нового элемента в заданную позицию.
@@ -129,16 +99,6 @@ public class CommandConfiguration {
      * Описание команды удаления первого элемента из коллекции.
      */
     public static final String REMOVE_FIRST_DESCRIPTION = "удалить первый элемент из коллекции";
-
-    /**
-     * Имя команды сохранения коллекции в файл.
-     */
-    public static final String SAVE_NAME = "save";
-
-    /**
-     * Описание команды сохранения коллекции в файл.
-     */
-    public static final String SAVE_DESCRIPTION = "сохранить коллекцию в файл";
 
     /**
      * Имя команды вывода всех элементов коллекции в строковом представлении.

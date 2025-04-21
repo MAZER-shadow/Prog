@@ -87,7 +87,6 @@ public class CommandConfiguration {
      * Описание команды удаления элемента из коллекции по его id.
      */
     public static final String REMOVE_BY_ID_DESCRIPTION = "удалить элемент из коллекции по его id";
-
     /**
      * Имя команды удаления первого элемента из коллекции.
      */

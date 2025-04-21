@@ -1,6 +1,7 @@
 # Этап сборки с Maven
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY ./config ./config
 COPY ./pom.xml ./pom.xml
 COPY ./common/pom.xml ./common/pom.xml
 COPY ./client/pom.xml ./client/pom.xml

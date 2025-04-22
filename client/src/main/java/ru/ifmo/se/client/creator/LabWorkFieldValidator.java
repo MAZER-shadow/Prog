@@ -1,7 +1,6 @@
 package ru.ifmo.se.client.creator;
 
 
-
 import ru.ifmo.se.common.dto.model.DifficultyDto;
 
 import java.time.LocalDate;
@@ -25,7 +24,7 @@ public class LabWorkFieldValidator {
     /**
      * Проверяет корректность введённой даты.
      *
-     * @param dateForCheck дата в строковом формате.
+     * @param dateForCheck   дата в строковом формате.
      * @param dateCollection минимальная допустимая дата.
      * @return true, если дата корректна, иначе false.
      */
@@ -48,7 +47,7 @@ public class LabWorkFieldValidator {
     /**
      * Проверяет корректность введённого ID.
      *
-     * @param id строковое представление ID.
+     * @param id    строковое представление ID.
      * @param setId множество существующих ID.
      * @return true, если ID корректен, иначе false.
      */

@@ -25,6 +25,7 @@ public class LabWork implements Comparable<LabWork> {
     private Float maximumPoint;
     private Difficulty difficulty;
     private Person author;
+    private User user;
 
     /**
      * Возвращает строковое представление объекта LabWork.

@@ -6,15 +6,15 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.io.Writer;
 
-
 /**
  * Команда для завершения работы программы.
  * При выполнении этой команды программа завершает свое выполнение.
  */
-public class ExitCommand extends WithoutParametersCommand  {
+public class ExitCommand extends WithoutParametersCommand {
 
     /**
      * Конструктор команды завершения работы программы.
+     *
      * @param writer Писатель для вывода сообщений.
      */
     public ExitCommand(Writer writer) {

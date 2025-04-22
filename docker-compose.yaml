@@ -12,7 +12,7 @@ services:
       - postgres:/var/lib/postgresql/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d mydatabase"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d mydatabase" ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -24,14 +24,14 @@ services:
         condition: service_healthy
     command:
       - --hub-mode=off
-      - --changeLogFile=db/changelog/db.changelog-master.xml # Указываем полный путь к файлу
+      - --changeLogFile=db/changelog/db.changelog-master.xml
       - --driver=org.postgresql.Driver
       - --url=jdbc:postgresql://postgres:5432/mydatabase
       - --username=postgres
       - --password=mysecretpassword
       - update
     volumes:
-      - ./server/src/main/resources:/liquibase/changelog  # Монтируем в другую директориюъx
+      - ./server/src/main/resources:/liquibase/changelog
 
   server:
     depends_on:

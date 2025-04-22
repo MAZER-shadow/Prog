@@ -16,15 +16,12 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class NetworkService {
-    private final int MAX_ATTEMPTS = 5;
-    private String ip;
-    private int port;
+    private final static int MAX_ATTEMPTS = 5;
     private DatagramChannel channel;
     private Selector selector;
     private SocketAddress socketAddress;
+
     public NetworkService(String ip, int port, DatagramChannel channel, Selector selector) {
-        this.ip = ip;
-        this.port = port;
         this.channel = channel;
         this.selector = selector;
         socketAddress = new InetSocketAddress(ip, port);

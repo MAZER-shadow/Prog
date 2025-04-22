@@ -3,7 +3,9 @@ package ru.ifmo.se.server.controller.command;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
+import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.LabWork;
+import ru.ifmo.se.server.entity.User;
 import ru.ifmo.se.server.service.LabWorkService;
 
 import java.util.Collections;
@@ -22,7 +24,7 @@ public class SortCommand extends AbstractCommand {
      * @param labWorkService объект, управляющий коллекцией.
      */
     public SortCommand(LabWorkService labWorkService) {
-        super(labWorkService, CommandConfiguration.SORT_NAME, CommandConfiguration.SORT_DESCRIPTION);
+        super(labWorkService, CommandConfiguration.SORT_NAME, CommandConfiguration.SORT_DESCRIPTION, Condition.SECURE);
     }
 
     /**
@@ -30,7 +32,7 @@ public class SortCommand extends AbstractCommand {
      * Если коллекция пуста, выводит соответствующее сообщение.
      */
     @Override
-    public Response execute(Request request) {
+    public Response execute(Request request, User user) {
         if (labWorkService.getSize() == 0) {
             return Response.builder()
                     .status(false)

@@ -1,5 +1,7 @@
 package ru.ifmo.se.server.dao;
 
+import ru.ifmo.se.server.entity.User;
+
 import java.util.Optional;
 
 /**
@@ -22,10 +24,10 @@ public interface Dao<T> {
     /**
      * Обновляет объект типа T в хранилище данных по-указанному ID.
      *
-     * @param id      ID объекта для обновления.
+     * @param id     ID объекта для обновления.
      * @param entity Объект с новыми данными.
      */
-    void updateById(long id, T entity);
+    void updateById(long id, T entity, User user);
 
     /**
      * Удаляет объект из хранилища данных по указанному ID.
@@ -33,7 +35,7 @@ public interface Dao<T> {
      * @param id ID объекта для удаления.
      * @return true, если объект был успешно удален, false в противном случае.
      */
-    boolean removeById(long id);
+    boolean removeById(long id, User user);
 
 
     /**

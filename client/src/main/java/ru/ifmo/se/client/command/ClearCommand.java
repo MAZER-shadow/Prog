@@ -10,10 +10,11 @@ import ru.ifmo.se.common.io.Writer;
  * Команда для очистки всей коллекции.
  * Удаляет все элементы из коллекции, делая её пустой.
  */
-public class ClearCommand extends WithoutParametersCommand  {
+public class ClearCommand extends WithoutParametersCommand {
 
     /**
      * Конструктор команды очистки коллекции.
+     *
      * @param writer Писатель для вывода сообщений.
      */
     public ClearCommand(Writer writer) {

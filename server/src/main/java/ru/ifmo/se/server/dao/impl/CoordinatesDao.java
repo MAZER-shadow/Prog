@@ -5,15 +5,17 @@ import ru.ifmo.se.annotationproccesor.TransactionSynchronizationManager;
 import ru.ifmo.se.database.ConnectionPull;
 import ru.ifmo.se.server.dao.Dao;
 import ru.ifmo.se.server.entity.Coordinates;
+import ru.ifmo.se.server.entity.User;
 
 import java.sql.*;
 import java.util.Optional;
+
 @Slf4j
 public class CoordinatesDao implements Dao<Coordinates> {
     public static final String DELETE_FROM_COORDINATES_WHERE_ID = "DELETE FROM coordinates WHERE id = ?";
     public static final String FIND_BY_ID = "SELECT * FROM coordinates WHERE id = ?";
     public static final String ADD_FROM_COORDINATES = "INSERT INTO coordinates (x, y) VALUES (?, ?)";
-    final String UPDATE_COORDINATES = "UPDATE coordinates SET x = ?, y = ? WHERE id = ?";
+    public static final String UPDATE_COORDINATES = "UPDATE coordinates SET x = ?, y = ? WHERE id = ?";
     private ConnectionPull connectionPull;
 
     public CoordinatesDao(ConnectionPull connectionPull) {
@@ -24,7 +26,7 @@ public class CoordinatesDao implements Dao<Coordinates> {
     public Coordinates add(Coordinates coordinates) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(ADD_FROM_COORDINATES, Statement.RETURN_GENERATED_KEYS);
-             Statement stmt1 = con.createStatement()) {
+                Statement stmt1 = con.createStatement()) {
 
             ResultSet rs1 = stmt1.executeQuery("SELECT txid_current()");
             if (rs1.next()) {
@@ -50,7 +52,7 @@ public class CoordinatesDao implements Dao<Coordinates> {
     }
 
     @Override
-    public void updateById(long id, Coordinates coordinates) {
+    public void updateById(long id, Coordinates coordinates, User user) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_COORDINATES)) {
             stmt.setLong(1, coordinates.getX());
@@ -72,7 +74,7 @@ public class CoordinatesDao implements Dao<Coordinates> {
     }
 
     @Override
-    public boolean removeById(long id) {
+    public boolean removeById(long id, User user) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(DELETE_FROM_COORDINATES_WHERE_ID)) {
             stmt.setLong(1, id);
@@ -91,7 +93,7 @@ public class CoordinatesDao implements Dao<Coordinates> {
     public Optional<Coordinates> getById(long id) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(FIND_BY_ID);
-             Statement stmt1 = con.createStatement()) {
+                Statement stmt1 = con.createStatement()) {
             ResultSet rs1 = stmt1.executeQuery("SELECT txid_current()");
             if (rs1.next()) {
                 String txId = rs1.getString(1);

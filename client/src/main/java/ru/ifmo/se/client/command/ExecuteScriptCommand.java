@@ -3,13 +3,14 @@ package ru.ifmo.se.client.command;
 import ru.ifmo.se.client.Starter;
 import ru.ifmo.se.client.configuration.CommandConfiguration;
 import ru.ifmo.se.client.exception.ExecuteScriptException;
+import ru.ifmo.se.client.exception.NonNullScriptException;
 import ru.ifmo.se.client.util.AbsolutePathResolver;
 import ru.ifmo.se.client.util.PathValidator;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.exception.NonNullException;
-import ru.ifmo.se.client.exception.NonNullScriptException;
 import ru.ifmo.se.common.io.Writer;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,11 +18,12 @@ import java.util.Set;
  * Команда для выполнения скрипта из указанного файла.
  * Читает команды из файла и выполняет их, предотвращая повторное выполнение того же файла.
  */
-public class ExecuteScriptCommand extends WithParametersCommand  {
+public class ExecuteScriptCommand extends WithParametersCommand {
     private static final Set<String> SET_OF_PATH = new HashSet<>();
 
     /**
      * Конструктор команды выполнения скрипта.
+     *
      * @param writer Писатель для вывода сообщений.
      */
     public ExecuteScriptCommand(Writer writer) {

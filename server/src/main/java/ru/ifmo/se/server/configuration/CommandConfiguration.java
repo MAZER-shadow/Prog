@@ -15,6 +15,13 @@ public class CommandConfiguration {
      */
     public static final String ADD_DESCRIPTION = "добавить новый элемент в коллекцию";
 
+    public static final String AUTHORIZATION_NAME = "authorization";
+
+    public static final String AUTHORIZATION_DESCRIPTION = "авторизоваться";
+
+    public static final String REGISTRATION_NAME = "registration";
+
+    public static final String REGISTRATION_DESCRIPTION = "зарегистрироваться";
     /**
      * Имя команды очистки коллекции.
      */
@@ -36,7 +43,6 @@ public class CommandConfiguration {
     public static final String COUNT_GREATER_THAN_AUTHOR_DESCRIPTION = "вывести количество элементов, " +
             "значение поля author которых больше заданного";
 
-
     /**
      * Имя команды группировки элементов коллекции по значению поля minimalPoint.
      */
@@ -57,7 +63,6 @@ public class CommandConfiguration {
      * Описание команды вывода справки по доступным командам.
      */
     public static final String HELP_DESCRIPTION = "вывести справку по доступным командам";
-
 
     /**
      * Имя команды добавления нового элемента в заданную позицию.
@@ -89,7 +94,6 @@ public class CommandConfiguration {
      * Описание команды удаления элемента из коллекции по его id.
      */
     public static final String REMOVE_BY_ID_DESCRIPTION = "удалить элемент из коллекции по его id";
-
     /**
      * Имя команды удаления первого элемента из коллекции.
      */

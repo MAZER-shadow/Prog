@@ -4,24 +4,24 @@ import java.sql.Connection;
 
 public class TransactionSynchronizationManager {
 
-    private static final ThreadLocal<Connection> resourceHolder = new ThreadLocal<>();
+    private static final ThreadLocal<Connection> RESOURCE_HOLDER = new ThreadLocal<>();
 
     public static boolean isTransactionActive() {
-        return resourceHolder.get() != null;
+        return RESOURCE_HOLDER.get() != null;
     }
 
     public static Connection getCurrentConnection() {
-        return resourceHolder.get();
+        return RESOURCE_HOLDER.get();
     }
 
     public static void bindResource(Connection connection) {
         if (isTransactionActive()) {
             throw new IllegalStateException("Cannot bind a new connection when a transaction is already active");
         }
-        resourceHolder.set(connection);
+        RESOURCE_HOLDER.set(connection);
     }
 
     public static void unbindResource() {
-        resourceHolder.remove();
+        RESOURCE_HOLDER.remove();
     }
 }

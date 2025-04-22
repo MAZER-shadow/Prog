@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <!-- Отключить все проверки для конкретного пакета -->
+    <suppress checks=".*" files="[ru.ifmo.se.server.mapper]"/>
+
+    <!-- Или можно отключить конкретные проверки для пакета -->
+    <!-- <suppress checks="LineLength" files="[путь/к/вашему/пакету/].*"/> -->
+</suppressions>

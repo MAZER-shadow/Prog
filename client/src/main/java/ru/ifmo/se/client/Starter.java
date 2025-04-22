@@ -4,11 +4,10 @@ package ru.ifmo.se.client;
 import ru.ifmo.se.client.command.*;
 import ru.ifmo.se.client.service.NetworkService;
 import ru.ifmo.se.common.exception.NonNullException;
+import ru.ifmo.se.common.io.Reader;
+import ru.ifmo.se.common.io.Writer;
 import ru.ifmo.se.common.io.impl.ReaderImpl;
 import ru.ifmo.se.common.io.impl.WriterImpl;
-
-import ru.ifmo.se.common.io.Writer;
-import ru.ifmo.se.common.io.Reader;
 
 import java.io.*;
 import java.nio.channels.DatagramChannel;
@@ -16,7 +15,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 
 /**
  * Класс Starter предназначен для инициализации и запуска приложения.
@@ -27,7 +25,6 @@ public class Starter {
     /**
      * Объект для взаимодействия с базой данных.
      */
-
 
     /**
      * Объект Writer для вывода сообщений.
@@ -69,8 +66,10 @@ public class Starter {
      */
     private void initializeCommands(Reader reader, Writer writer, boolean flag) {
         List<AbstractCommand> listCommand = List.of(new ShowCommand(writer),
-                new ExitCommand(writer),
                 new ClearCommand(writer),
+                new ExitCommand(writer),
+                new AuthorizationCommand(reader, writer),
+                new RegistrationCommand(reader, writer),
                 new AddCommand(reader, writer, flag),
                 new SortCommand(writer), new SortCommand(writer),
                 new MinByMinimalPointCommand(writer),
@@ -185,6 +184,7 @@ public class Starter {
 
         return ip.matches(ipv4Pattern) || ip.matches(ipv6Pattern);
     }
+
     /**
      * Запускает приложение, инициализируя необходимые компоненты и начиная обработку команд.
      */
@@ -192,9 +192,10 @@ public class Starter {
         if (flag) {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
                     BufferedWriter writer = new BufferedWriter(
-                                new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
+                            new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
                 launchAssistants(reader, writer);
                 writerReal.println("введите help для получения информации о командах");
+
                 writerReal.println("введите exit для выхода из приложения");
                 initializeCommands(consoleReader, writerReal, true);
                 makeRequest(consoleReader, writerReal);

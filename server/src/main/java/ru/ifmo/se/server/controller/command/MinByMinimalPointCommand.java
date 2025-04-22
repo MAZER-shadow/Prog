@@ -4,7 +4,9 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.dto.response.ResponseLabWorkDto;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
+import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.LabWork;
+import ru.ifmo.se.server.entity.User;
 import ru.ifmo.se.server.mapper.LabWorkMapper;
 import ru.ifmo.se.server.service.LabWorkService;
 
@@ -25,7 +27,7 @@ public class MinByMinimalPointCommand extends AbstractCommand {
      */
     public MinByMinimalPointCommand(LabWorkService labWorkService) {
         super(labWorkService, CommandConfiguration.MIN_BY_MINIMAL_POINT_NAME,
-                CommandConfiguration.MIN_BY_MINIMAL_POINT_DESCRIPTION);
+                CommandConfiguration.MIN_BY_MINIMAL_POINT_DESCRIPTION, Condition.SECURE);
     }
 
     /**
@@ -34,7 +36,7 @@ public class MinByMinimalPointCommand extends AbstractCommand {
      * о первой сущности в отсортированном списке.
      */
     @Override
-    public Response execute(Request request) {
+    public Response execute(Request request, User user) {
         List<LabWork> list = new ArrayList<>(labWorkService.getAll());
         if (list.isEmpty()) {
             return Response.builder()

@@ -23,7 +23,7 @@ public class TransactionalProxy implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
         boolean isConnection = TransactionSynchronizationManager.isTransactionActive();
         if (method.isAnnotationPresent(Transactional.class)) {
             Connection connection;
@@ -33,20 +33,17 @@ public class TransactionalProxy implements InvocationHandler {
                 connection = connectionPull.getConnection();
                 TransactionSynchronizationManager.bindResource(connection);
             }
-
             try {
                 transactionManager.beginTransaction(connection);
 
-
                 Object invoke = method.invoke(target, args);
-
 
                 transactionManager.commitTransaction(connection);
 
                 return invoke;
             } catch (Exception e) {
                 transactionManager.rollbackTransaction(connection);
-                throw new RuntimeException(e);
+                throw e;
             } finally {
                 if (connection != null) {
                     TransactionSynchronizationManager.unbindResource();
@@ -63,7 +60,8 @@ public class TransactionalProxy implements InvocationHandler {
         }
     }
 
-    public static <T> T newProxyInstance(Object target, TransactionManager transactionManager, ConnectionPull connectionPool, Class<T> interfaceType) {
+    public static <T> T newProxyInstance(Object target, TransactionManager transactionManager,
+                                         ConnectionPull connectionPool, Class<T> interfaceType) {
         return (T) Proxy.newProxyInstance(
                 target.getClass().getClassLoader(),
                 new Class<?>[]{interfaceType},

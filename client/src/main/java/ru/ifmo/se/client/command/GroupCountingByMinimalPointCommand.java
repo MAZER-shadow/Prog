@@ -10,10 +10,11 @@ import ru.ifmo.se.common.io.Writer;
  * Команда для группировки элементов коллекции по минимальной оценке и подсчета их количества.
  * Выводит количество элементов для каждой уникальной минимальной точки.
  */
-public class GroupCountingByMinimalPointCommand extends WithoutParametersCommand  {
+public class GroupCountingByMinimalPointCommand extends WithoutParametersCommand {
 
     /**
      * Конструктор команды группировки и подсчета элементов по минимальной оценке
+     *
      * @param writer Писатель для вывода сообщений.
      */
     public GroupCountingByMinimalPointCommand(Writer writer) {
@@ -38,9 +39,11 @@ public class GroupCountingByMinimalPointCommand extends WithoutParametersCommand
 
     @Override
     public void handleResponse(Response response) {
-        ResponseMap responseMap = (ResponseMap) response;
-        responseMap.getResponse().forEach((minimalPoint, count) ->
-                writer.println("minimalPoint: " + minimalPoint + " -> Количество: " + count)
-        );
+        if (response instanceof ResponseMap) {
+            ResponseMap responseMap = (ResponseMap) response;
+            responseMap.getResponse().forEach((minimalPoint, count) ->
+                    writer.println("minimalPoint: " + minimalPoint + " -> Количество: " + count)
+            );
+        }
     }
 }

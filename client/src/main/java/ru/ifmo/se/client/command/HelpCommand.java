@@ -9,11 +9,12 @@ import ru.ifmo.se.common.io.Writer;
  * Команда для вывода справки по доступным командам.
  * Выводит список всех команд и их описания.
  */
-public class HelpCommand extends WithoutParametersCommand  {
+public class HelpCommand extends WithoutParametersCommand {
 
     /**
      * Конструктор команды справки.
      * Инициализирует список доступных команд и их описания.
+     *
      * @param writer Писатель для вывода сообщений.
      */
     public HelpCommand(Writer writer) {

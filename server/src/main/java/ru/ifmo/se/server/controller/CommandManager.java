@@ -1,13 +1,21 @@
 package ru.ifmo.se.server.controller;
 
+import liquibase.util.grammar.Token;
 import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
-import ru.ifmo.se.common.io.Writer;
 import ru.ifmo.se.common.exception.CommandNotFoundException;
+import ru.ifmo.se.common.io.Writer;
+import ru.ifmo.se.server.configuration.CommandConfiguration;
+import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.controller.command.AbstractCommand;
+import ru.ifmo.se.server.entity.User;
+import ru.ifmo.se.server.exception.PermissionDeniedException;
+import ru.ifmo.se.server.service.AuthService;
 
-
+import javax.naming.AuthenticationException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -53,20 +61,22 @@ public class CommandManager {
      */
     private static final String DEFAULT_ARGUMENT_OF_COMMAND = "";
 
+    private final AuthService authService;
     /**
      * Конструктор класса CommandManager. Инициализирует объект с указанным Writer.
      *
      * @param writer Объект Writer для вывода сообщений.
      */
-    public CommandManager(Writer writer) {
+    public CommandManager(Writer writer, AuthService authService) {
         this.writer = writer;
+        this.authService = authService;
     }
 
     /**
      * Регистрирует команду в карте команд.
      *
      * @param abstractCommandName Имя команды.
-     * @param abstractCommand Объект команды, который будет зарегистрирован.
+     * @param abstractCommand     Объект команды, который будет зарегистрирован.
      */
     public void register(String abstractCommandName, AbstractCommand abstractCommand) {
         commandMap.put(abstractCommandName, abstractCommand);
@@ -74,7 +84,7 @@ public class CommandManager {
 
     /**
      * Выполняет команду на основе введенных данных.
-
+     *
      * @throws CommandNotFoundException Если команда не найдена.
      */
     public Response execute(Request request) {
@@ -84,16 +94,29 @@ public class CommandManager {
             if (Objects.isNull(abstractCommand)) {
                 throw new CommandNotFoundException(String.format("Не найдено команды: %s", commandName));
             }
-            return abstractCommand.execute(request);
-        } catch (CommandNotFoundException e) {
+            User user = null;
+            if (abstractCommand.getName().equals(CommandConfiguration.HELP_NAME) && request.getToken() != null) {
+                user = authService.authenticate(request.getToken());
+            }
+            if (abstractCommand.getCondition().equals(Condition.SECURE)) {
+                user = authService.authenticate(request.getToken());
+            }
+            return abstractCommand.execute(request, user);
+        } catch (UndeclaredThrowableException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof InvocationTargetException) {
+                cause = ((InvocationTargetException) cause).getTargetException();
+            }
+            String message = cause != null ? cause.getMessage() : "Неизвестная ошибка";
+            // используйте message
             return Response.builder()
                     .status(false)
-                    .message(e.getMessage())
+                    .message(message)
                     .build();
         } catch (Throwable e) {
             return Response.builder()
                     .status(false)
-                    .message("СЕРВЕР УПАЛ ИЗВИНИТЕ, ДАВАЙТЕ В ДРУГОЙ РАЗ МОЖЕТ БЫТЬ В АЛЬФА БАНКЕ ОН РАБОТАЕТ")
+                    .message(e.getMessage())
                     .build();
         }
     }

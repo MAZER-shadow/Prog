@@ -1,2 +1,2 @@
 INSERT INTO coordinates(x, y)
-VALUES (1 ,2);
+VALUES (1, 2);

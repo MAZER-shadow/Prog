@@ -1,12 +1,12 @@
 package ru.ifmo.se.client.creator;
 
 
+import ru.ifmo.se.client.exception.NonNullScriptException;
 import ru.ifmo.se.common.dto.model.CoordinatesDto;
 import ru.ifmo.se.common.dto.model.DifficultyDto;
 import ru.ifmo.se.common.dto.model.LabWorkDto;
 import ru.ifmo.se.common.dto.model.PersonDto;
 import ru.ifmo.se.common.exception.NonNullException;
-import ru.ifmo.se.client.exception.NonNullScriptException;
 import ru.ifmo.se.common.io.Reader;
 import ru.ifmo.se.common.io.Writer;
 
@@ -36,7 +36,7 @@ public class LabWorkCreator {
      *
      * @param reader объект для чтения пользовательского ввода.
      * @param writer объект для вывода информации пользователю.
-     * @param flag флаг режима работы (например, режим скрипта или консольный ввод).
+     * @param flag   флаг режима работы (например, режим скрипта или консольный ввод).
      */
     public LabWorkCreator(Reader reader, Writer writer, boolean flag) {
         this.flag = flag;

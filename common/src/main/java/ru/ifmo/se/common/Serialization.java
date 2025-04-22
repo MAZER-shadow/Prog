@@ -6,7 +6,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 
 public class Serialization {
-    public static byte [] serialize(Object obj) {
+    public static byte[] serialize(Object obj) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);

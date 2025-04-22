@@ -8,8 +8,8 @@
 
     <!-- Best Practices -->
     <!-- <rule ref="category/java/bestpractices.xml/UnusedPrivateField"/> -->
-     <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
-     <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
+    <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
 
     <!-- Code Style -->
     <rule ref="category/java/codestyle.xml/UnnecessaryImport"/>

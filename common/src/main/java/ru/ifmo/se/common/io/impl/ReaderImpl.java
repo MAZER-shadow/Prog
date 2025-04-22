@@ -1,7 +1,6 @@
 package ru.ifmo.se.common.io.impl;
 
 
-
 import ru.ifmo.se.common.exception.IORuntimeException;
 import ru.ifmo.se.common.exception.NonNullException;
 import ru.ifmo.se.common.io.Reader;
@@ -29,7 +28,7 @@ public class ReaderImpl implements Reader {
      * Читает строку текста. Если строка равна null, выбрасывает исключение NonNullException.
      *
      * @return Прочитанная строка.
-     * @throws NonNullException Если прочитанная строка равна null.
+     * @throws NonNullException   Если прочитанная строка равна null.
      * @throws IORuntimeException Если возникает ошибка ввода-вывода при чтении строки.
      */
     @Override

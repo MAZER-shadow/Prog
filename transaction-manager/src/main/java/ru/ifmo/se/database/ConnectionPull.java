@@ -4,14 +4,15 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.annotationproccesor.TransactionSynchronizationManager;
 
-
 import java.sql.Connection;
 import java.util.LinkedList;
 import java.util.Queue;
+
 @Slf4j
 public class ConnectionPull {
     private Queue<Connection> queue;
     private final int size;
+
     public ConnectionPull(int size) {
         this.size = size;
         initialize();

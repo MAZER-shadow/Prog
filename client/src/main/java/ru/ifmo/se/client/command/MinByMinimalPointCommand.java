@@ -39,6 +39,8 @@ public class MinByMinimalPointCommand extends WithoutParametersCommand {
 
     @Override
     public void handleResponse(Response response) {
-        writer.println(((ResponseLabWorkDto) response).getLabWorkDto().aboutLabWork());
+        if (response instanceof ResponseLabWorkDto) {
+            writer.println(((ResponseLabWorkDto) response).getLabWorkDto().aboutLabWork());
+        }
     }
 }

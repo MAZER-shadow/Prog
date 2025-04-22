@@ -41,5 +41,6 @@ public abstract class AbstractCommand {
      * @param parameters Параметры, переданные в команду.
      */
     public abstract Request makeRequest(String parameters);
+
     public abstract void handleResponse(Response response);
 }

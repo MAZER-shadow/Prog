@@ -9,20 +9,20 @@ import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.io.Reader;
 import ru.ifmo.se.common.io.Writer;
 
-
 /**
  * Класс UpdateIdCommand предназначен для обновления элемента коллекции по заданному ID.
  * Наследуется от WithParametersCommand.
  */
-public class UpdateIdCommand extends WithParametersCommand  {
+public class UpdateIdCommand extends WithParametersCommand {
     private final LabWorkCreator creator;
     private final Reader reader;
 
     /**
      * Конструктор UpdateIdCommand.
+     *
      * @param reader объект для считывания пользовательского ввода.
      * @param writer объект для вывода информации пользователю.
-     * @param flag флаг, определяющий режим работы.
+     * @param flag   флаг, определяющий режим работы.
      */
     public UpdateIdCommand(Reader reader, Writer writer, boolean flag) {
         super(CommandConfiguration.UPDATE_ID_NAME, CommandConfiguration.UPDATE_ID_DESCRIPTION, writer);
@@ -47,7 +47,6 @@ public class UpdateIdCommand extends WithParametersCommand  {
                     .index(id)
                     .labWorkDto(labWork)
                     .build();
-
         } catch (NumberFormatException e) {
             writer.println("Значение id не в том формате");
             return null;

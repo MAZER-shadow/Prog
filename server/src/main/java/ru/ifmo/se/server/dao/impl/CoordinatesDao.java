@@ -5,6 +5,7 @@ import ru.ifmo.se.annotationproccesor.TransactionSynchronizationManager;
 import ru.ifmo.se.database.ConnectionPull;
 import ru.ifmo.se.server.dao.Dao;
 import ru.ifmo.se.server.entity.Coordinates;
+import ru.ifmo.se.server.entity.User;
 
 import java.sql.*;
 import java.util.Optional;
@@ -51,7 +52,7 @@ public class CoordinatesDao implements Dao<Coordinates> {
     }
 
     @Override
-    public void updateById(long id, Coordinates coordinates) {
+    public void updateById(long id, Coordinates coordinates, User user) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_COORDINATES)) {
             stmt.setLong(1, coordinates.getX());
@@ -73,7 +74,7 @@ public class CoordinatesDao implements Dao<Coordinates> {
     }
 
     @Override
-    public boolean removeById(long id) {
+    public boolean removeById(long id, User user) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(DELETE_FROM_COORDINATES_WHERE_ID)) {
             stmt.setLong(1, id);

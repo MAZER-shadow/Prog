@@ -5,7 +5,9 @@ import ru.ifmo.se.common.dto.request.RequestIndex;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.exception.EntityNotFoundException;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
+import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.LabWork;
+import ru.ifmo.se.server.entity.User;
 import ru.ifmo.se.server.mapper.LabWorkMapper;
 import ru.ifmo.se.server.service.LabWorkService;
 
@@ -23,7 +25,7 @@ public class UpdateIdCommand extends AbstractCommand {
      * @param labWorkService объект, управляющий коллекцией.
      */
     public UpdateIdCommand(LabWorkService labWorkService) {
-        super(labWorkService, CommandConfiguration.UPDATE_ID_NAME, CommandConfiguration.UPDATE_ID_DESCRIPTION);
+        super(labWorkService, CommandConfiguration.UPDATE_ID_NAME, CommandConfiguration.UPDATE_ID_DESCRIPTION, Condition.SECURE);
     }
 
     /**
@@ -31,7 +33,7 @@ public class UpdateIdCommand extends AbstractCommand {
      * Если ID не найден, выводит сообщение об ошибке.
      */
     @Override
-    public Response execute(Request request) {
+    public Response execute(Request request, User user) {
         if (request instanceof RequestIndex) {
             try {
                 RequestIndex requestIndex = (RequestIndex) request;
@@ -45,7 +47,7 @@ public class UpdateIdCommand extends AbstractCommand {
                     LabWork labWork = LabWorkMapper.INSTANCE.toEntity(requestIndex.getLabWorkDto());
                     labWork.setId(id);
                     labWork.setCreationDate(LocalDate.now());
-                    labWorkService.updateById(id, labWork);
+                    labWorkService.updateById(id, labWork, user);
                     return Response.builder()
                             .status(true)
                             .message("успешное обновление сущности")

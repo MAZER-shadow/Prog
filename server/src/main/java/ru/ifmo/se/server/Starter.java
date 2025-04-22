@@ -1,5 +1,6 @@
 package ru.ifmo.se.server;
 
+import io.jsonwebtoken.security.Keys;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.annotationproccesor.TransactionManager;
@@ -10,13 +11,13 @@ import ru.ifmo.se.database.ConnectionPull;
 import ru.ifmo.se.server.controller.CommandManager;
 import ru.ifmo.se.server.controller.command.*;
 import ru.ifmo.se.server.dao.LabWorkDao;
+import ru.ifmo.se.server.dao.UserDao;
 import ru.ifmo.se.server.dao.impl.CoordinatesDao;
 import ru.ifmo.se.server.dao.impl.LabWorkDaoImpl;
 import ru.ifmo.se.server.dao.impl.PersonDao;
+import ru.ifmo.se.server.dao.impl.UserDaoImpl;
 import ru.ifmo.se.server.exception.DumpDataBaseValidationException;
-import ru.ifmo.se.server.service.LabWorkService;
-import ru.ifmo.se.server.service.LabWorkServiceImpl;
-import ru.ifmo.se.server.service.NetworkService;
+import ru.ifmo.se.server.service.*;
 import ru.ifmo.se.server.util.BannerPrinter;
 
 import java.io.BufferedWriter;
@@ -37,6 +38,9 @@ public class Starter {
      */
     private static LabWorkService labWorkService;
 
+    private static AuthService authService;
+
+    private static UserService userService;
     /**
      * Объект Writer для вывода сообщений.
      */
@@ -53,19 +57,20 @@ public class Starter {
     private void initializeCommands() {
         List<AbstractCommand> listCommand = List.of(new ShowCommand(labWorkService),
                 new ClearCommand(labWorkService),
+                new RegistrationCommand(authService),
+                new AuthorizationCommand(authService),
                 new AddCommand(labWorkService),
                 new SortCommand(labWorkService), new SortCommand(labWorkService),
                 new MinByMinimalPointCommand(labWorkService),
                 new CountGreaterThanAuthorCommand(labWorkService),
                 new UpdateIdCommand(labWorkService),
                 new RemoveByIdCommand(labWorkService),
-                new InsertAtIndexCommand(labWorkService),
                 new RemoveFirstCommand(labWorkService),
                 new GroupCountingByMinimalPointCommand(labWorkService));
         for (AbstractCommand command : listCommand) {
             commandManager.register(command.getName(), command);
         }
-        HelpCommand help = new HelpCommand(labWorkService, commandManager.getDescriptionMap());
+        HelpCommand help = new HelpCommand(labWorkService, listCommand);
         commandManager.register(help.getName(), help);
     }
 
@@ -82,15 +87,23 @@ public class Starter {
     private void launchAssistants(BufferedWriter writer) {
         try {
             writerReal = new WriterImpl(writer);
-            commandManager = new CommandManager(writerReal);
             ConnectionPull connectionPull = new ConnectionPull(10);
             TransactionManager transactionManager = new TransactionManager();
             LabWorkDao labWorkDao = new LabWorkDaoImpl(new CoordinatesDao(connectionPull),
                     new PersonDao(connectionPull), connectionPull);
             LabWorkService receiver = new LabWorkServiceImpl(labWorkDao);
-            LabWorkService labWorkService = TransactionalProxy.newProxyInstance(receiver,
+            labWorkService = TransactionalProxy.newProxyInstance(receiver,
                     transactionManager, connectionPull, LabWorkService.class);
-            this.labWorkService = labWorkService;
+            UserDao userDao = new UserDaoImpl(connectionPull);
+            userService = TransactionalProxy.newProxyInstance(new UserServiceImpl(userDao), transactionManager, connectionPull, UserService.class);
+            AuthService authServiceLocal = new AuthServiceImpl(userService, Keys.hmacShaKeyFor(
+                    ("sdfgsdfgsdfgsdfsdfsdfsdffghkfgh;lkfg;lhf'gl;hfl;gh" +
+                            "fgl;hfgl;hklfgmhlkfgmhkl;fmghklmfghklmfgh" +
+                            "dfghflgkmhkflgmhkfgmhlfgmhmklfgmhl;fgh" +
+                            "fghfg;lh,f;lgh,f;gl,hf;lg,h").getBytes(StandardCharsets.UTF_8)));
+            authService = TransactionalProxy.newProxyInstance(authServiceLocal, transactionManager, connectionPull, AuthService.class);
+            commandManager = new CommandManager(writerReal, authService);
+
         } catch (DumpDataBaseValidationException e) {
             writerReal.println(e.getMessage());
             System.exit(1);

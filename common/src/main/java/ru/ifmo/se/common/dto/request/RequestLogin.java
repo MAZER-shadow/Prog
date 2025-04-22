@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Request implements Serializable {
-    private String commandName;
-    private String token;
+public class RequestLogin extends Request implements Serializable {
+    private String username;
+    private String password;
 }

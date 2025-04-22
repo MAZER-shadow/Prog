@@ -6,6 +6,7 @@ import ru.ifmo.se.annotationproccesor.TransactionSynchronizationManager;
 import ru.ifmo.se.database.ConnectionPull;
 import ru.ifmo.se.server.dao.Dao;
 import ru.ifmo.se.server.entity.Person;
+import ru.ifmo.se.server.entity.User;
 
 import java.sql.*;
 import java.util.Optional;
@@ -62,7 +63,7 @@ public class PersonDao implements Dao<Person> {
     }
 
     @Override
-    public void updateById(long id, Person person) {
+    public void updateById(long id, Person person, User user) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_SQL)) {
 
@@ -84,7 +85,7 @@ public class PersonDao implements Dao<Person> {
     }
 
     @Override
-    public boolean removeById(long id) {
+    public boolean removeById(long id, User user) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(DELETE_SQL)) {
 

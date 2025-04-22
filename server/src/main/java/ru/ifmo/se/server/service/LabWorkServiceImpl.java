@@ -2,6 +2,7 @@ package ru.ifmo.se.server.service;
 
 import ru.ifmo.se.server.dao.LabWorkDao;
 import ru.ifmo.se.server.entity.LabWork;
+import ru.ifmo.se.server.entity.User;
 
 import java.util.List;
 
@@ -50,8 +51,8 @@ public class LabWorkServiceImpl implements LabWorkService {
     /**
      * Очищает базу данных, удаляя все объекты LabWork.
      */
-    public void clear() {
-        db.clear();
+    public void clear(User user) {
+        db.clear(user);
     }
 
     /**
@@ -88,8 +89,8 @@ public class LabWorkServiceImpl implements LabWorkService {
      * @param id      Идентификатор объекта LabWork, который необходимо обновить.
      * @param labWork Новый объект LabWork для замены старого.
      */
-    public void updateById(long id, LabWork labWork) {
-        db.updateById(id, labWork);
+    public void updateById(long id, LabWork labWork, User user) {
+        db.updateById(id, labWork, user);
     }
 
     /**
@@ -98,7 +99,7 @@ public class LabWorkServiceImpl implements LabWorkService {
      * @param id Идентификатор объекта LabWork, который необходимо удалить.
      * @return true, если объект был успешно удален, иначе false.
      */
-    public boolean removeById(long id) {
-        return db.removeById(id);
+    public boolean removeById(long id, User user) {
+        return db.removeById(id, user);
     }
 }

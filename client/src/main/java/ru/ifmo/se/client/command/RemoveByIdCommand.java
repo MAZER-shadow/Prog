@@ -2,6 +2,7 @@ package ru.ifmo.se.client.command;
 
 import ru.ifmo.se.client.configuration.CommandConfiguration;
 import ru.ifmo.se.common.dto.request.Request;
+import ru.ifmo.se.common.dto.request.RequestId;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.io.Writer;
 
@@ -30,8 +31,10 @@ public class RemoveByIdCommand extends WithParametersCommand {
     @Override
     public Request makeRequest(String parameter) {
         verifyParameter(parameter);
-        return Request.builder()
+        Long id = Long.parseLong(parameter);
+        return RequestId.builder()
                 .commandName(name)
+                .id(id)
                 .build();
     }
 

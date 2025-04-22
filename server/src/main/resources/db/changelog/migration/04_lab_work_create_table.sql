@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS lab_work
     maximum_point  FLOAT            NOT NULL,
     difficulty     TEXT             NOT NULL,
     author_id      BIGINT           REFERENCES person (id) ON DELETE SET NULL,
+    user_id        BIGINT           REFERENCES users (id) ON DELETE SET NULL
 
     CONSTRAINT min_point_check CHECK (minimal_point > 0),
     CONSTRAINT max_point_check CHECK (maximum_point IS NULL OR maximum_point > 0)

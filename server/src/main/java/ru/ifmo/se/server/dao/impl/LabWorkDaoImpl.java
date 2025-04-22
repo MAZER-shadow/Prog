@@ -5,11 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.annotationproccesor.TransactionSynchronizationManager;
 import ru.ifmo.se.database.ConnectionPull;
 import ru.ifmo.se.server.dao.LabWorkDao;
-import ru.ifmo.se.server.entity.Coordinates;
-import ru.ifmo.se.server.entity.Difficulty;
-import ru.ifmo.se.server.entity.LabWork;
-import ru.ifmo.se.server.entity.Person;
+import ru.ifmo.se.server.entity.*;
+import ru.ifmo.se.server.exception.PermissionDeniedException;
 
+import javax.naming.AuthenticationException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,12 +17,13 @@ import java.util.Optional;
 
 @Slf4j
 public class LabWorkDaoImpl implements LabWorkDao {
-    public static final String TRUNCATE_LAB_WORK = "TRUNCATE lab_work;";
+    public static final String TRUNCATE_LAB_WORK = "DELETE FROM lab_work WHERE user_id = ?";
     public static final String FIND_BY_ID = "SELECT lb.*, coordinates.x, coordinates.y," +
-            " person.name as nam, person.height, person.passport_id" +
+            " person.name as nam, person.height, person.passport_id, users.id" +
             " FROM lab_work AS lb" +
             " JOIN person ON lb.author_id = person.id" +
             " JOIN coordinates ON lb.coordinates_id = coordinates.id" +
+            " JOIN users ON lb.user_id = users.id" +
             " WHERE lb.id = ?";
     public static final String DELETE_FROM_LAB_WORK_WHERE_ID = "DELETE FROM lab_work WHERE id = ?";
     public static final String SELECT_ALL = "SELECT lb.*, coordinates.x, coordinates.y," +
@@ -32,7 +32,7 @@ public class LabWorkDaoImpl implements LabWorkDao {
             " JOIN person ON lb.author_id = person.id" +
             " JOIN coordinates ON lb.coordinates_id = coordinates.id";
     public static final String INSERT_INTO_LAB_WORK = "INSERT INTO lab_work (name, coordinates_id," +
-            " creation_date, minimal_point, maximum_point, difficulty, author_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            " creation_date, minimal_point, maximum_point, difficulty, author_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     public static final String UPDATE_LAB_WORK = "UPDATE lab_work SET name = ?, coordinates_id = ?," +
             " minimal_point = ?, maximum_point = ?, difficulty = ?, author_id = ? WHERE id = ?";
 
@@ -47,9 +47,10 @@ public class LabWorkDaoImpl implements LabWorkDao {
     }
 
     @Override
-    public void clear() {
+    public void clear(User user) {
         Connection con = connectionPull.getConnection();
-        try (Statement stmt = con.createStatement()) {
+        try (PreparedStatement stmt = con.prepareStatement(TRUNCATE_LAB_WORK)) {
+            stmt.setLong(1, user.getId());
             stmt.executeUpdate(TRUNCATE_LAB_WORK);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -61,10 +62,14 @@ public class LabWorkDaoImpl implements LabWorkDao {
     }
 
     @Override
-    public boolean removeById(long id) {
+    public boolean removeById(long id, User user) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(DELETE_FROM_LAB_WORK_WHERE_ID)) {
             stmt.setLong(1, id);
+            LabWork labWork = getById(id).orElseThrow(RuntimeException::new);
+            if (labWork.getUser().getId() != user.getId()) {
+                throw new PermissionDeniedException("Недостаточно прав");
+            }
             int s = stmt.executeUpdate();
             return s > 0;
         } catch (SQLException e) {
@@ -122,6 +127,9 @@ public class LabWorkDaoImpl implements LabWorkDao {
                                 .name(rs.getString("nam"))
                                 .height(rs.getInt("height"))
                                 .passportID(rs.getString("passport_id"))
+                                .build())
+                        .user(User.builder()
+                                .id(rs.getLong("user_id"))
                                 .build())
                         .build();
                 return Optional.of(build);
@@ -217,6 +225,7 @@ public class LabWorkDaoImpl implements LabWorkDao {
             stmt.setFloat(5, entity.getMaximumPoint());
             stmt.setString(6, entity.getDifficulty() == null ? "NORMAL" : entity.getDifficulty().name());
             stmt.setLong(7, savedAuthor.getId());
+            stmt.setLong(8, entity.getUser().getId());
 
             stmt.executeUpdate();
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
@@ -237,12 +246,15 @@ public class LabWorkDaoImpl implements LabWorkDao {
     }
 
     @Override
-    public void updateById(long id, LabWork entity) {
+    public void updateById(long id, LabWork entity, User user) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_LAB_WORK)) {
             LabWork labWork = getById(id).orElseThrow(RuntimeException::new);
-            coordinatesDao.updateById(labWork.getCoordinates().getId(), entity.getCoordinates());
-            personDao.updateById(labWork.getAuthor().getId(), entity.getAuthor());
+            if (labWork.getUser().getId() != user.getId()) {
+                throw new PermissionDeniedException("Недостаточно прав");
+            }
+            coordinatesDao.updateById(labWork.getCoordinates().getId(), entity.getCoordinates(), user);
+            personDao.updateById(labWork.getAuthor().getId(), entity.getAuthor(), user);
 
             stmt.setString(1, entity.getName());
             stmt.setLong(2, labWork.getCoordinates().getId());

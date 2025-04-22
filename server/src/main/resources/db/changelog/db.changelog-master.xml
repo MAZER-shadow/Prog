@@ -26,11 +26,21 @@
     </changeSet>
 
     <changeSet id="3" author="pavel">
-        <comment>Create lab_work table</comment>
-        <sqlFile path="migration/03_lab_work_create_table.sql"
+        <comment>Create person table</comment>
+        <sqlFile path="migration/03_user_create_table.sql"
                  relativeToChangelogFile="true"/>
         <rollback>
-            <sqlFile path="rollback/03_lab_work_rollback.sql"
+            <sqlFile path="rollback/03_user_rollback.sql"
+                     relativeToChangelogFile="true"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="4" author="pavel">
+        <comment>Create lab_work table</comment>
+        <sqlFile path="migration/04_lab_work_create_table.sql"
+                 relativeToChangelogFile="true"/>
+        <rollback>
+            <sqlFile path="rollback/04_lab_work_rollback.sql"
                      relativeToChangelogFile="true"/>
         </rollback>
     </changeSet>
@@ -40,10 +50,10 @@
 
     <changeSet id="5" author="pavel">
         <comment>Create coordinates table</comment>
-        <sqlFile path="migration/04_insert.sql"
+        <sqlFile path="migration/05_insert.sql"
                  relativeToChangelogFile="true"/>
         <rollback>
-            <sqlFile path="rollback/04_insert_rollback.sql"
+            <sqlFile path="rollback/05_insert_rollback.sql"
                      relativeToChangelogFile="true"/>
         </rollback>
     </changeSet>

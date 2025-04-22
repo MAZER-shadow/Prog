@@ -1,6 +1,7 @@
 package ru.ifmo.se.server.dao;
 
 import ru.ifmo.se.server.entity.LabWork;
+import ru.ifmo.se.server.entity.User;
 
 import java.sql.DatabaseMetaData;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface LabWorkDao extends Dao<LabWork> {
     /**
      * Удаляет все объекты из хранилища данных.
      */
-    void clear();
+    void clear(User user);
 
     /**
      * Возвращает метаданные базы данных.

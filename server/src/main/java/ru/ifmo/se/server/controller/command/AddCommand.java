@@ -7,7 +7,9 @@ import ru.ifmo.se.common.dto.request.RequestLabWork;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.dto.response.ResponseLabWorkDto;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
+import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.LabWork;
+import ru.ifmo.se.server.entity.User;
 import ru.ifmo.se.server.exception.LabWorkDtoException;
 import ru.ifmo.se.server.mapper.LabWorkMapper;
 import ru.ifmo.se.server.service.LabWorkService;
@@ -26,11 +28,11 @@ public class AddCommand extends AbstractCommand {
      * @param labWorkService Объект для взаимодействия с базой данных.
      */
     public AddCommand(LabWorkService labWorkService) {
-        super(labWorkService, CommandConfiguration.ADD_NAME, CommandConfiguration.ADD_DESCRIPTION);
+        super(labWorkService, CommandConfiguration.ADD_NAME, CommandConfiguration.ADD_DESCRIPTION, Condition.SECURE);
     }
 
     @Override
-    public Response execute(Request request) {
+    public Response execute(Request request, User user) {
         if (request instanceof RequestLabWork) {
             RequestLabWork requestLabWork = (RequestLabWork) request;
             LabWorkDto labWorkDto = requestLabWork.getLabWorkDto();
@@ -41,6 +43,7 @@ public class AddCommand extends AbstractCommand {
                 return Response.builder().status(false).message(e.getMessage()).build();
             }
             LabWork labWork = LabWorkMapper.INSTANCE.toEntity(labWorkDto);
+            labWork.setUser(user);
             labWork = labWorkService.add(labWork);
             log.info(labWork.aboutLabWork());
             LabWorkDto lastLabWorkDto = LabWorkMapper.INSTANCE.toDto(labWork);

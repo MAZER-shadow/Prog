@@ -2,6 +2,7 @@ package ru.ifmo.se.server.service;
 
 import ru.ifmo.se.annotationproccesor.Transactional;
 import ru.ifmo.se.server.entity.LabWork;
+import ru.ifmo.se.server.entity.User;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface LabWorkService {
      * Очищает базу данных, удаляя все объекты LabWork.
      */
     @Transactional
-    void clear();
+    void clear(User user);
 
     /**
      * Возвращает список всех объектов LabWork в базе данных.
@@ -65,7 +66,7 @@ public interface LabWorkService {
      * @param labWork Новый объект LabWork для замены старого.
      */
     @Transactional
-    void updateById(long id, LabWork labWork);
+    void updateById(long id, LabWork labWork, User user);
 
     /**
      * Удаляет объект LabWork с указанным идентификатором из базы данных.
@@ -74,5 +75,5 @@ public interface LabWorkService {
      * @return true, если объект был успешно удален, иначе false.
      */
     @Transactional
-    boolean removeById(long id);
+    boolean removeById(long id, User user);
 }

@@ -53,6 +53,7 @@ public class CommandManager {
 
     private final NetworkService networkService;
 
+    public static String token;
     /**
      * Конструктор класса CommandManager. Инициализирует объект с указанным Writer.
      *
@@ -96,6 +97,7 @@ public class CommandManager {
                 if (request == null) {
                     return;
                 }
+                request.setToken(token);
                 Response response = networkService.send(request);
                 if (response.isStatus()) {
                     abstractCommand.handleResponse(response);
@@ -107,6 +109,7 @@ public class CommandManager {
                 if (request == null) {
                     return;
                 }
+                request.setToken(token);
                 Response response = networkService.send(request);
                 if (response.isStatus()) {
                     abstractCommand.handleResponse(response);

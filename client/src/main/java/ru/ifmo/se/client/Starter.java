@@ -66,8 +66,10 @@ public class Starter {
      */
     private void initializeCommands(Reader reader, Writer writer, boolean flag) {
         List<AbstractCommand> listCommand = List.of(new ShowCommand(writer),
-                new ExitCommand(writer),
                 new ClearCommand(writer),
+                new ExitCommand(writer),
+                new AuthorizationCommand(reader, writer),
+                new RegistrationCommand(reader, writer),
                 new AddCommand(reader, writer, flag),
                 new SortCommand(writer), new SortCommand(writer),
                 new MinByMinimalPointCommand(writer),
@@ -193,6 +195,7 @@ public class Starter {
                             new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
                 launchAssistants(reader, writer);
                 writerReal.println("введите help для получения информации о командах");
+
                 writerReal.println("введите exit для выхода из приложения");
                 initializeCommands(consoleReader, writerReal, true);
                 makeRequest(consoleReader, writerReal);

@@ -15,6 +15,13 @@ public class CommandConfiguration {
      */
     public static final String ADD_DESCRIPTION = "добавить новый элемент в коллекцию";
 
+    public static final String AUTHORIZATION_NAME = "authorization";
+
+    public static final String AUTHORIZATION_DESCRIPTION = "авторизоваться";
+
+    public static final String REGISTRATION_NAME = "registration";
+
+    public static final String REGISTRATION_DESCRIPTION = "зарегистрироваться";
     /**
      * Имя команды очистки коллекции.
      */

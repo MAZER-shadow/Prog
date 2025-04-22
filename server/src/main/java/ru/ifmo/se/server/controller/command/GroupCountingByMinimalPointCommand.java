@@ -4,7 +4,9 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.dto.response.ResponseMap;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
+import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.LabWork;
+import ru.ifmo.se.server.entity.User;
 import ru.ifmo.se.server.service.LabWorkService;
 
 import java.util.Map;
@@ -23,7 +25,7 @@ public class GroupCountingByMinimalPointCommand extends AbstractCommand {
      */
     public GroupCountingByMinimalPointCommand(LabWorkService labWorkService) {
         super(labWorkService, CommandConfiguration.GROUP_COUNTING_BY_MINIMAL_POINT_NAME,
-                CommandConfiguration.GROUP_COUNTING_BY_MINIMAL_POINT_DESCRIPTION);
+                CommandConfiguration.GROUP_COUNTING_BY_MINIMAL_POINT_DESCRIPTION, Condition.SECURE);
     }
 
     /**
@@ -32,7 +34,7 @@ public class GroupCountingByMinimalPointCommand extends AbstractCommand {
      * Если коллекция пуста, выводится соответствующее сообщение.
      */
     @Override
-    public Response execute(Request request) {
+    public Response execute(Request request, User user) {
         if (labWorkService.getAll().isEmpty()) {
             return Response.builder()
                     .status(false)

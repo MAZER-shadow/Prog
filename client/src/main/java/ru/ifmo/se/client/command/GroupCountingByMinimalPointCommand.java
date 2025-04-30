@@ -19,7 +19,7 @@ public class GroupCountingByMinimalPointCommand extends WithoutParametersCommand
      */
     public GroupCountingByMinimalPointCommand(Writer writer) {
         super(CommandConfiguration.GROUP_COUNTING_BY_MINIMAL_POINT_NAME,
-                CommandConfiguration.GROUP_COUNTING_BY_MINIMAL_POINT_DESCRIPTION, writer);
+                CommandConfiguration.GROUP_COUNTING_BY_MINIMAL_POINT_DESCRIPTION, writer, true);
     }
 
     /**

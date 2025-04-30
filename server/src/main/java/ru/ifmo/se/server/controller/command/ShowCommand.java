@@ -5,6 +5,7 @@ import ru.ifmo.se.common.dto.model.LabWorkDto;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.dto.response.ResponseListLabWorkDto;
+import ru.ifmo.se.common.util.AnswerType;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.User;
@@ -35,15 +36,9 @@ public class ShowCommand extends AbstractCommand {
      */
     @Override
     public Response execute(Request request, User user) {
-//        if (receiver.getSize() == 0) {
-//            return Response.builder()
-//                    .status(false)
-//                    .message("Нет элементов в коллекции")
-//                    .build();
-//        }
         List<LabWorkDto> list = labWorkService.getAll().stream().map(LabWorkMapper.INSTANCE::toDto).toList();
         return ResponseListLabWorkDto.builder()
-                .status(true)
+                .answerType(AnswerType.SUCCESS)
                 .labWorkList(list)
                 .build();
     }

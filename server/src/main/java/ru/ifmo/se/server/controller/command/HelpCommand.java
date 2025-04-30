@@ -3,6 +3,7 @@ package ru.ifmo.se.server.controller.command;
 import lombok.SneakyThrows;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
+import ru.ifmo.se.common.util.AnswerType;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.User;
@@ -39,12 +40,12 @@ public class HelpCommand extends AbstractCommand {
     public Response execute(Request request, User user) {
         if (user == null) {
             return Response.builder()
-                    .status(true)
+                    .answerType(AnswerType.SUCCESS)
                     .message(resultInsecureCommand.toString())
                     .build();
         } else {
             return Response.builder()
-                    .status(true)
+                    .answerType(AnswerType.SUCCESS)
                     .message(resultSecureCommand.toString())
                     .build();
         }

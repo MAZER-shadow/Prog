@@ -23,7 +23,7 @@ public class ShowCommand extends WithoutParametersCommand {
      * @param writer объект для вывода информации пользователю.
      */
     public ShowCommand(Writer writer) {
-        super(CommandConfiguration.SHOW_NAME, CommandConfiguration.SHOW_DESCRIPTION, writer);
+        super(CommandConfiguration.SHOW_NAME, CommandConfiguration.SHOW_DESCRIPTION, writer, true);
     }
 
     /**

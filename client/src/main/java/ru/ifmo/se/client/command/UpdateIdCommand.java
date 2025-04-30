@@ -15,19 +15,16 @@ import ru.ifmo.se.common.io.Writer;
  */
 public class UpdateIdCommand extends WithParametersCommand {
     private final LabWorkCreator creator;
-    private final Reader reader;
 
     /**
      * Конструктор UpdateIdCommand.
      *
      * @param reader объект для считывания пользовательского ввода.
      * @param writer объект для вывода информации пользователю.
-     * @param flag   флаг, определяющий режим работы.
      */
-    public UpdateIdCommand(Reader reader, Writer writer, boolean flag) {
-        super(CommandConfiguration.UPDATE_ID_NAME, CommandConfiguration.UPDATE_ID_DESCRIPTION, writer);
-        this.reader = reader;
-        creator = new LabWorkCreator(reader, writer, flag);
+    public UpdateIdCommand(Reader reader, Writer writer) {
+        super(CommandConfiguration.UPDATE_ID_NAME, CommandConfiguration.UPDATE_ID_DESCRIPTION, writer, true);
+        creator = new LabWorkCreator(reader, writer);
     }
 
     /**

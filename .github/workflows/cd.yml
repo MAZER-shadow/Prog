@@ -1,39 +1,39 @@
-name: Continuous Deployment
-
-on:
-  push:
-    branches:
-      - build/lab7  # Или ваша основная ветка, например 'master'
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Build Docker image
-        run: |
-          docker build -t your-docker-image .
-
-      - name: Push Docker image to Docker Hub
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker tag your-docker-image:latest ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest
-
-      - name: Deploy to server via SSH
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_SSH_USER }}@${{ secrets.SERVER_SSH_HOST }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest
-            docker compose down || true
-            docker compose up --build -d || true
-          
-            docker rmi $(docker images -f "dangling=true" -q) || true
-          EOF
+#name: Continuous Deployment
+#
+#on:
+#  push:
+#    branches:
+#      - build/lab7  # Или ваша основная ветка, например 'master'
+#
+#jobs:
+#  deploy:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v4
+#
+#      - name: Set up SSH
+#        uses: webfactory/ssh-agent@v0.9.0
+#        with:
+#          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+#
+#      - name: Build Docker image
+#        run: |
+#          docker build -t your-docker-image .
+#
+#      - name: Push Docker image to Docker Hub
+#        run: |
+#          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+#          docker tag your-docker-image:latest ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest
+#          docker push ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest
+#
+#      - name: Deploy to server via SSH
+#        run: |
+#          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_SSH_USER }}@${{ secrets.SERVER_SSH_HOST }} << 'EOF'
+#            docker pull ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest
+#            docker compose down || true
+#            docker compose up --build -d || true
+#
+#            docker rmi $(docker images -f "dangling=true" -q) || true
+#          EOF

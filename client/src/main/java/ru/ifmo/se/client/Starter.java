@@ -46,17 +46,6 @@ public class Starter {
     private static String ip;
     private static Integer port;
 
-    private boolean flag;
-    private String pathForExecuteScript;
-
-    public Starter() {
-        flag = true;
-    }
-
-    public Starter(String pathForExecuteScript) {
-        this.flag = false;
-        this.pathForExecuteScript = pathForExecuteScript;
-    }
 
     /**
      * Инициализирует команды, которые будут доступны в приложении.
@@ -64,24 +53,29 @@ public class Starter {
      * @param reader Читатель для ввода данных.
      * @param writer Писатель для вывода данных.
      */
-    private void initializeCommands(Reader reader, Writer writer, boolean flag) {
+    private void initializeCommands(Reader reader, Writer writer) {
         List<AbstractCommand> listCommand = List.of(new ShowCommand(writer),
                 new ClearCommand(writer),
                 new ExitCommand(writer),
                 new AuthorizationCommand(reader, writer),
                 new RegistrationCommand(reader, writer),
-                new AddCommand(reader, writer, flag),
+                new AddCommand(reader, writer),
                 new SortCommand(writer), new SortCommand(writer),
                 new MinByMinimalPointCommand(writer),
-                new CountGreaterThanAuthorCommand(reader, writer, flag),
-                new UpdateIdCommand(reader, writer, flag),
+                new CountGreaterThanAuthorCommand(reader, writer),
+                new UpdateIdCommand(reader, writer),
                 new RemoveByIdCommand(writer),
-                new InsertAtIndexCommand(reader, writer, flag),
                 new RemoveFirstCommand(writer), new HelpCommand(writer),
-                new GroupCountingByMinimalPointCommand(writer),
-                new ExecuteScriptCommand(writer));
+                new GroupCountingByMinimalPointCommand(writer));
         for (AbstractCommand command : listCommand) {
-            commandManager.register(command.getName(), command);
+            if (command.getFlag() == null) {
+                commandManager.register(command.getName(), command, true);
+                commandManager.register(command.getName(), command, false);
+            } else if (command.getFlag()) {
+                commandManager.register(command.getName(), command, true);
+            } else {
+                commandManager.register(command.getName(), command, false);
+            }
         }
     }
 
@@ -100,13 +94,6 @@ public class Starter {
         } catch (NonNullException e) {
             writer.println(e.getMessage());
             makeRequest(reader, writer);
-        }
-    }
-
-    private void makeRequestForRequestFromFile(Reader reader) {
-        while (true) {
-            String line = reader.readLine();
-            commandManager.execute(line);
         }
     }
 
@@ -189,29 +176,17 @@ public class Starter {
      * Запускает приложение, инициализируя необходимые компоненты и начиная обработку команд.
      */
     public void run() {
-        if (flag) {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
-                launchAssistants(reader, writer);
-                writerReal.println("введите help для получения информации о командах");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+             BufferedWriter writer = new BufferedWriter(
+                     new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
+            launchAssistants(reader, writer);
+            writerReal.println("введите help для получения информации о командах");
 
-                writerReal.println("введите exit для выхода из приложения");
-                initializeCommands(consoleReader, writerReal, true);
-                makeRequest(consoleReader, writerReal);
-            } catch (IOException e) {
-                writerReal.println("ошибка потока ввода");
-            }
-        } else {
-            try (FileReader fileReader = new FileReader(pathForExecuteScript, StandardCharsets.UTF_8);
-                    BufferedReader reader = new BufferedReader(fileReader)) {
-                Reader readerCommandFromFile = new ReaderImpl(reader);
-                commandManager = new CommandManager(writerReal, networkService);
-                initializeCommands(readerCommandFromFile, writerReal, false);
-                makeRequestForRequestFromFile(readerCommandFromFile);
-            } catch (IOException e) {
-                writerReal.println("ошибка потока ввода");
-            }
+            writerReal.println("введите exit для выхода из приложения");
+            initializeCommands(consoleReader, writerReal);
+            makeRequest(consoleReader, writerReal);
+        } catch (IOException e) {
+            writerReal.println("ошибка потока ввода");
         }
     }
 }

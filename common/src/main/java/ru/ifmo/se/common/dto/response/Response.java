@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import ru.ifmo.se.common.util.AnswerType;
 
 import java.io.Serializable;
 
@@ -12,6 +13,6 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 public class Response implements Serializable {
-    private boolean status;
+    private AnswerType answerType;
     private String message;
 }

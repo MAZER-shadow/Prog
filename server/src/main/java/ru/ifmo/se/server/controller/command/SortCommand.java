@@ -2,6 +2,7 @@ package ru.ifmo.se.server.controller.command;
 
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
+import ru.ifmo.se.common.util.AnswerType;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.LabWork;
@@ -35,14 +36,14 @@ public class SortCommand extends AbstractCommand {
     public Response execute(Request request, User user) {
         if (labWorkService.getSize() == 0) {
             return Response.builder()
-                    .status(false)
+                    .answerType(AnswerType.ERROR)
                     .message("Нет элементов в коллекции -> нечего сортировать")
                     .build();
         }
         List<LabWork> list = labWorkService.getAll();
         Collections.sort(list);
         return Response.builder()
-                .status(true)
+                .answerType(AnswerType.SUCCESS)
                 .message("коллекция успешно отсортирована")
                 .build();
     }

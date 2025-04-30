@@ -16,20 +16,17 @@ import ru.ifmo.se.common.io.Writer;
  */
 public class CountGreaterThanAuthorCommand extends WithoutParametersCommand {
     private final Reader reader;
-    private final boolean flag;
 
     /**
      * Конструктор команды подсчёта элементов с автором, лексикографически большим, чем переданный.
      *
      * @param reader Читатель для создания объектов.
      * @param writer Писатель для вывода сообщений.
-     * @param flag   Флаг, используемый для создания данных.
      */
-    public CountGreaterThanAuthorCommand(Reader reader, Writer writer, boolean flag) {
+    public CountGreaterThanAuthorCommand(Reader reader, Writer writer) {
         super(CommandConfiguration.COUNT_GREATER_THAN_AUTHOR_NAME,
-                CommandConfiguration.COUNT_GREATER_THAN_AUTHOR_DESCRIPTION, writer);
+                CommandConfiguration.COUNT_GREATER_THAN_AUTHOR_DESCRIPTION, writer, true);
         this.reader = reader;
-        this.flag = flag;
     }
 
     /**
@@ -41,7 +38,7 @@ public class CountGreaterThanAuthorCommand extends WithoutParametersCommand {
     @Override
     public Request makeRequest(String parameter) {
         verifyParameter(parameter);
-        LabWorkCreator labWorkCreator = new LabWorkCreator(reader, writer, flag);
+        LabWorkCreator labWorkCreator = new LabWorkCreator(reader, writer);
         PersonDto person = labWorkCreator.createPerson();
         return RequestPersonDto
                 .builder()

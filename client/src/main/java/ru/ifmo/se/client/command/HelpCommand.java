@@ -18,7 +18,7 @@ public class HelpCommand extends WithoutParametersCommand {
      * @param writer Писатель для вывода сообщений.
      */
     public HelpCommand(Writer writer) {
-        super(CommandConfiguration.HELP_NAME, CommandConfiguration.HELP_DESCRIPTION, writer);
+        super(CommandConfiguration.HELP_NAME, CommandConfiguration.HELP_DESCRIPTION, writer, null);
     }
 
     /**

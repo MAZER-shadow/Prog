@@ -1,19 +1,18 @@
 package ru.ifmo.se.server.controller;
 
-import liquibase.util.grammar.Token;
 import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.exception.CommandNotFoundException;
 import ru.ifmo.se.common.io.Writer;
+import ru.ifmo.se.common.util.AnswerType;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.controller.command.AbstractCommand;
 import ru.ifmo.se.server.entity.User;
-import ru.ifmo.se.server.exception.PermissionDeniedException;
+import ru.ifmo.se.server.exception.TokenTimeRuntimeException;
 import ru.ifmo.se.server.service.AuthService;
 
-import javax.naming.AuthenticationException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashMap;
@@ -108,29 +107,26 @@ public class CommandManager {
                 cause = ((InvocationTargetException) cause).getTargetException();
             }
             String message = cause != null ? cause.getMessage() : "Неизвестная ошибка";
-            // используйте message
+            if (cause instanceof TokenTimeRuntimeException) {
+                return Response.builder()
+                        .answerType(AnswerType.REAUTHORIZATION)
+                        .message(message)
+                        .build();
+            }
             return Response.builder()
-                    .status(false)
+                    .answerType(AnswerType.ERROR)
                     .message(message)
+                    .build();
+        } catch (TokenTimeRuntimeException e) {
+            return Response.builder()
+                    .answerType(AnswerType.REAUTHORIZATION)
+                    .message(e.getMessage())
                     .build();
         } catch (Throwable e) {
             return Response.builder()
-                    .status(false)
+                    .answerType(AnswerType.ERROR)
                     .message(e.getMessage())
                     .build();
         }
-    }
-
-    /**
-     * Возвращает карту с описаниями всех зарегистрированных команд.
-     *
-     * @return Карта, где ключ - имя команды, а значение - её описание.
-     */
-    public Map<String, String> getDescriptionMap() {
-        Map<String, String> descriptionAbstractCommand = new HashMap<>();
-        for (AbstractCommand value : commandMap.values()) {
-            descriptionAbstractCommand.put(value.getName(), value.getDescription());
-        }
-        return descriptionAbstractCommand;
     }
 }

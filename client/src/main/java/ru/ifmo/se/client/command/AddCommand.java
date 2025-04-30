@@ -22,11 +22,10 @@ public class AddCommand extends WithoutParametersCommand {
      *
      * @param reader Читатель для ввода данных.
      * @param writer Писатель для вывода сообщений.
-     * @param flag   Флаг, используемый для настройки создания сущности.
      */
-    public AddCommand(Reader reader, Writer writer, boolean flag) {
-        super(CommandConfiguration.ADD_NAME, CommandConfiguration.ADD_DESCRIPTION, writer);
-        creator = new LabWorkCreator(reader, writer, flag);
+    public AddCommand(Reader reader, Writer writer) {
+        super(CommandConfiguration.ADD_NAME, CommandConfiguration.ADD_DESCRIPTION, writer, true);
+        creator = new LabWorkCreator(reader, writer);
     }
 
     /**
@@ -47,8 +46,7 @@ public class AddCommand extends WithoutParametersCommand {
 
     @Override
     public void handleResponse(Response response) {
-        if (response instanceof ResponseLabWorkDto) {
-            ResponseLabWorkDto responseLabWorkDto = (ResponseLabWorkDto) response;
+        if (response instanceof ResponseLabWorkDto responseLabWorkDto) {
             LabWorkDto labWorkDto = responseLabWorkDto.getLabWorkDto();
             writer.println(String.format("Успешное создание сущности LabWork, id = %d", labWorkDto.getId()));
         }

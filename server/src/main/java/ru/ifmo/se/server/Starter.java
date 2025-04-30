@@ -12,9 +12,9 @@ import ru.ifmo.se.server.controller.CommandManager;
 import ru.ifmo.se.server.controller.command.*;
 import ru.ifmo.se.server.dao.LabWorkDao;
 import ru.ifmo.se.server.dao.UserDao;
-import ru.ifmo.se.server.dao.impl.CoordinatesDao;
+import ru.ifmo.se.server.dao.impl.CoordinatesDaoImpl;
 import ru.ifmo.se.server.dao.impl.LabWorkDaoImpl;
-import ru.ifmo.se.server.dao.impl.PersonDao;
+import ru.ifmo.se.server.dao.impl.PersonDaoImpl;
 import ru.ifmo.se.server.dao.impl.UserDaoImpl;
 import ru.ifmo.se.server.exception.DumpDataBaseValidationException;
 import ru.ifmo.se.server.service.*;
@@ -89,8 +89,8 @@ public class Starter {
             writerReal = new WriterImpl(writer);
             ConnectionPull connectionPull = new ConnectionPull(10);
             TransactionManager transactionManager = new TransactionManager();
-            LabWorkDao labWorkDao = new LabWorkDaoImpl(new CoordinatesDao(connectionPull),
-                    new PersonDao(connectionPull), connectionPull);
+            LabWorkDao labWorkDao = new LabWorkDaoImpl(new CoordinatesDaoImpl(connectionPull),
+                    new PersonDaoImpl(connectionPull), connectionPull);
             LabWorkService receiver = new LabWorkServiceImpl(labWorkDao);
             labWorkService = TransactionalProxy.newProxyInstance(receiver,
                     transactionManager, connectionPull, LabWorkService.class);

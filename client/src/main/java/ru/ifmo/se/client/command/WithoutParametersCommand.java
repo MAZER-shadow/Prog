@@ -15,8 +15,8 @@ public abstract class WithoutParametersCommand extends AbstractCommand {
      * @param description Описание команды.
      * @param writer      Писатель для вывода сообщений.
      */
-    public WithoutParametersCommand(String name, String description, Writer writer) {
-        super(name, description, writer);
+    public WithoutParametersCommand(String name, String description, Writer writer, Boolean flag) {
+        super(flag, name, description, writer);
     }
 
     /**

@@ -10,20 +10,12 @@ import ru.ifmo.se.server.service.LabWorkService;
 public abstract class AbstractCommand {
     @Getter
     private final Condition condition;
-    /**
-     * Объект, управляющий взаимодействием с базой данных или хранилищем данных.
-     */
+
     protected LabWorkService labWorkService;
 
-    /**
-     * Название команды.
-     */
     @Getter
     protected final String name;
 
-    /**
-     * Описание команды.
-     */
     @Getter
     protected final String description;
 
@@ -39,12 +31,6 @@ public abstract class AbstractCommand {
         this.description = description;
         this.condition = condition;
     }
-
-    /**
-     * Абстрактный метод для выполнения команды.
-     * Каждая команда должна реализовать свою логику выполнения в этом методе.
-     */
-
 
     public abstract Response execute(Request request, User user);
 

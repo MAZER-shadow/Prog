@@ -3,6 +3,7 @@ package ru.ifmo.se.server.controller.command;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.request.RequestPersonDto;
 import ru.ifmo.se.common.dto.response.Response;
+import ru.ifmo.se.common.util.AnswerType;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.LabWork;
@@ -35,7 +36,7 @@ public class CountGreaterThanAuthorCommand extends AbstractCommand {
                 validator.validatePerson(requestPersonDto.getPerson());
             } catch (PersonDtoException e) {
                 return Response.builder()
-                        .status(false)
+                        .answerType(AnswerType.ERROR)
                         .message(e.getMessage())
                         .build();
             }
@@ -47,10 +48,10 @@ public class CountGreaterThanAuthorCommand extends AbstractCommand {
                             toEntity(requestPersonDto.getPerson())) > 0)
                     .count();
             return Response.builder()
-                    .status(true)
+                    .answerType(AnswerType.SUCCESS)
                     .message(String.format("Результат CountGreaterThanAuthorCommand: %s", count))
                     .build();
         }
-        return Response.builder().status(false).build();
+        return Response.builder().answerType(AnswerType.ERROR).build();
     }
 }

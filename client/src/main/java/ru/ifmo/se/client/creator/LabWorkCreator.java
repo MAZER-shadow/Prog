@@ -16,7 +16,7 @@ import ru.ifmo.se.common.io.Writer;
  * Обеспечивает корректность данных и повторный ввод при ошибках.
  */
 public class LabWorkCreator {
-    private final boolean flag;
+    private final boolean flag = true;
     private final Writer writer;
     private final Reader reader;
     private final LabWorkFieldValidator labWorkFieldValidator = new LabWorkFieldValidator();
@@ -36,10 +36,8 @@ public class LabWorkCreator {
      *
      * @param reader объект для чтения пользовательского ввода.
      * @param writer объект для вывода информации пользователю.
-     * @param flag   флаг режима работы (например, режим скрипта или консольный ввод).
      */
-    public LabWorkCreator(Reader reader, Writer writer, boolean flag) {
-        this.flag = flag;
+    public LabWorkCreator(Reader reader, Writer writer) {
         this.writer = writer;
         this.reader = reader;
     }

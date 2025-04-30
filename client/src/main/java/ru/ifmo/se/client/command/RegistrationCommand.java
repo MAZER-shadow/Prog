@@ -10,7 +10,7 @@ import ru.ifmo.se.common.io.Writer;
 public class RegistrationCommand extends WithoutParametersCommand {
     private final Reader reader;
     public RegistrationCommand(Reader reader, Writer writer) {
-        super(CommandConfiguration.REGISTRATION_NAME, CommandConfiguration.REGISTRATION_DESCRIPTION, writer);
+        super(CommandConfiguration.REGISTRATION_NAME, CommandConfiguration.REGISTRATION_DESCRIPTION, writer, false);
         this.reader = reader;
     }
 

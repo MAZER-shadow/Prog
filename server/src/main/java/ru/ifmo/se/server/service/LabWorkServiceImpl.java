@@ -34,21 +34,6 @@ public class LabWorkServiceImpl implements LabWorkService {
     }
 
     /**
-     * Возвращает максимальный идентификатор среди всех объектов LabWork в базе данных.
-     *
-     * @return Максимальный идентификатор.
-     */
-    public long getMaxId() {
-        long id = 0;
-        for (LabWork labWork : getAll()) {
-            if (labWork.getId() > id) {
-                id = labWork.getId();
-            }
-        }
-        return id;
-    }
-
-    /**
      * Очищает базу данных, удаляя все объекты LabWork.
      */
     public void clear(User user) {

@@ -11,7 +11,7 @@ import ru.ifmo.se.common.io.Writer;
 public class AuthorizationCommand extends WithoutParametersCommand {
     private final Reader reader;
     public AuthorizationCommand(Reader reader, Writer writer) {
-        super(CommandConfiguration.AUTHORIZATION_NAME, CommandConfiguration.AUTHORIZATION_DESCRIPTION, writer);
+        super(CommandConfiguration.AUTHORIZATION_NAME, CommandConfiguration.AUTHORIZATION_DESCRIPTION, writer, false);
         this.reader = reader;
     }
 

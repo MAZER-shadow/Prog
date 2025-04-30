@@ -4,11 +4,12 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.annotationproccesor.TransactionSynchronizationManager;
 import ru.ifmo.se.database.ConnectionPull;
+import ru.ifmo.se.server.dao.CoordinatesDao;
 import ru.ifmo.se.server.dao.LabWorkDao;
+import ru.ifmo.se.server.dao.PersonDao;
 import ru.ifmo.se.server.entity.*;
 import ru.ifmo.se.server.exception.PermissionDeniedException;
 
-import javax.naming.AuthenticationException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,13 +37,13 @@ public class LabWorkDaoImpl implements LabWorkDao {
     public static final String UPDATE_LAB_WORK = "UPDATE lab_work SET name = ?, coordinates_id = ?," +
             " minimal_point = ?, maximum_point = ?, difficulty = ?, author_id = ? WHERE id = ?";
 
-    private final CoordinatesDao coordinatesDao;
-    private final PersonDao personDao;
-    private ConnectionPull connectionPull;
+    private final CoordinatesDao coordinatesDaoImpl;
+    private final PersonDao personDaoImpl;
+    private final ConnectionPull connectionPull;
 
-    public LabWorkDaoImpl(CoordinatesDao coordinatesDao, PersonDao personDao, ConnectionPull connectionPull) {
-        this.coordinatesDao = coordinatesDao;
-        this.personDao = personDao;
+    public LabWorkDaoImpl(CoordinatesDao coordinatesDaoImpl, PersonDao personDaoImpl, ConnectionPull connectionPull) {
+        this.coordinatesDaoImpl = coordinatesDaoImpl;
+        this.personDaoImpl = personDaoImpl;
         this.connectionPull = connectionPull;
     }
 
@@ -51,7 +52,7 @@ public class LabWorkDaoImpl implements LabWorkDao {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(TRUNCATE_LAB_WORK)) {
             stmt.setLong(1, user.getId());
-            stmt.executeUpdate(TRUNCATE_LAB_WORK);
+            stmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
@@ -66,7 +67,10 @@ public class LabWorkDaoImpl implements LabWorkDao {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(DELETE_FROM_LAB_WORK_WHERE_ID)) {
             stmt.setLong(1, id);
-            LabWork labWork = getById(id).orElseThrow(RuntimeException::new);
+            if (getById(id).isEmpty()) {
+                return false;
+            }
+            LabWork labWork = getById(id).get();
             if (labWork.getUser().getId() != user.getId()) {
                 throw new PermissionDeniedException("Недостаточно прав");
             }
@@ -89,7 +93,7 @@ public class LabWorkDaoImpl implements LabWorkDao {
             ResultSet rs1 = stmt1.executeQuery("SELECT txid_current()");
             if (rs1.next()) {
                 String txId = rs1.getString(1);
-                log.info("[TXID] Current transaction ID: " + txId);
+                log.info("[TXID] Current transaction ID: {}", txId);
             }
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
@@ -110,29 +114,11 @@ public class LabWorkDaoImpl implements LabWorkDao {
             stmt.setLong(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                LabWork build = LabWork.builder()
-                        .name(rs.getString("name"))
-                        .id(rs.getLong("id"))
-                        .maximumPoint(rs.getFloat("maximum_point"))
-                        .minimalPoint(rs.getDouble("minimal_point"))
-                        .difficulty(Difficulty.valueOf(rs.getString("difficulty")))
-                        .creationDate(rs.getDate("creation_date").toLocalDate())
-                        .coordinates(Coordinates.builder()
-                                .id(rs.getLong("coordinates_id"))
-                                .x(rs.getInt("x"))
-                                .y(rs.getLong("y"))
-                                .build())
-                        .author(Person.builder()
-                                .id(rs.getLong("author_id"))
-                                .name(rs.getString("nam"))
-                                .height(rs.getInt("height"))
-                                .passportID(rs.getString("passport_id"))
-                                .build())
-                        .user(User.builder()
-                                .id(rs.getLong("user_id"))
-                                .build())
-                        .build();
-                return Optional.of(build);
+                LabWork labWork = labWorkCreator(rs);
+                labWork.setUser(User.builder()
+                        .id(rs.getLong("user_id"))
+                        .build());
+                return Optional.of(labWork);
             }
             return Optional.empty();
         } catch (SQLException e) {
@@ -159,25 +145,7 @@ public class LabWorkDaoImpl implements LabWorkDao {
                 log.info("ID транзакции, в которой происходит выполнение: {}", txId);
             }
             while (rs.next()) {
-                LabWork labWork = LabWork.builder()
-                        .name(rs.getString("name"))
-                        .id(rs.getLong("id"))
-                        .maximumPoint(rs.getFloat("maximum_point"))
-                        .minimalPoint(rs.getDouble("minimal_point"))
-                        .difficulty(Difficulty.valueOf(rs.getString("difficulty")))
-                        .creationDate(rs.getDate("creation_date").toLocalDate())
-                        .coordinates(Coordinates.builder()
-                                .id(rs.getLong("coordinates_id"))
-                                .x(rs.getInt("x"))
-                                .y(rs.getLong("y"))
-                                .build())
-                        .author(Person.builder()
-                                .id(rs.getLong("author_id"))
-                                .name(rs.getString("nam"))
-                                .height(rs.getInt("height"))
-                                .passportID(rs.getString("passport_id"))
-                                .build())
-                        .build();
+                LabWork labWork = labWorkCreator(rs);
                 labWorks.add(labWork);
             }
         } catch (SQLException e) {
@@ -191,26 +159,12 @@ public class LabWorkDaoImpl implements LabWorkDao {
     }
 
     @Override
-    public DatabaseMetaData getDatabaseMetaData() {
-        Connection con = connectionPull.getConnection();
-        try {
-            return con.getMetaData();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (!TransactionSynchronizationManager.isTransactionActive()) {
-                connectionPull.returnConnection(con);
-            }
-        }
-    }
-
-    @Override
     public LabWork add(LabWork entity) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(INSERT_INTO_LAB_WORK, Statement.RETURN_GENERATED_KEYS);
                 Statement stmt1 = con.createStatement()) {
-            Coordinates savedCoordinates = coordinatesDao.add(entity.getCoordinates());
-            Person savedAuthor = personDao.add(entity.getAuthor());
+            Coordinates savedCoordinates = coordinatesDaoImpl.add(entity.getCoordinates());
+            Person savedAuthor = personDaoImpl.add(entity.getAuthor());
 
             ResultSet rs1 = stmt1.executeQuery("SELECT txid_current()");
             if (rs1.next()) {
@@ -253,14 +207,14 @@ public class LabWorkDaoImpl implements LabWorkDao {
             if (labWork.getUser().getId() != user.getId()) {
                 throw new PermissionDeniedException("Недостаточно прав");
             }
-            coordinatesDao.updateById(labWork.getCoordinates().getId(), entity.getCoordinates(), user);
-            personDao.updateById(labWork.getAuthor().getId(), entity.getAuthor(), user);
+            coordinatesDaoImpl.updateById(labWork.getCoordinates().getId(), entity.getCoordinates());
+            personDaoImpl.updateById(labWork.getAuthor().getId(), entity.getAuthor());
 
             stmt.setString(1, entity.getName());
             stmt.setLong(2, labWork.getCoordinates().getId());
             stmt.setDouble(3, entity.getMinimalPoint());
             stmt.setFloat(4, entity.getMaximumPoint());
-            stmt.setString(5, entity.getDifficulty().name());
+            stmt.setString(5, entity.getDifficulty() == null ? "NORMAL" : entity.getDifficulty().name());
             stmt.setLong(6, labWork.getAuthor().getId());
             stmt.setLong(7, id);
 
@@ -275,5 +229,27 @@ public class LabWorkDaoImpl implements LabWorkDao {
                 connectionPull.returnConnection(con);
             }
         }
+    }
+
+    private LabWork labWorkCreator(ResultSet rs) throws SQLException {
+        return LabWork.builder()
+                .name(rs.getString("name"))
+                .id(rs.getLong("id"))
+                .maximumPoint(rs.getFloat("maximum_point"))
+                .minimalPoint(rs.getDouble("minimal_point"))
+                .difficulty(Difficulty.valueOf(rs.getString("difficulty")))
+                .creationDate(rs.getDate("creation_date").toLocalDate())
+                .coordinates(Coordinates.builder()
+                        .id(rs.getLong("coordinates_id"))
+                        .x(rs.getInt("x"))
+                        .y(rs.getLong("y"))
+                        .build())
+                .author(Person.builder()
+                        .id(rs.getLong("author_id"))
+                        .name(rs.getString("nam"))
+                        .height(rs.getInt("height"))
+                        .passportID(rs.getString("passport_id"))
+                        .build())
+                .build();
     }
 }

@@ -19,7 +19,7 @@ public class MinByMinimalPointCommand extends WithoutParametersCommand {
      */
     public MinByMinimalPointCommand(Writer writer) {
         super(CommandConfiguration.MIN_BY_MINIMAL_POINT_NAME,
-                CommandConfiguration.MIN_BY_MINIMAL_POINT_DESCRIPTION, writer);
+                CommandConfiguration.MIN_BY_MINIMAL_POINT_DESCRIPTION, writer, true);
     }
 
     /**

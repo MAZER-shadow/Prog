@@ -18,7 +18,7 @@ public class ClearCommand extends WithoutParametersCommand {
      * @param writer Писатель для вывода сообщений.
      */
     public ClearCommand(Writer writer) {
-        super(CommandConfiguration.CLEAR_NAME, CommandConfiguration.CLEAR_DESCRIPTION, writer);
+        super(CommandConfiguration.CLEAR_NAME, CommandConfiguration.CLEAR_DESCRIPTION, writer, true);
     }
 
     /**

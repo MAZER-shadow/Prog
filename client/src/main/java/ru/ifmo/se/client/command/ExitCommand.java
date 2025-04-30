@@ -18,7 +18,7 @@ public class ExitCommand extends WithoutParametersCommand {
      * @param writer Писатель для вывода сообщений.
      */
     public ExitCommand(Writer writer) {
-        super(CommandConfiguration.EXIT_NAME, CommandConfiguration.EXIT_DESCRIPTION, writer);
+        super(CommandConfiguration.EXIT_NAME, CommandConfiguration.EXIT_DESCRIPTION, writer, true);
     }
 
     /**

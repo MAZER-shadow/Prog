@@ -1,18 +1,15 @@
 package ru.ifmo.se.server.dao.impl;
 
-
 import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.annotationproccesor.TransactionSynchronizationManager;
 import ru.ifmo.se.database.ConnectionPull;
-import ru.ifmo.se.server.dao.Dao;
+import ru.ifmo.se.server.dao.PersonDao;
 import ru.ifmo.se.server.entity.Person;
-import ru.ifmo.se.server.entity.User;
 
 import java.sql.*;
-import java.util.Optional;
 
 @Slf4j
-public class PersonDao implements Dao<Person> {
+public class PersonDaoImpl implements PersonDao {
     public static final String DELETE_SQL = "DELETE FROM person WHERE id = ?";
     public static final String FIND_BY_ID_SQL = "SELECT * FROM person WHERE id = ?";
     public static final String INSERT_SQL = "INSERT INTO person (name, height, passport_id) VALUES (?, ?, ?)";
@@ -20,7 +17,7 @@ public class PersonDao implements Dao<Person> {
     public static final String FIND_BY_PASSPORT_SQL = "SELECT * FROM person WHERE passport_id = ?";
     private ConnectionPull connectionPull;
 
-    public PersonDao(ConnectionPull connection) {
+    public PersonDaoImpl(ConnectionPull connection) {
         connectionPull = connection;
     }
 
@@ -63,7 +60,7 @@ public class PersonDao implements Dao<Person> {
     }
 
     @Override
-    public void updateById(long id, Person person, User user) {
+    public void updateById(long id, Person person) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_SQL)) {
 
@@ -85,7 +82,7 @@ public class PersonDao implements Dao<Person> {
     }
 
     @Override
-    public boolean removeById(long id, User user) {
+    public boolean removeById(long id) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(DELETE_SQL)) {
 
@@ -98,55 +95,5 @@ public class PersonDao implements Dao<Person> {
                 connectionPull.returnConnection(con);
             }
         }
-    }
-
-    @Override
-    public Optional<Person> getById(long id) {
-        Connection con = connectionPull.getConnection();
-        try (PreparedStatement stmt = con.prepareStatement(FIND_BY_ID_SQL)) {
-
-            stmt.setLong(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(buildPersonFromResultSet(rs));
-            }
-            return Optional.empty();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error getting person", e);
-        } finally {
-            if (!TransactionSynchronizationManager.isTransactionActive()) {
-                connectionPull.returnConnection(con);
-            }
-        }
-    }
-
-    public Optional<Person> getByPassportID(String passportID) {
-        Connection con = connectionPull.getConnection();
-        try (PreparedStatement stmt = con.prepareStatement(FIND_BY_PASSPORT_SQL)) {
-
-            stmt.setString(1, passportID);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(buildPersonFromResultSet(rs));
-            }
-            return Optional.empty();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error finding person by passport", e);
-        } finally {
-            if (!TransactionSynchronizationManager.isTransactionActive()) {
-                connectionPull.returnConnection(con);
-            }
-        }
-    }
-
-    private Person buildPersonFromResultSet(ResultSet rs) throws SQLException {
-        return Person.builder()
-                .id(rs.getInt("id"))
-                .name(rs.getString("name"))
-                .height(rs.getInt("height"))
-                .passportID(rs.getString("passport_id"))
-                .build();
     }
 }

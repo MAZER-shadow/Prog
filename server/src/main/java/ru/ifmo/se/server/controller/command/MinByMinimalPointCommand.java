@@ -3,6 +3,7 @@ package ru.ifmo.se.server.controller.command;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.dto.response.ResponseLabWorkDto;
+import ru.ifmo.se.common.util.AnswerType;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.LabWork;
@@ -40,13 +41,13 @@ public class MinByMinimalPointCommand extends AbstractCommand {
         List<LabWork> list = new ArrayList<>(labWorkService.getAll());
         if (list.isEmpty()) {
             return Response.builder()
-                    .status(false)
+                    .answerType(AnswerType.ERROR)
                     .message("Коллекция пуста")
                     .build();
         }
         list.sort(Comparator.comparingDouble(LabWork::getMinimalPoint));
         return ResponseLabWorkDto.builder()
-                .status(true)
+                .answerType(AnswerType.SUCCESS)
                 .labWorkDto(LabWorkMapper.INSTANCE.toDto(list.get(0)))
                 .build();
     }

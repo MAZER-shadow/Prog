@@ -2,6 +2,7 @@ package ru.ifmo.se.server.controller.command;
 
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
+import ru.ifmo.se.common.util.AnswerType;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.User;
@@ -30,14 +31,14 @@ public class RemoveFirstCommand extends AbstractCommand {
     public Response execute(Request request, User user) {
         if (labWorkService.getAll().isEmpty()) {
             return Response.builder()
-                    .status(false)
+                    .answerType(AnswerType.ERROR)
                     .message("В коллекции нет сущностей")
                     .build();
         } else {
             long id = labWorkService.getAll().get(0).getId();
             labWorkService.removeById(id, user);
             return Response.builder()
-                    .status(true)
+                    .answerType(AnswerType.SUCCESS)
                     .message("Успешное удаление")
                     .build();
         }

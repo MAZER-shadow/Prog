@@ -6,13 +6,10 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.io.Writer;
 
-/**
- * Каждая команда должна реализовывать метод {@link #execute(String)} для выполнения своей логики.
- * Хранит информацию о названии команды, её описании и объекте для вывода сообщений.
- */
 @AllArgsConstructor
 public abstract class AbstractCommand {
-
+    @Getter
+    private Boolean flag;
     /**
      * Объект, управляющий взаимодействием с базой данных или хранилищем данных.
      */

@@ -1,6 +1,5 @@
 package ru.ifmo.se.server.dao.impl;
 
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.ifmo.se.annotationproccesor.TransactionSynchronizationManager;
 import ru.ifmo.se.database.ConnectionPull;
@@ -8,8 +7,6 @@ import ru.ifmo.se.server.dao.UserDao;
 import ru.ifmo.se.server.entity.User;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -53,7 +50,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateById(long id, User entity, User user) {
+    public void updateById(long id, User entity) {
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(UPDATE_USER)) {
             stmt.setString(1, entity.getName());
@@ -74,7 +71,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean removeById(long id, User user) {
+    public boolean removeById(long id) {
+
         Connection con = connectionPull.getConnection();
         try (PreparedStatement stmt = con.prepareStatement(DELETE_FROM_USER_WHERE_ID)) {
             stmt.setLong(1, id);
@@ -111,31 +109,6 @@ public class UserDaoImpl implements UserDao {
                 connectionPull.returnConnection(con);
             }
         }
-    }
-
-
-    @SneakyThrows
-    public List<User> getAll() {
-        List<User> users = new ArrayList<>();
-        Connection con = connectionPull.getConnection();
-        try (PreparedStatement stmt = con.prepareStatement(SELECT_ALL)) {
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                User user = User.builder()
-                        .id(rs.getLong("id"))
-                        .name(rs.getString("name"))
-                        .password(rs.getString("password"))
-                        .build();
-                users.add(user);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (!TransactionSynchronizationManager.isTransactionActive()) {
-                connectionPull.returnConnection(con);
-            }
-        }
-        return users;
     }
 
     @Override

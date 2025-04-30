@@ -3,6 +3,7 @@ package ru.ifmo.se.server.controller.command;
 import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.dto.response.ResponseMap;
+import ru.ifmo.se.common.util.AnswerType;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.LabWork;
@@ -37,7 +38,7 @@ public class GroupCountingByMinimalPointCommand extends AbstractCommand {
     public Response execute(Request request, User user) {
         if (labWorkService.getAll().isEmpty()) {
             return Response.builder()
-                    .status(false)
+                    .answerType(AnswerType.ERROR)
                     .message("В коллекции нет элементов")
                     .build();
         } else {
@@ -47,7 +48,7 @@ public class GroupCountingByMinimalPointCommand extends AbstractCommand {
                             Collectors.counting()
                     ));
             return ResponseMap.builder()
-                    .status(true)
+                    .answerType(AnswerType.SUCCESS)
                     .response(map)
                     .build();
         }

@@ -6,6 +6,7 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.request.RequestLabWork;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.dto.response.ResponseLabWorkDto;
+import ru.ifmo.se.common.util.AnswerType;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.LabWork;
@@ -40,7 +41,7 @@ public class AddCommand extends AbstractCommand {
             try {
                 validator.validateLabWorkDto(labWorkDto);
             } catch (LabWorkDtoException e) {
-                return Response.builder().status(false).message(e.getMessage()).build();
+                return Response.builder().answerType(AnswerType.ERROR).message(e.getMessage()).build();
             }
             LabWork labWork = LabWorkMapper.INSTANCE.toEntity(labWorkDto);
             labWork.setUser(user);
@@ -48,9 +49,9 @@ public class AddCommand extends AbstractCommand {
             log.info(labWork.aboutLabWork());
             LabWorkDto lastLabWorkDto = LabWorkMapper.INSTANCE.toDto(labWork);
             return ResponseLabWorkDto.builder()
-                    .status(true)
+                    .answerType(AnswerType.SUCCESS)
                     .labWorkDto(lastLabWorkDto).build();
         }
-        return Response.builder().status(false).build();
+        return Response.builder().answerType(AnswerType.ERROR).build();
     }
 }

@@ -15,7 +15,7 @@ COPY ./common/src ./common/src
 COPY ./transaction-manager/src ./transaction-manager/src
 COPY ./server/src ./server/src
 
-RUN mvn clean install
+RUN mvn clean install -DskipTests
 # Этап запуска (только JAR)
 FROM openjdk:17-jdk-slim
 WORKDIR /

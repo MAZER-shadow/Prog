@@ -6,22 +6,23 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import ru.ifmo.se.server.entity.User;
+import ru.ifmo.se.server.exception.AuthenticationRuntimeException;
+import ru.ifmo.se.server.exception.TokenTimeRuntimeException;
 
 import javax.crypto.SecretKey;
-import javax.naming.AuthenticationException;
 import java.util.Date;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserService userService;
-    private final SecretKey secretKey; // Изменили тип с Key на SecretKey
+    private final SecretKey secretKey;
     private final MD5HashingService md5HashingService = new MD5HashingService(new String("eRGOKMEFGLKMDRG"));
 
-    public void register(String name, String password) throws AuthenticationException {
+    public void register(String name, String password) {
         Optional<User> user = userService.findByUsername(name);
         if (user.isPresent()) {
-            throw new AuthenticationException("Username already exists.");
+            throw new AuthenticationRuntimeException("Имя уже занято");
         }
         userService.save(User.builder()
                 .name(name)
@@ -29,36 +30,36 @@ public class AuthServiceImpl implements AuthService {
                 .build());
     }
 
-    public String login(String name, String password) throws AuthenticationException {
+    public String login(String name, String password) {
         Optional<User> user = userService.findByUsername(name);
 
         if (user.isEmpty() || !user.get().getPassword().equals(md5HashingService.hashString(password))) {
-            throw new AuthenticationException("Invalid username or password.");
+            throw new AuthenticationRuntimeException("Неверное имя или пароль");
         }
         return generateToken(user.get());
     }
 
-    public User authenticate(String token) throws AuthenticationException {
+    public User authenticate(String token) {
         if (token == null || token.isEmpty()) {
-            throw new AuthenticationException("Invalid token: Token is missing.");
+            throw new AuthenticationRuntimeException("Вы ещё не авторизовались, чтобы использовать такие команды");
         }
 
         try {
             Jws<Claims> jws = Jwts.parser()
-                    .verifyWith(secretKey) // Теперь без приведения типа
+                    .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token);
             Long userId = jws.getBody().get("userId", Long.class);
             Optional<User> user = userService.findById(userId);
 
             if (user.isEmpty()) {
-                throw new AuthenticationException("Invalid token: User not found.");
+                throw new AuthenticationRuntimeException("Неверный токен. Пользователь не найден");
             }
 
-            return user.get(); // Используем .get() вместо .orElse(null)
+            return user.get();
 
         } catch (JwtException e) {
-            throw new AuthenticationException("Invalid token: " + e.getMessage());
+            throw new TokenTimeRuntimeException("время действия токена истекло, нужно авторизоваться по новой");
         }
     }
 
@@ -67,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
                 .setSubject(user.getName())
                 .claim("userId", user.getId())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 36000000))
+                .setExpiration(new Date(System.currentTimeMillis() + 10000))
                 .signWith(secretKey)
                 .compact();
     }

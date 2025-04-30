@@ -18,7 +18,7 @@ public class SortCommand extends WithoutParametersCommand {
      * @param writer объект для вывода информации пользователю.
      */
     public SortCommand(Writer writer) {
-        super(CommandConfiguration.SORT_NAME, CommandConfiguration.SORT_DESCRIPTION, writer);
+        super(CommandConfiguration.SORT_NAME, CommandConfiguration.SORT_DESCRIPTION, writer, true);
     }
 
     /**

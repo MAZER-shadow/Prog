@@ -4,6 +4,7 @@ import ru.ifmo.se.common.dto.request.Request;
 import ru.ifmo.se.common.dto.request.RequestId;
 import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.exception.EntityNotFoundException;
+import ru.ifmo.se.common.util.AnswerType;
 import ru.ifmo.se.server.configuration.CommandConfiguration;
 import ru.ifmo.se.server.configuration.Condition;
 import ru.ifmo.se.server.entity.User;
@@ -37,28 +38,28 @@ public class RemoveByIdCommand extends AbstractCommand {
                 Long id = Long.parseLong(String.valueOf(requestId.getId()));
                 if (!labWorkService.existById(id)) {
                     return Response.builder()
-                            .status(false)
+                            .answerType(AnswerType.ERROR)
                             .message("Нет такого id")
                             .build();
                 } else {
                     labWorkService.removeById(id, user);
                     return Response.builder()
-                            .status(true)
+                            .answerType(AnswerType.SUCCESS)
                             .message("успешное удаление сущности")
                             .build();
                 }
             } catch (NumberFormatException e) {
                 return Response.builder()
-                        .status(false)
+                        .answerType(AnswerType.ERROR)
                         .message("Формат Id не целое число!")
                         .build();
             } catch (EntityNotFoundException e) {
                 return Response.builder()
-                        .status(false)
+                        .answerType(AnswerType.ERROR)
                         .message(e.getMessage())
                         .build();
             }
         }
-        return Response.builder().status(false).build();
+        return Response.builder().answerType(AnswerType.ERROR).build();
     }
 }

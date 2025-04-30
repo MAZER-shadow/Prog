@@ -6,6 +6,7 @@ import ru.ifmo.se.common.dto.response.Response;
 import ru.ifmo.se.common.exception.CommandNotFoundException;
 import ru.ifmo.se.common.exception.IORuntimeException;
 import ru.ifmo.se.common.io.Writer;
+import ru.ifmo.se.common.util.AnswerType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,10 +27,12 @@ public class CommandManager {
      */
     private final Map<String, AbstractCommand> commandMap = new HashMap<>();
 
+    private final Map<String, AbstractCommand> specialCommandMap = new HashMap<>();
+
     /**
      * Объект для вывода сообщений.
      */
-    private Writer writer;
+    private final Writer writer;
 
     /**
      * Позиция имени команды во входной строке.
@@ -70,8 +73,12 @@ public class CommandManager {
      * @param abstractCommandName Имя команды.
      * @param abstractCommand     Объект команды, который будет зарегистрирован.
      */
-    public void register(String abstractCommandName, AbstractCommand abstractCommand) {
-        commandMap.put(abstractCommandName, abstractCommand);
+    public void register(String abstractCommandName, AbstractCommand abstractCommand, boolean flag) {
+        if (flag) {
+            commandMap.put(abstractCommandName, abstractCommand);
+        } else {
+            specialCommandMap.put(abstractCommandName, abstractCommand);
+        }
     }
 
     /**
@@ -84,8 +91,15 @@ public class CommandManager {
         try {
             input = input.stripLeading();
             String[] parameters = input.split(SEPARATOR);
-            String abstractCommandName = parameters[POSITION_COMMAND_NAME_IN_INPUT];
-            AbstractCommand abstractCommand = commandMap.get(abstractCommandName);
+            AbstractCommand abstractCommand;
+            String abstractCommandName;
+            if (token != null) {
+                abstractCommandName = parameters[POSITION_COMMAND_NAME_IN_INPUT];
+                abstractCommand = commandMap.get(abstractCommandName);
+            } else {
+                abstractCommandName = parameters[POSITION_COMMAND_NAME_IN_INPUT];
+                abstractCommand = specialCommandMap.get(abstractCommandName);
+            }
             if (parameters.length > SUM_WORDS_OF_COMMAND_NAME_AND_ARGUMENTS) {
                 throw new CommandNotFoundException("Слишком много параметров -_-");
             }
@@ -99,10 +113,13 @@ public class CommandManager {
                 }
                 request.setToken(token);
                 Response response = networkService.send(request);
-                if (response.isStatus()) {
+                if (response.getAnswerType() == AnswerType.SUCCESS) {
                     abstractCommand.handleResponse(response);
-                } else {
+                } else if (response.getAnswerType() == AnswerType.ERROR) {
                     writer.println(response.getMessage());
+                } else if (response.getAnswerType() == AnswerType.REAUTHORIZATION) {
+                    writer.println(response.getMessage());
+                    token = null;
                 }
             } else {
                 Request request = abstractCommand.makeRequest(DEFAULT_ARGUMENT_OF_COMMAND);
@@ -111,27 +128,18 @@ public class CommandManager {
                 }
                 request.setToken(token);
                 Response response = networkService.send(request);
-                if (response.isStatus()) {
+                if (response.getAnswerType() == AnswerType.SUCCESS) {
                     abstractCommand.handleResponse(response);
-                } else {
+                } else if (response.getAnswerType() == AnswerType.ERROR) {
                     writer.println(response.getMessage());
+                } else if (response.getAnswerType() == AnswerType.REAUTHORIZATION) {
+                    writer.println(response.getMessage());
+                    writer.println("Пожалуйста авторизуйтесь ещё раз");
+                    token = null;
                 }
             }
         } catch (IORuntimeException | CommandNotFoundException e) {
             writer.println(e.getMessage());
         }
-    }
-
-    /**
-     * Возвращает карту с описаниями всех зарегистрированных команд.
-     *
-     * @return Карта, где ключ - имя команды, а значение - её описание.
-     */
-    public Map<String, String> getDescriptionMap() {
-        Map<String, String> descriptionAbstractCommand = new HashMap<>();
-        for (AbstractCommand value : commandMap.values()) {
-            descriptionAbstractCommand.put(value.getName(), value.getDescription());
-        }
-        return descriptionAbstractCommand;
     }
 }

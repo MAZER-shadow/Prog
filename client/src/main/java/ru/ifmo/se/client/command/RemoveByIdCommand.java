@@ -18,7 +18,7 @@ public class RemoveByIdCommand extends WithParametersCommand {
      * @param writer Писатель для вывода сообщений.
      */
     public RemoveByIdCommand(Writer writer) {
-        super(CommandConfiguration.REMOVE_BY_ID_NAME, CommandConfiguration.REMOVE_BY_ID_DESCRIPTION, writer);
+        super(CommandConfiguration.REMOVE_BY_ID_NAME, CommandConfiguration.REMOVE_BY_ID_DESCRIPTION, writer, true);
     }
 
     /**

@@ -17,7 +17,7 @@ public class RemoveFirstCommand extends WithoutParametersCommand {
      * @param writer Писатель для вывода сообщений.
      */
     public RemoveFirstCommand(Writer writer) {
-        super(CommandConfiguration.REMOVE_FIRST_NAME, CommandConfiguration.REMOVE_FIRST_DESCRIPTION, writer);
+        super(CommandConfiguration.REMOVE_FIRST_NAME, CommandConfiguration.REMOVE_FIRST_DESCRIPTION, writer, true);
     }
 
     /**

@@ -20,14 +20,6 @@ public interface LabWorkService {
     LabWork add(LabWork labWork);
 
     /**
-     * Возвращает максимальный идентификатор среди всех объектов LabWork в базе данных.
-     *
-     * @return Максимальный идентификатор.
-     */
-    @Transactional
-    long getMaxId();
-
-    /**
      * Очищает базу данных, удаляя все объекты LabWork.
      */
     @Transactional

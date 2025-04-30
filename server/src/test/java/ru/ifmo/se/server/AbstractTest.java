@@ -33,7 +33,7 @@ public class AbstractTest {
             .withExposedPorts(5432)
             .withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(
                     new HostConfig().withPortBindings(
-                            new PortBinding(Ports.Binding.bindPort(5432), new ExposedPort(5432))
+                            new PortBinding(Ports.Binding.bindPort(5435), new ExposedPort(5432))
                     )
             ));
 

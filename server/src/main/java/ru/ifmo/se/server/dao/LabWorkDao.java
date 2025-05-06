@@ -3,7 +3,6 @@ package ru.ifmo.se.server.dao;
 import ru.ifmo.se.server.entity.LabWork;
 import ru.ifmo.se.server.entity.User;
 
-import java.sql.DatabaseMetaData;
 import java.util.List;
 import java.util.Optional;
 

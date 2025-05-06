@@ -6,17 +6,16 @@ import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import ru.ifmo.se.database.ConnectionPull;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 @Slf4j
 public class AbstractTest {
@@ -33,22 +32,26 @@ public class AbstractTest {
             .withExposedPorts(5432)
             .withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(
                     new HostConfig().withPortBindings(
-                            new PortBinding(Ports.Binding.bindPort(5435), new ExposedPort(5432))
+                            new PortBinding(Ports.Binding.bindPort(5432), new ExposedPort(5432))
                     )
             ));
 
-    @SneakyThrows
-    @BeforeAll
-    static void setup() {
+    static  {
         // Wait for the container to be ready
         postgresContainer.start();
-        Connection connection = DriverManager.getConnection(
-                postgresContainer.getJdbcUrl(), postgresContainer.getUsername(), postgresContainer.getPassword());
-        Liquibase
-                liquibase = new Liquibase("db-test/changelog-test/db.changelog-master.xml", new ClassLoaderResourceAccessor(),
-                new JdbcConnection(connection));
-        liquibase.update("");
+        System.out.println(postgresContainer.getMappedPort(5432));
         connectionPull = new ConnectionPull(10);
+        Connection connection = connectionPull.getConnection();
+        Liquibase
+                liquibase = null;
+        try {
+            liquibase = new Liquibase("db-test/changelog-test/db.changelog-master.xml", new ClassLoaderResourceAccessor(),
+            new JdbcConnection(connection));
+            liquibase.update("");
+            connection.close();
+        } catch (LiquibaseException | SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @AfterEach

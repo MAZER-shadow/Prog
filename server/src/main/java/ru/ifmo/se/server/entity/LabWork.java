@@ -1,9 +1,6 @@
 package ru.ifmo.se.server.entity;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Objects;
 

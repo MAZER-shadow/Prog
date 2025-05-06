@@ -10,7 +10,6 @@ import ru.ifmo.se.server.entity.User;
 import ru.ifmo.se.server.service.LabWorkService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Команда для вывода справки по доступным командам.

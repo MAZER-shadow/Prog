@@ -7,7 +7,6 @@ import ru.ifmo.se.server.dao.CoordinatesDao;
 import ru.ifmo.se.server.entity.Coordinates;
 
 import java.sql.*;
-import java.util.Optional;
 
 @Slf4j
 public class CoordinatesDaoImpl implements CoordinatesDao {

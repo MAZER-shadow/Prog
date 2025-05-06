@@ -16,7 +16,7 @@ import ru.ifmo.se.common.io.Writer;
  * Обеспечивает корректность данных и повторный ввод при ошибках.
  */
 public class LabWorkCreator {
-    private final boolean flag = true;
+    private final static boolean flag = true;
     private final Writer writer;
     private final Reader reader;
     private final LabWorkFieldValidator labWorkFieldValidator = new LabWorkFieldValidator();

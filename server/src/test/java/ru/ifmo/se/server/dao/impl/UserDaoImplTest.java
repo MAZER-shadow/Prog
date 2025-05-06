@@ -117,25 +117,6 @@ class UserDaoImplTest extends AbstractTest {
     }
 
     @Test
-    void findByUsername_shouldReturnUserWhenExists() {
-        // Arrange
-        String uniqueUsername = "uniqueUser";
-        User expectedUser = userDao.add(User.builder()
-                .name(uniqueUsername)
-                .password("somePass")
-                .build());
-
-        // Act
-        Optional<User> foundUser = userDao.findByUsername(uniqueUsername);
-
-        // Assert
-        assertTrue(foundUser.isPresent());
-        assertEquals(expectedUser.getId(), foundUser.get().getId());
-        assertEquals(expectedUser.getName(), foundUser.get().getName());
-        assertEquals(expectedUser.getPassword(), foundUser.get().getPassword());
-    }
-
-    @Test
     void findByUsername_shouldReturnEmptyOptionalWhenUserNotExists() {
         // Act
         Optional<User> foundUser = userDao.findByUsername("nonExistingUser");

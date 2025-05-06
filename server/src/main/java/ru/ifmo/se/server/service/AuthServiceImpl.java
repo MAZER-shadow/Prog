@@ -15,9 +15,10 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+    public static final String E_RGOKMEFGLKMDRG = "eRGOKMEFGLKMDRG";
     private final UserService userService;
     private final SecretKey secretKey;
-    private final MD5HashingService md5HashingService = new MD5HashingService(new String("eRGOKMEFGLKMDRG"));
+    private final MD5HashingService md5HashingService = new MD5HashingService(E_RGOKMEFGLKMDRG);
 
     public void register(String name, String password) {
         Optional<User> user = userService.findByUsername(name);
@@ -68,7 +69,7 @@ public class AuthServiceImpl implements AuthService {
                 .setSubject(user.getName())
                 .claim("userId", user.getId())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 10000))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000000000))
                 .signWith(secretKey)
                 .compact();
     }
